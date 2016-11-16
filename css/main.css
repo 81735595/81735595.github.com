@@ -463,7 +463,7 @@ body {
   }
 }
 .main {
-  padding-bottom: 150px;
+  padding-bottom: 130px;
 }
 .main-inner {
   margin: 0 auto;
@@ -1682,7 +1682,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #03ff45;
+  background: #ff3814;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2174,12 +2174,6 @@ a.search-result {
   left: 44%;
   top: 42%;
   color: #ccc;
-}
-.busuanzi-count:before {
-  content: " ";
-  float: left;
-  width: 260px;
-  min-height: 25px;
 }
 @media (min-width: 768px) and (max-width: 991px) {
   .busuanzi-count {

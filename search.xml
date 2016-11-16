@@ -3,37 +3,37 @@
   
     
     <entry>
-      <title><![CDATA[Capitan之后JetBrains的产品都不能用了]]></title>
-      <url>%2F2015%2F11%2F21%2FCapitan%E4%B9%8B%E5%90%8EJetBrains%E7%9A%84%E4%BA%A7%E5%93%81%E9%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8%E4%BA%86%2F</url>
-      <content type="text"><![CDATA[更新了osx升级10.11 EL Capitan之后发现有好多坑啊……限制超多而且JetBrains的产品都不能用了…… 查了一溜够貌似是之前安装的一些系统软件都被清除了，而且还需要接触rootless模式，总之先附上搜索到的资料链接吧 http://blog.euphonictech.com/entry/2014/11/12/192856（需翻墙）]]></content>
+      <title><![CDATA[新的开始]]></title>
+      <url>%2F2016%2F11%2F16%2F%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B%2F</url>
+      <content type="text"><![CDATA[哈，距离上次写博客刚好一年了呢，话说我还真是懒呢…… _(:3 」∠)_ 这里不得不感叹下榜样的力量是无穷的。要不是继伟发起每周写博客的活动，估计我现在还在床上躺着呢……读好书，交高人，此言非虚呀~ 总之，希望这是个新的开始，期待能遇见更好的自己~(｡･ω･｡)]]></content>
     </entry>
 
     
     <entry>
-      <title><![CDATA[jenv-install]]></title>
-      <url>%2F2015%2F11%2F16%2Fjenv-install%2F</url>
-      <content type="text"><![CDATA[今天用brew安装jenv的时候遇到了个问题， 提示说需要root权限 Agreeing to the Xcode/iOS license requires admin privileges, please re-run as root via sudo.Error: Failure while executing: /usr/bin/otool -L /usr/bin/install_name_tool 但是sudo brew install又报错 Error: Cowardly refusing to sudo brew installYou can use brew with sudo, but only if the brew executable is owned by root.However, this is both not recommended and completely unsupported so do so at your own risk. 搜了下貌似是新版osx的问题，最后是按照下面这篇文章里的方法解决的，记录一下 http://digitizor.com/2014/06/29/fix-cowardly-refusing-sudo-error-brew/]]></content>
+      <title><![CDATA[Capitan之后JetBrains的产品都不能用了]]></title>
+      <url>%2F2015%2F11%2F21%2FCapitan%E4%B9%8B%E5%90%8EJetBrains%E7%9A%84%E4%BA%A7%E5%93%81%E9%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8%E4%BA%86%2F</url>
+      <content type="text"><![CDATA[更新了osx升级10.11 EL Capitan之后发现有好多坑啊……限制超多而且JetBrains的产品都不能用了…… 查了一溜够貌似是之前安装的一些系统软件都被清除了，而且还需要接触rootless模式，总之先附上搜索到的资料链接吧 Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻墙）]]></content>
     </entry>
 
     
     <entry>
       <title><![CDATA[邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉]]></title>
       <url>%2F2015%2F10%2F21%2F%E9%82%AE%E4%BB%B6%E9%93%BE%E6%8E%A5%E4%B8%AD%E5%8A%A0%E5%85%A5%E5%8F%82%E6%95%B0%E5%8F%AF%E4%BB%A5%E7%BB%99%E8%A6%81%E5%8F%91%E9%80%81%E7%9A%84%E9%82%AE%E4%BB%B6%E6%B7%BB%E5%8A%A0%E6%A0%87%E9%A2%98%E5%92%8C%E5%86%85%E5%AE%B9%EF%BC%8C%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%8F%91%E7%8E%B0%E5%94%89%2F</url>
-      <content type="text"><![CDATA[示例： mailto:legend@baidu.com?Subject=申请开通Legend权限&amp;Body=姓名 - 邮箱 - 岗位 - 产品线 貌似按照get方式加上参数就行了，Subject代表标题，Body代表姓名]]></content>
+      <content type="text"><![CDATA[a标签的href属性值可以是mailto协议的地址，这个比较常见，但是能加参数设置邮件内容我还是第一次见呢。 示例： mailto:xxx@xxx.com?Subject=标题&amp;Body=正文 貌似按照get方式加上参数就行了，Subject代表标题，Body代表正文]]></content>
     </entry>
 
     
     <entry>
       <title><![CDATA[总结下hexo搭建的过程]]></title>
       <url>%2F2015%2F10%2F16%2F%E6%80%BB%E7%BB%93%E4%B8%8Bhexo%E6%90%AD%E5%BB%BA%E7%9A%84%E8%BF%87%E7%A8%8B%2F</url>
-      <content type="text"><![CDATA[先记下些资料 [http://www.jianshu.com/p/98e993305653] [http://wp.huangshiyang.com/hexo%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88] [http://www.tuicool.com/articles/7J3IRnA] [https://cnodejs.org/topic/5463645f72f405c829029f4c] [http://modernist.heroicyang.com/page/2/] [https://linux.cn/article-2311-1.html] [http://ibruce.info/2013/11/22/hexo-your-blog/] [http://www.v2ex.com/t/185148] [http://www.v2ex.com/t/175940] [http://www.jianshu.com/p/05289a4bc8b2] [http://blog.163.com/gis_warrior/blog/static/19361717320153100184696/] [http://blog.fens.me/nodejs-stylus-css/] [http://segmentfault.com/a/1190000003776905] [http://www.cnblogs.com/hustskyking/p/npm-cross-wall.html]]]></content>
+      <content type="text"><![CDATA[2016-11-16 UPDATE: 距离写下这篇博客已经过了一年了，hexo在这一年里发展的挺快。现在hexo的文档已经齐全，整个工作流程也相当顺畅了。 安装过程中如果 node-gyp 报 error，可以尝试升级xcode，并安装xcode-select 升级 CLT。 下面附上几篇比较好的文章，建站过程中遇到问题可以查阅一下。 Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题 hexo你的博客文章的内容很全，不止写了如何使用hexo，如何使用github，如何找图床等问题也都有描述，如果是使用github pages搭建博客的话，看这篇就够用了 如何搭建一个独立博客——简明Github Pages与Hexo教程和上一篇文章一样，这篇文章的内容也很全面，除了博客的搭建过程，如何在购买域名和服务器也有描述，只不过图片貌似都已经失效了……有些遗憾呢…… 翻译自GitHub Pages的Help页面（仍在更新中）github pages的help页面的翻译，对于英语苦手的人来说，应该会很有帮助吧]]></content>
     </entry>
 
     
     <entry>
       <title><![CDATA[总结一下升级OS X El Capitan后brew遇到的问题]]></title>
       <url>%2F2015%2F10%2F15%2F%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B%E5%8D%87%E7%BA%A7OS-X-El-Capitan%E5%90%8Ebrew%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%2F</url>
-      <content type="text"><![CDATA[[https://github.com/Homebrew/homebrew/issues/41665] [http://gotohayato.com/content/69]]]></content>
+      <content type="text"><![CDATA[升级了osx之后，先是brew update的时候报错，后来用brew安装jenv的时候又提示说需要root权限 Agreeing to the Xcode/iOS license requires admin privileges, please re-run as root via sudo.Error: Failure while executing: /usr/bin/otool -L /usr/bin/install_name_tool 但是sudo brew install又报错 Error: Cowardly refusing to sudo brew installYou can use brew with sudo, but only if the brew executable is owned by root.However, this is both not recommended and completely unsupported so do so at your own risk. 搜了下貌似是新版osx的问题，需要进行权限设置，用chown命令设置一下就好了 以下是一些参考资料 How To Fix Cowardly Refusing to Sudo error in Brew – Mac OS X Failed brew update on El Capitan (OS X 10.11) Beta Mac OS X El Capitan にアップデートした後に brew update が動かない場合の対処方法]]></content>
     </entry>
 
     

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Keep Walking</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://brooch.me/"/>
+  <updated>2016-11-16T16:36:18.000Z</updated>
+  <id>http://brooch.me/</id>
+  
+  <author>
+    <name>投身烈火</name>
+    <email>81735595@qq.com</email>
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>新的开始</title>
+    <link href="http://brooch.me/2016/11/16/%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/"/>
+    <id>http://brooch.me/2016/11/16/新的开始/</id>
+    <published>2016-11-16T14:23:33.000Z</published>
+    <updated>2016-11-16T16:36:18.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>哈，距离上次写博客刚好一年了呢，话说我还真是懒呢…… _(:3 」∠)_</p>
+<p>这里不得不感叹下榜样的力量是无穷的。要不是<a href="http://testudy.cc/" target="_blank" rel="external">继伟</a>发起每周写博客的活动，估计我现在还在床上躺着呢……读好书，交高人，此言非虚呀~</p>
+<p>总之，希望这是个新的开始，期待能遇见更好的自己~(｡･ω･｡)</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;哈，距离上次写博客刚好一年了呢，话说我还真是懒呢…… _(:3 」∠)_&lt;/p&gt;
+&lt;p&gt;这里不得不感叹下榜样的力量是无穷的。要不是&lt;a href=&quot;http://testudy.cc/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;继伟&lt;/a&gt;发起每周写博
+    
+    </summary>
+    
+      <category term="感想" scheme="http://brooch.me/categories/%E6%84%9F%E6%83%B3/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Capitan之后JetBrains的产品都不能用了</title>
+    <link href="http://brooch.me/2015/11/21/Capitan%E4%B9%8B%E5%90%8EJetBrains%E7%9A%84%E4%BA%A7%E5%93%81%E9%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8%E4%BA%86/"/>
+    <id>http://brooch.me/2015/11/21/Capitan之后JetBrains的产品都不能用了/</id>
+    <published>2015-11-21T04:06:24.000Z</published>
+    <updated>2016-11-16T16:35:32.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>更新了osx升级10.11 EL Capitan之后发现有好多坑啊……限制超多而且JetBrains的产品都不能用了……</p>
+<p>查了一溜够貌似是之前安装的一些系统软件都被清除了，而且还需要接触rootless模式，总之先附上搜索到的资料链接吧</p>
+<p><a href="http://blog.euphonictech.com/entry/2014/11/12/192856" target="_blank" rel="external">Intellij IDEAやAppCodeが起動しない場合に考えられること</a>（需翻墙）</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;更新了osx升级10.11 EL Capitan之后发现有好多坑啊……限制超多而且JetBrains的产品都不能用了……&lt;/p&gt;
+&lt;p&gt;查了一溜够貌似是之前安装的一些系统软件都被清除了，而且还需要接触rootless模式，总之先附上搜索到的资料链接吧&lt;/p&gt;
+&lt;p&gt;&lt;a h
+    
+    </summary>
+    
+      <category term="随手一记" scheme="http://brooch.me/categories/%E9%9A%8F%E6%89%8B%E4%B8%80%E8%AE%B0/"/>
+    
+    
+      <category term="osx" scheme="http://brooch.me/tags/osx/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉</title>
+    <link href="http://brooch.me/2015/10/21/%E9%82%AE%E4%BB%B6%E9%93%BE%E6%8E%A5%E4%B8%AD%E5%8A%A0%E5%85%A5%E5%8F%82%E6%95%B0%E5%8F%AF%E4%BB%A5%E7%BB%99%E8%A6%81%E5%8F%91%E9%80%81%E7%9A%84%E9%82%AE%E4%BB%B6%E6%B7%BB%E5%8A%A0%E6%A0%87%E9%A2%98%E5%92%8C%E5%86%85%E5%AE%B9%EF%BC%8C%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%8F%91%E7%8E%B0%E5%94%89/"/>
+    <id>http://brooch.me/2015/10/21/邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉/</id>
+    <published>2015-10-21T03:51:34.000Z</published>
+    <updated>2016-11-16T16:36:24.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>a标签的href属性值可以是mailto协议的地址，这个比较常见，但是能加参数设置邮件内容我还是第一次见呢。</p>
+<p>示例：</p>
+<p>mailto:xxx@xxx.com?Subject=标题&amp;Body=正文</p>
+<p>貌似按照get方式加上参数就行了，Subject代表标题，Body代表正文</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;a标签的href属性值可以是mailto协议的地址，这个比较常见，但是能加参数设置邮件内容我还是第一次见呢。&lt;/p&gt;
+&lt;p&gt;示例：&lt;/p&gt;
+&lt;p&gt;mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文&lt;/p&gt;
+&lt;p&gt;貌似按照get方式加上参数就行
+    
+    </summary>
+    
+      <category term="随手一记" scheme="http://brooch.me/categories/%E9%9A%8F%E6%89%8B%E4%B8%80%E8%AE%B0/"/>
+    
+    
+      <category term="html" scheme="http://brooch.me/tags/html/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>总结下hexo搭建的过程</title>
+    <link href="http://brooch.me/2015/10/16/%E6%80%BB%E7%BB%93%E4%B8%8Bhexo%E6%90%AD%E5%BB%BA%E7%9A%84%E8%BF%87%E7%A8%8B/"/>
+    <id>http://brooch.me/2015/10/16/总结下hexo搭建的过程/</id>
+    <published>2015-10-16T14:23:22.000Z</published>
+    <updated>2016-11-16T16:35:14.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>2016-11-16 UPDATE:</strong> 距离写下这篇博客已经过了一年了，hexo在这一年里发展的挺快。现在hexo的文档已经齐全，整个工作流程也相当顺畅了。</p>
+<p>安装过程中如果 node-gyp 报 error，可以尝试升级xcode，并安装xcode-select 升级 CLT。</p>
+<p>下面附上几篇比较好的文章，建站过程中遇到问题可以查阅一下。</p>
+<p><a href="http://wp.huangshiyang.com/hexo%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88" target="_blank" rel="external">Hexo常见问题解决方案</a><br>收集了很多使用hexo过程中的常见问题</p>
+<a id="more"></a>
+<p><a href="http://ibruce.info/2013/11/22/hexo-your-blog/" target="_blank" rel="external">hexo你的博客</a><br>文章的内容很全，不止写了如何使用hexo，如何使用github，如何找图床等问题也都有描述，如果是使用github pages搭建博客的话，看这篇就够用了</p>
+<p><a href="http://www.jianshu.com/p/05289a4bc8b2" target="_blank" rel="external">如何搭建一个独立博客——简明Github Pages与Hexo教程</a><br>和上一篇文章一样，这篇文章的内容也很全面，除了博客的搭建过程，如何在购买域名和服务器也有描述，只不过图片貌似都已经失效了……有些遗憾呢……</p>
+<p><a href="http://segmentfault.com/a/1190000003776905" target="_blank" rel="external">翻译自GitHub Pages的Help页面（仍在更新中）</a><br>github pages的help页面的翻译，对于英语苦手的人来说，应该会很有帮助吧</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;2016-11-16 UPDATE:&lt;/strong&gt; 距离写下这篇博客已经过了一年了，hexo在这一年里发展的挺快。现在hexo的文档已经齐全，整个工作流程也相当顺畅了。&lt;/p&gt;
+&lt;p&gt;安装过程中如果 node-gyp 报 error，可以尝试升级xcode，并安装xcode-select 升级 CLT。&lt;/p&gt;
+&lt;p&gt;下面附上几篇比较好的文章，建站过程中遇到问题可以查阅一下。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://wp.huangshiyang.com/hexo%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88&quot;&gt;Hexo常见问题解决方案&lt;/a&gt;&lt;br&gt;收集了很多使用hexo过程中的常见问题&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="随手一记" scheme="http://brooch.me/categories/%E9%9A%8F%E6%89%8B%E4%B8%80%E8%AE%B0/"/>
+    
+    
+      <category term="hexo" scheme="http://brooch.me/tags/hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>总结一下升级OS X El Capitan后brew遇到的问题</title>
+    <link href="http://brooch.me/2015/10/15/%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B%E5%8D%87%E7%BA%A7OS-X-El-Capitan%E5%90%8Ebrew%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98/"/>
+    <id>http://brooch.me/2015/10/15/总结一下升级OS-X-El-Capitan后brew遇到的问题/</id>
+    <published>2015-10-15T14:45:31.000Z</published>
+    <updated>2016-11-16T16:35:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>升级了osx之后，先是brew update的时候报错，后来用brew安装jenv的时候又提示说需要root权限</p>
+<blockquote>
+<p>Agreeing to the Xcode/iOS license requires admin privileges, please re-run as root via sudo.<br>Error: Failure while executing: /usr/bin/otool -L /usr/bin/install_name_tool</p>
+</blockquote>
+<a id="more"></a>
+<p>但是sudo brew install又报错</p>
+<blockquote>
+<p>Error: Cowardly refusing to <code>sudo brew install</code><br>You can use brew with sudo, but only if the brew executable is owned by root.<br>However, this is both not recommended and completely unsupported so do so at your own risk.</p>
+</blockquote>
+<p>搜了下貌似是新版osx的问题，需要进行权限设置，用chown命令设置一下就好了</p>
+<p>以下是一些参考资料</p>
+<p><a href="http://digitizor.com/2014/06/29/fix-cowardly-refusing-sudo-error-brew/" target="_blank" rel="external">How To Fix Cowardly Refusing to Sudo error in Brew – Mac OS X</a></p>
+<p><a href="https://github.com/Homebrew/homebrew/issues/41665" target="_blank" rel="external">Failed <code>brew update</code> on El Capitan (OS X 10.11) Beta</a></p>
+<p><a href="http://gotohayato.com/content/69" target="_blank" rel="external">Mac OS X El Capitan にアップデートした後に brew update が動かない場合の対処方法</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;升级了osx之后，先是brew update的时候报错，后来用brew安装jenv的时候又提示说需要root权限&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Agreeing to the Xcode/iOS license requires admin privileges, please re-run as root via sudo.&lt;br&gt;Error: Failure while executing: /usr/bin/otool -L /usr/bin/install_name_tool&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="随手一记" scheme="http://brooch.me/categories/%E9%9A%8F%E6%89%8B%E4%B8%80%E8%AE%B0/"/>
+    
+    
+      <category term="osx" scheme="http://brooch.me/tags/osx/"/>
+    
+      <category term="brew" scheme="http://brooch.me/tags/brew/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>啊，我的第一次</title>
+    <link href="http://brooch.me/2015/10/14/first-love/"/>
+    <id>http://brooch.me/2015/10/14/first-love/</id>
+    <published>2015-10-14T07:15:06.000Z</published>
+    <updated>2016-11-16T16:24:40.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>人生第一篇blog，总觉得有点儿小激动呢……⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄</p>
+<p>话说再过生日就30岁了呢，做程序员也是第8个年头，愈发觉得将自己的平时的一些想法、遇到的一些问题记录下来很重要，其实以前也很想，奈何我懒……</p>
+<p>总之，之后会努力多写一些，也算是对自己的一种提升吧，嗯，希望我能一直坚持下去~</p>
+<p>&lt;(￣▽￣)&gt; 哈哈哈……</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;人生第一篇blog，总觉得有点儿小激动呢……⁄(⁄ ⁄•⁄ω⁄•⁄ ⁄)⁄&lt;/p&gt;
+&lt;p&gt;话说再过生日就30岁了呢，做程序员也是第8个年头，愈发觉得将自己的平时的一些想法、遇到的一些问题记录下来很重要，其实以前也很想，奈何我懒……&lt;/p&gt;
+&lt;p&gt;总之，之后会努力多写一些，也
+    
+    </summary>
+    
+      <category term="感想" scheme="http://brooch.me/categories/%E6%84%9F%E6%83%B3/"/>
+    
+    
+  </entry>
+  
+</feed>
