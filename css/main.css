@@ -273,7 +273,9 @@ h6 {
     font-size: 8px;
   }
 }
-p {
+p,
+.page-home .post-type-quote blockquote pre,
+.page-post-detail .post-type-quote blockquote pre {
   margin: 0 0 25px 0;
 }
 a {
@@ -1322,6 +1324,14 @@ pre .javascript .function {
 .page-post-detail .post-type-quote .post-tags {
   display: none;
 }
+.page-home .post-type-quote blockquote pre,
+.page-post-detail .post-type-quote blockquote pre {
+  font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  line-height: 2;
+  color: #555;
+  background: #fff;
+}
 .posts-expand .post-title {
   font-size: 26px;
   text-align: center;
@@ -1682,7 +1692,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #69e3bd;
+  background: #ff2eff;
 }
 .links-of-blogroll {
   font-size: 13px;

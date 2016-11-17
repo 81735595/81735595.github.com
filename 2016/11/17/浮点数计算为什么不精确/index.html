@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="hexo," />
+  <meta name="keywords" content="javascript,floating point,big decimal,IEEE 754," />
 
 
 
@@ -86,25 +86,34 @@
 
 
 
-<meta name="description" content="2016-11-16 UPDATE: 距离写下这篇博客已经过了一年了，hexo在这一年里发展的挺快。现在hexo的文档已经齐全，整个工作流程也相当顺畅了。
-安装过程中如果 node-gyp 报 error，可以尝试升级xcode，并安装xcode-select 升级 CLT。
-下面附上几篇比较好的文章，建站过程中遇到问题可以查阅一下。
-Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
+<meta name="description" content="其实这篇博客早就写好了，只不过之前懒一直没有整理完善……哈哈哈…… _(:3 」∠)_
+
+前几几几几天，在微博上看到寇胖转了一个关于浮点数计算的微博，里面的内容不太准确。正好之前我调查过一些关于浮点数的资料，在这里好好掰吃掰吃，做个记录~(￣▽￣)~*
+结论先说结论，嫌又臭又长的看到这里就可以了:
+
+浮点数计算不精确并不是bug，因为标准就是这样的。
+原因简单来说是这样：2进制的小数无法精确的表">
 <meta property="og:type" content="article">
-<meta property="og:title" content="总结下hexo搭建的过程">
-<meta property="og:url" content="http://brooch.me/2015/10/16/总结下hexo搭建的过程/index.html">
+<meta property="og:title" content="浮点数计算为什么不精确">
+<meta property="og:url" content="http://brooch.me/2016/11/17/浮点数计算为什么不精确/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="2016-11-16 UPDATE: 距离写下这篇博客已经过了一年了，hexo在这一年里发展的挺快。现在hexo的文档已经齐全，整个工作流程也相当顺畅了。
-安装过程中如果 node-gyp 报 error，可以尝试升级xcode，并安装xcode-select 升级 CLT。
-下面附上几篇比较好的文章，建站过程中遇到问题可以查阅一下。
-Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
-<meta property="og:updated_time" content="2016-11-16T16:35:14.000Z">
+<meta property="og:description" content="其实这篇博客早就写好了，只不过之前懒一直没有整理完善……哈哈哈…… _(:3 」∠)_
+
+前几几几几天，在微博上看到寇胖转了一个关于浮点数计算的微博，里面的内容不太准确。正好之前我调查过一些关于浮点数的资料，在这里好好掰吃掰吃，做个记录~(￣▽￣)~*
+结论先说结论，嫌又臭又长的看到这里就可以了:
+
+浮点数计算不精确并不是bug，因为标准就是这样的。
+原因简单来说是这样：2进制的小数无法精确的表">
+<meta property="og:updated_time" content="2016-11-17T14:49:27.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="总结下hexo搭建的过程">
-<meta name="twitter:description" content="2016-11-16 UPDATE: 距离写下这篇博客已经过了一年了，hexo在这一年里发展的挺快。现在hexo的文档已经齐全，整个工作流程也相当顺畅了。
-安装过程中如果 node-gyp 报 error，可以尝试升级xcode，并安装xcode-select 升级 CLT。
-下面附上几篇比较好的文章，建站过程中遇到问题可以查阅一下。
-Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
+<meta name="twitter:title" content="浮点数计算为什么不精确">
+<meta name="twitter:description" content="其实这篇博客早就写好了，只不过之前懒一直没有整理完善……哈哈哈…… _(:3 」∠)_
+
+前几几几几天，在微博上看到寇胖转了一个关于浮点数计算的微博，里面的内容不太准确。正好之前我调查过一些关于浮点数的资料，在这里好好掰吃掰吃，做个记录~(￣▽￣)~*
+结论先说结论，嫌又臭又长的看到这里就可以了:
+
+浮点数计算不精确并不是bug，因为标准就是这样的。
+原因简单来说是这样：2进制的小数无法精确的表">
 
 
 
@@ -132,13 +141,13 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
 
 
 
-  <link rel="canonical" href="http://brooch.me/2015/10/16/总结下hexo搭建的过程/"/>
+  <link rel="canonical" href="http://brooch.me/2016/11/17/浮点数计算为什么不精确/"/>
 
 
 
 
 
-  <title> 总结下hexo搭建的过程 | Keep Walking </title>
+  <title> 浮点数计算为什么不精确 | Keep Walking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -272,7 +281,7 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2015/10/16/总结下hexo搭建的过程/">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2016/11/17/浮点数计算为什么不精确/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="投身烈火">
@@ -296,7 +305,7 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
             
             
               
-                总结下hexo搭建的过程
+                浮点数计算为什么不精确
               
             
           </h1>
@@ -309,8 +318,8 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-10-16T22:23:22+08:00">
-                2015-10-16
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-17T10:22:47+08:00">
+                2016-11-17
               </time>
             
 
@@ -328,8 +337,8 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/随手一记/" itemprop="url" rel="index">
-                    <span itemprop="name">随手一记</span>
+                  <a href="/categories/计算机原理/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机原理</span>
                   </a>
                 </span>
 
@@ -343,8 +352,8 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2015/10/16/总结下hexo搭建的过程/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/16/总结下hexo搭建的过程/" itemprop="commentCount"></span>
+                <a href="/2016/11/17/浮点数计算为什么不精确/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/17/浮点数计算为什么不精确/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -375,14 +384,68 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
       
 
       
-        <p><strong>2016-11-16 UPDATE:</strong> 距离写下这篇博客已经过了一年了，hexo在这一年里发展的挺快。现在hexo的文档已经齐全，整个工作流程也相当顺畅了。</p>
-<p>安装过程中如果 node-gyp 报 error，可以尝试升级xcode，并安装xcode-select 升级 CLT。</p>
-<p>下面附上几篇比较好的文章，建站过程中遇到问题可以查阅一下。</p>
-<p><a href="http://wp.huangshiyang.com/hexo%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88" target="_blank" rel="external">Hexo常见问题解决方案</a><br>收集了很多使用hexo过程中的常见问题</p>
+        <blockquote>
+<p>其实这篇博客早就写好了，只不过之前懒一直没有整理完善……哈哈哈…… _(:3 」∠)_</p>
+</blockquote>
+<p>前几几几几天，在微博上看到<a href="http://weibo.com/u/1778942741" target="_blank" rel="external">寇胖</a>转了一个关于浮点数计算的<a href="http://weibo.com/1996814695/DC0c6iAVD" target="_blank" rel="external">微博</a>，里面的内容不太准确。正好之前我调查过一些关于浮点数的资料，在这里好好掰吃掰吃，做个记录~(￣▽￣)~*</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>先说结论，嫌又臭又长的看到这里就可以了:</p>
+<ul>
+<li>浮点数计算不精确并不是bug，因为标准就是这样的。</li>
+<li>原因简单来说是这样：2进制的小数无法精确的表达10进制小数，计算机在计算10进制小数的过程中要先转换为2进制进行计算，这个过程中出现了误差。</li>
+<li>解决方法：对于需要精确结果的场景，别直接使用浮点数进行计算。现阶段可以使用<a href="http://mikemcl.github.io/big.js/" target="_blank" rel="external">big.js</a>解决，等以后ecmascript实现decimal了，就可以使用decimal类型计算了。</li>
+</ul>
 <a id="more"></a>
-<p><a href="http://ibruce.info/2013/11/22/hexo-your-blog/" target="_blank" rel="external">hexo你的博客</a><br>文章的内容很全，不止写了如何使用hexo，如何使用github，如何找图床等问题也都有描述，如果是使用github pages搭建博客的话，看这篇就够用了</p>
-<p><a href="http://www.jianshu.com/p/05289a4bc8b2" target="_blank" rel="external">如何搭建一个独立博客——简明Github Pages与Hexo教程</a><br>和上一篇文章一样，这篇文章的内容也很全面，除了博客的搭建过程，如何在购买域名和服务器也有描述，只不过图片貌似都已经失效了……有些遗憾呢……</p>
-<p><a href="http://segmentfault.com/a/1190000003776905" target="_blank" rel="external">翻译自GitHub Pages的Help页面（仍在更新中）</a><br>github pages的help页面的翻译，对于英语苦手的人来说，应该会很有帮助吧</p>
+<h2 id="小数算不准，真的是js的锅吗？"><a href="#小数算不准，真的是js的锅吗？" class="headerlink" title="小数算不准，真的是js的锅吗？"></a>小数算不准，真的是js的锅吗？</h2><p>说到这个问题，其实这是两个锅，js计算不准确不止会出现在小数的计算上，还会出现在大整数计算上，可以运行下面两行代码查看问题的具体表现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">0.1</span> + <span class="number">0.2</span> == <span class="number">0.3</span>; <span class="comment">// false</span></div><div class="line"><span class="number">9999999999999999</span> + <span class="number">2</span> == <span class="number">10000000000000001</span>; <span class="comment">// false</span></div></pre></td></tr></table></figure>
+<p>当然，这个锅肯定不是javascript背。事实上，使用了IEEE 754 标准来存储浮点类型的任何编程语言（C/C++/C#/Java 等等）都存在精度丢失问题。</p>
+<p>例如在 Java 中，要想算准浮点数，同样不能直接计算，需要使用 BigDecimal 类来进行相应的处理。</p>
+<p>当然，javascript也并没有落后于其他语言。ECMAScript 规范中已有 <a href="http://wiki.ecmascript.org/doku.php?id=proposals:decimal" target="_blank" rel="external">decimal </a>类型的提案了，但目前尚未被正式采纳。</p>
+<h2 id="为什么不算准？"><a href="#为什么不算准？" class="headerlink" title="为什么不算准？"></a>为什么不算准？</h2><p>要解释这个问题，就得从10进制与2进制的转换说起。</p>
+<p>众所周知，计算机做运算是使用二级制的。所以其实咱们在程序中做10进制运算，都是要转换为2进制再进行计算的。10进制整数转换为2进制的方法可能大家都知道：</p>
+<blockquote>
+<p><strong>除以2，商继续除以2，得到0为止，将余数逆序排列</strong><br>例如：<br>22 / 2     11 余 0<br>11 / 2     5  余 1<br>5  / 2     2  余 1<br>2  / 2     1  余 0<br>1  / 2     0  余 1<br>所以22的的二进制是10110</p>
+</blockquote>
+<p>那10进制小数转换为2进制的方法呢？</p>
+<blockquote>
+<p><strong>乘以2，取整，小数部分继续乘以2，取整，得到小数部分0为止，将整数顺序排列</strong><br>0.8125 x 2     1.625 取 1<br>0.625  x 2     1.25  取 1<br>0.25   x 2     0.5   取 0<br>0.5    x 2     1.0   取 1<br>所以0.8125的二进制是0.1101</p>
+</blockquote>
+<p>那么问题就来了，比如你想计算10进制0.2的2进制：</p>
+<blockquote>
+<p>0.2 x 2     0.4<br>0.4 x 2     0.8<br>0.8 x 2     1.6<br>0.6 x 2     1.2<br>0.2 x 2     0.4<br>……</p>
+</blockquote>
+<p>发现了吗？它乘不尽，是无限循环的……</p>
+<p>而 javascript 使用64位双精度浮点数存储数字，类似科学计数法，其中1位用来存储符号，11位用来存储指数值，52位用来存储尾数值（真正的数字），当计算的结果的二进制有效位数超过 52 位时，就会出现精度丢失的问题……</p>
+<p>大整数计算的原因也是一样，有效位数超过 52位时，精度就会丢失</p>
+<p>这就解释了下面这种情况：</p>
+<blockquote>
+<p>十进制 0.1 的二进制为 0.0 0011 0011 0011 … （循环 0011）<br>十进制 0.2 的二进制为 0.0011 0011 0011 … （循环 0011）</p>
+<p>0.1 + 0.2 相加可表示为：<br>   e = -4; m = 1.10011001100…1100（52 位）<br> + e = -3; m = 1.10011001100…1100（52 位）<br>-——————————————–<br>   e = -3; m = 0.11001100110…0110<br> + e = -3; m = 1.10011001100…1100<br>-——————————————–<br>   e = -3; m = 10.01100110011…001<br>-——————————————–<br> = 0.01001100110011…001<br> = 0.30000000000000004（十进制）</p>
+</blockquote>
+<p>但是0.05和0.2用二进制都无法精确表达，0.05 + 0.2 却不会计算错误，0.2 + 0.7 会计算错误，1.2 +1.7 又不会，这又是为什么？</p>
+<p>具体的原因我并没有找到相关的资料……</p>
+<p>貌似这和 IEEE 754 的舍入模式有关系。</p>
+<p>IEEE 754 采用的是最近舍入模式，和我们最熟悉的是四舍五入模式有些许不同，也是比较容易引起误解的地方之一。举例比较如下：</p>
+<blockquote>
+<p>最近舍入模式：Round(0.5) = 0; Round(1.5) = 2; Round(2.5) = 2;</p>
+<p>四舍五入模式：Round(0.5) = 1; Round(1.5) = 2; Round(2.5) = 3;</p>
+</blockquote>
+<p>既当有两个最接近的可表示的值时首选“偶数”值。</p>
+<p>具体的原因我会再调查调查，有了新的资料再补充到这里。</p>
+<h2 id="如何解决这个问题？"><a href="#如何解决这个问题？" class="headerlink" title="如何解决这个问题？"></a>如何解决这个问题？</h2><p>当然，问题的解决方法其实也已经有前人跟咱们铺好路了，毕竟这个在问题在编程领域里其实是个挺常见的问题……</p>
+<p>网上的解决办法五花八门，总的原则就是逐位运算。我推荐 github 上  <a href="https://github.com/MikeMcl" target="_blank" rel="external">MikeMcl</a> 开发的 <a href="http://mikemcl.github.io/big.js/" target="_blank" rel="external">big.js</a> 。这个库不尽支持基础运算，而且还支持各种函数运算和比较运算，相当全面呢。实现上，是将数字按照科学计数法解析成一个包含正负符号、指数、尾数的对象，再做运算。例子就不写了，它的文档很全，而且简单易懂。</p>
+<p>有趣的是，这个作者除了 big.js 还开发了另两个计算库 bignumber.js 和 decimal.js，三个库的侧重点不一样，关于这三个的对比，有兴趣的话可以看作者自己写的wiki <a href="https://github.com/MikeMcl/big.js/wiki" target="_blank" rel="external">What is the difference between big.js, bignumber.js and decimal.js?</a></p>
+<h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章:"></a>相关文章:</h2><ol>
+<li><p><a href="http://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513140&amp;idx=1&amp;sn=565517e977ac56904305a4a9f9d65012#rd" target="_blank" rel="external">浮点数为什么不精确？</a></p>
+</li>
+<li><p><a href="http://www.cnblogs.com/maplejan/p/3893545.html" target="_blank" rel="external">JavaScript超大整数加法</a></p>
+</li>
+<li><p><a href="http://demon.tw/copy-paste/javascript-precision.html" target="_blank" rel="external">JavaScript 中小数和大整数的精度丢失</a></p>
+</li>
+<li><p><a href="http://www.cnblogs.com/bossin/archive/2007/04/08/704567.html" target="_blank" rel="external">IEEE 754 浮点数的表示精度探讨</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/IEEE_754" target="_blank" rel="external">IEEE 754</a></p>
+</li>
+</ol>
 
       
     </div>
@@ -406,7 +469,13 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
       
         <div class="post-tags">
           
-            <a href="/tags/hexo/" rel="tag"># hexo</a>
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/floating-point/" rel="tag"># floating point</a>
+          
+            <a href="/tags/big-decimal/" rel="tag"># big decimal</a>
+          
+            <a href="/tags/IEEE-754/" rel="tag"># IEEE 754</a>
           
         </div>
       
@@ -415,8 +484,8 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/10/15/总结一下升级OS-X-El-Capitan后brew遇到的问题/" rel="next" title="总结一下升级OS X El Capitan后brew遇到的问题">
-                <i class="fa fa-chevron-left"></i> 总结一下升级OS X El Capitan后brew遇到的问题
+              <a href="/2016/11/16/新的开始/" rel="next" title="新的开始">
+                <i class="fa fa-chevron-left"></i> 新的开始
               </a>
             
           </div>
@@ -424,10 +493,6 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/10/21/邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉/" rel="prev" title="邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉">
-                邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -479,8 +544,8 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/10/16/总结下hexo搭建的过程/"
-           data-title="总结下hexo搭建的过程" data-url="http://brooch.me/2015/10/16/总结下hexo搭建的过程/">
+      <div class="ds-thread" data-thread-key="2016/11/17/浮点数计算为什么不精确/"
+           data-title="浮点数计算为什么不精确" data-url="http://brooch.me/2016/11/17/浮点数计算为什么不精确/">
       </div>
     
   </div>
@@ -504,8 +569,17 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -585,6 +659,22 @@ Hexo常见问题解决方案收集了很多使用hexo过程中的常见问题">
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">1.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小数算不准，真的是js的锅吗？"><span class="nav-number">2.</span> <span class="nav-text">小数算不准，真的是js的锅吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么不算准？"><span class="nav-number">3.</span> <span class="nav-text">为什么不算准？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何解决这个问题？"><span class="nav-number">4.</span> <span class="nav-text">如何解决这个问题？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关文章"><span class="nav-number">5.</span> <span class="nav-text">相关文章:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
