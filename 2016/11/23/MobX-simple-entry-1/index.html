@@ -96,7 +96,7 @@
 <meta property="og:description" content="话说，吐槽被react全家桶坑的文章已经算是各大论坛上的月经贴了吧……行内样式、jsx里html和js混排、依赖太多、学习曲线陡峭……当然其中不乏抱怨redux反人类的……
 当然，这篇文章并不是来黑react不好的，毕竟以后涨工资还得靠它呢哈哈哈(￣▽￣)……
 今天咱们要说的是众多槽点之一，”反人类的redux”和其替代方案。">
-<meta property="og:updated_time" content="2016-11-25T15:42:51.000Z">
+<meta property="og:updated_time" content="2016-11-25T16:01:49.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React全家桶又填新成员 MobX入坑指南(1)">
 <meta name="twitter:description" content="话说，吐槽被react全家桶坑的文章已经算是各大论坛上的月经贴了吧……行内样式、jsx里html和js混排、依赖太多、学习曲线陡峭……当然其中不乏抱怨redux反人类的……
@@ -377,6 +377,10 @@
 <p>在上面的例子里可以看到，使用mobx-react的不同点只是在编写组件类时observer包装了一下，其他的跟不使用mobx-react没什么区别。另外，如果在stroe里加入方法，就可以做到类似action一样的动作，使用上比redux要简单很多。当然这也引出一个问题，就是当子组件状态变化影响到父组件的状态，如何通知父组件。redux用类似dbus的设计解决了这个问题，mobx怎么解决，我还没有看到，后续看到了再做补充。</p>
 <h2 id="简单的总结"><a href="#简单的总结" class="headerlink" title="简单的总结"></a>简单的总结</h2><p>怎么说呢，总感觉mobx的功能和vue好像……￣ω￣=……特别是computed……这种设计对于写惯了mvc的人来说会感觉非常亲切，stroe其实就是相当于平时常写的model嘛，概念很容易理解。难度上，个人感觉不高，除了一些绑定后的数据需要调用set、get方法，api也不多。</p>
 <p>其实mobx还有很多的功能没有介绍到，而且在网上资料也很少，如果有时间的话，打算试着翻译mobx的文档。更多的例子，后续再做详细的补充，今天就先到这里吧，我实在是写不动了……_(:3 」∠)_</p>
+<h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><ul>
+<li><a href="http://mobxjs.github.io/mobx/index.html" target="_blank" rel="external">MobX Documentation</a></li>
+<li><a href="http://frontendinsights.com/short-introduction-to-mobx/" target="_blank" rel="external">A short introduction to MobX</a></li>
+</ul>
 
       
     </div>
@@ -622,7 +626,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#redux有什么不好？"><span class="nav-number">1.</span> <span class="nav-text">redux有什么不好？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mobx是啥？"><span class="nav-number">2.</span> <span class="nav-text">mobx是啥？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#api简单介绍"><span class="nav-number">3.</span> <span class="nav-text">api简单介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mobx-react"><span class="nav-number">4.</span> <span class="nav-text">mobx-react</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的总结"><span class="nav-number">5.</span> <span class="nav-text">简单的总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#redux有什么不好？"><span class="nav-number">1.</span> <span class="nav-text">redux有什么不好？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mobx是啥？"><span class="nav-number">2.</span> <span class="nav-text">mobx是啥？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#api简单介绍"><span class="nav-number">3.</span> <span class="nav-text">api简单介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mobx-react"><span class="nav-number">4.</span> <span class="nav-text">mobx-react</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的总结"><span class="nav-number">5.</span> <span class="nav-text">简单的总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关文章"><span class="nav-number">6.</span> <span class="nav-text">相关文章</span></a></li></ol></div>
             
 
           </div>
