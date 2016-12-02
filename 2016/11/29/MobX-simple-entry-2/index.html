@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="osx," />
+  <meta name="keywords" content="Hexo, NexT, javascript, css, html, git, workflow, vue, react, angular, webpack, rx, redux, 自动化, 想法, 随笔, 思考, 笔记" />
 
 
 
@@ -86,22 +86,37 @@
 
 
 
-<meta name="description" content="更新了osx升级10.11 EL Capitan之后发现有好多坑啊……限制超多而且JetBrains的产品都不能用了……
-查了一溜够貌似是之前安装的一些系统软件都被清除了，而且还需要接触rootless模式，总之先附上搜索到的资料链接吧
-Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻墙）">
+<meta name="description" content="上一篇简单介绍了下mobx常用的几个api(observable、computed、autorun)，以及mobx-react的api(observer)。这次说说action。
+action用法：
+
+action(fn)
+action(name, fn)
+@action classMethod
+@action(name) classMethod
+@action boundClassMethod">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Capitan之后JetBrains的产品都不能用了">
-<meta property="og:url" content="http://brooch.me/2015/11/21/Capitan之后JetBrains的产品都不能用了/index.html">
+<meta property="og:title" content="MobX入坑指南(2)">
+<meta property="og:url" content="http://brooch.me/2016/11/29/MobX-simple-entry-2/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="更新了osx升级10.11 EL Capitan之后发现有好多坑啊……限制超多而且JetBrains的产品都不能用了……
-查了一溜够貌似是之前安装的一些系统软件都被清除了，而且还需要接触rootless模式，总之先附上搜索到的资料链接吧
-Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻墙）">
-<meta property="og:updated_time" content="2016-11-16T16:35:32.000Z">
+<meta property="og:description" content="上一篇简单介绍了下mobx常用的几个api(observable、computed、autorun)，以及mobx-react的api(observer)。这次说说action。
+action用法：
+
+action(fn)
+action(name, fn)
+@action classMethod
+@action(name) classMethod
+@action boundClassMethod">
+<meta property="og:updated_time" content="2016-12-02T08:52:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Capitan之后JetBrains的产品都不能用了">
-<meta name="twitter:description" content="更新了osx升级10.11 EL Capitan之后发现有好多坑啊……限制超多而且JetBrains的产品都不能用了……
-查了一溜够貌似是之前安装的一些系统软件都被清除了，而且还需要接触rootless模式，总之先附上搜索到的资料链接吧
-Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻墙）">
+<meta name="twitter:title" content="MobX入坑指南(2)">
+<meta name="twitter:description" content="上一篇简单介绍了下mobx常用的几个api(observable、computed、autorun)，以及mobx-react的api(observer)。这次说说action。
+action用法：
+
+action(fn)
+action(name, fn)
+@action classMethod
+@action(name) classMethod
+@action boundClassMethod">
 
 
 
@@ -129,13 +144,13 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
 
 
 
-  <link rel="canonical" href="http://brooch.me/2015/11/21/Capitan之后JetBrains的产品都不能用了/"/>
+  <link rel="canonical" href="http://brooch.me/2016/11/29/MobX-simple-entry-2/"/>
 
 
 
 
 
-  <title> Capitan之后JetBrains的产品都不能用了 | Keep Walking </title>
+  <title> MobX入坑指南(2) | Keep Walking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -269,7 +284,7 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2015/11/21/Capitan之后JetBrains的产品都不能用了/">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2016/11/29/MobX-simple-entry-2/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="投身烈火">
@@ -293,7 +308,7 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
             
             
               
-                Capitan之后JetBrains的产品都不能用了
+                MobX入坑指南(2)
               
             
           </h1>
@@ -306,8 +321,8 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-11-21T12:06:24+08:00">
-                2015-11-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-29T20:40:50+08:00">
+                2016-11-29
               </time>
             
 
@@ -317,31 +332,13 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
           </span>
 
           
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/随手一记/" itemprop="url" rel="index">
-                    <span itemprop="name">随手一记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
 
           
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2015/11/21/Capitan之后JetBrains的产品都不能用了/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/11/21/Capitan之后JetBrains的产品都不能用了/" itemprop="commentCount"></span>
+                <a href="/2016/11/29/MobX-simple-entry-2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/29/MobX-simple-entry-2/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -372,9 +369,37 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
       
 
       
-        <p>更新了osx升级10.11 EL Capitan之后发现有好多坑啊……限制超多而且JetBrains的产品都不能用了……</p>
-<p>查了一溜够貌似是之前安装的一些系统软件都被清除了，而且还需要接触rootless模式，总之先附上搜索到的资料链接吧</p>
-<p><a href="http://blog.euphonictech.com/entry/2014/11/12/192856" target="_blank" rel="external">Intellij IDEAやAppCodeが起動しない場合に考えられること</a>（需翻墙）</p>
+        <p><a href="/2016/11/29/MobX-simple-entry-2/">上一篇</a>简单介绍了下mobx常用的几个api(observable、computed、autorun)，以及mobx-react的api(observer)。这次说说action。</p>
+<h2 id="action"><a href="#action" class="headerlink" title="action"></a>action</h2><p>用法：</p>
+<ul>
+<li>action(fn)</li>
+<li>action(name, fn)</li>
+<li>@action classMethod</li>
+<li>@action(name) classMethod</li>
+<li>@action boundClassMethod = (args) =&gt; { body }</li>
+<li>@action(name) boundClassMethod = (args) =&gt; { body }</li>
+</ul>
+<p>之前的例子里使用了回调的方式来触发响应，mobx其实也支持使用flux的方式来出发响应，并且在2.2版本提供了action的功能。</p>
+<p>action是一个工厂函数，可以接受name和fn两个参数，name是String，主要描述action的作用，fn是Function，是这个action的具体逻辑。action执行后返回一个函数，调用这个函数就会执行action，其实就是调用fn参数。</p>
+<p>个人感觉在mobx中，action的作用更多的是用来注释当前的操作……使用的时候在name参数上写操作是干啥的，能够快速的了解action的意图。当然如果安装了devtools，action还能输出调试信息。</p>
+<p>需要注意的是，如果使用<a href="https://github.com/mobxjs/mobx/blob/gh-pages/docs/refguide/api.md#usestrict" target="_blank" rel="external">useStrict</a>api开启了严格模式，就必须通过action才能修改状态(state)，直接修改值会报错。</p>
+<p>举个🌰</p>
+<a id="more"></a>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;observable, useStrict, action, computed, autorun&#125; <span class="keyword">from</span> <span class="string">'mobx'</span>;</div><div class="line"></div><div class="line">useStrict(<span class="literal">true</span>);</div><div class="line"></div><div class="line"><span class="keyword">let</span> numbers = observable([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]);</div><div class="line"><span class="keyword">let</span> sum = computed(<span class="function"><span class="params">()</span> =&gt;</span> numbers.reduce(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a + b, <span class="number">0</span>));</div><div class="line"></div><div class="line"><span class="keyword">let</span> disposer1 = autorun(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">`sum:<span class="subst">$&#123;sum.get()&#125;</span>`</span>));</div><div class="line"><span class="comment">// sum:6</span></div><div class="line"><span class="keyword">let</span> disposer2 = autorun(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">`length:<span class="subst">$&#123;numbers.length&#125;</span>`</span>));</div><div class="line"><span class="comment">// length:3</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> pushNumber = action(<span class="string">'push number'</span>,()=&gt;&#123;</div><div class="line">	numbers.push(<span class="number">4</span>)</div><div class="line">&#125;)</div><div class="line"></div><div class="line">pushNumber(<span class="number">4</span>)</div><div class="line"><span class="comment">// sum:10</span></div><div class="line"><span class="comment">// length:4</span></div><div class="line"></div><div class="line">numbers.push(<span class="number">5</span>)</div><div class="line"><span class="comment">// Uncaught Error: [mobx] Invariant failed: It is not allowed to create</span></div><div class="line"><span class="comment">// or change state outside an `action` when MobX is in strict mode. Wrap</span></div><div class="line"><span class="comment">// the current method in `action` if this state change is intended.</span></div></pre></td></tr></table></figure>
+<p>另外，action在执行时是可以接受参数的，而且action在执行后还会返回fn参数的返回值，这一点文档里没有明显的说明，害的我翻源码才翻出来的……┑(￣Д ￣)┍……话说mobx是用typescript写的呢。虽然ts最近很火，而且功能也确实挺实用的，但是我对java一样死板的语法却怎么都都爱不起来……所以更看好<a href="https://www.zhihu.com/question/31415286/answer/58022648" target="_blank" rel="external">WebAssembly</a>一些……</p>
+<p>扯远了扯远了……那么我们再把上面那个例子修改一下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;observable, useStrict, action, computed, autorun&#125; <span class="keyword">from</span> <span class="string">'mobx'</span>;</div><div class="line"></div><div class="line">useStrict(<span class="literal">true</span>);</div><div class="line"></div><div class="line"><span class="keyword">let</span> numbers = observable([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]);</div><div class="line"><span class="keyword">let</span> sum = computed(<span class="function"><span class="params">()</span> =&gt;</span> numbers.reduce(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a + b, <span class="number">0</span>));</div><div class="line"><span class="comment">// sum:6</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> disposer = autorun(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">`sum:<span class="subst">$&#123;sum.get()&#125;</span>`</span>));</div><div class="line"></div><div class="line"><span class="keyword">var</span> pushNumber = action(<span class="string">'push number'</span>,(number)=&gt;numbers.push(number))</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(<span class="string">`length:<span class="subst">$&#123;pushNumber(<span class="number">6</span>)&#125;</span>`</span>)</div><div class="line"><span class="comment">// sum:12</span></div><div class="line"><span class="comment">// length:4</span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">`length:<span class="subst">$&#123;pushNumber(<span class="number">7</span>)&#125;</span>`</span>)</div><div class="line"><span class="comment">// sum:19</span></div><div class="line"><span class="comment">// length:5</span></div></pre></td></tr></table></figure>
+<p>从上面的例子可以看到，传入pushNumber的参数最后被传入了action的fn中，然后pushNumber返回了push的返回值。</p>
+<p>官方文档中的一个例子也能看到调用action返回函数时传递参数的应用场景：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">@action createRandomContact() &#123;</div><div class="line">	<span class="keyword">this</span>.pendingRequestCount++;</div><div class="line">	superagent</div><div class="line">		.get(<span class="string">'https://randomuser.me/api/'</span>)</div><div class="line">		.set(<span class="string">'Accept'</span>, <span class="string">'application/json'</span>)</div><div class="line">		.end(action(<span class="string">"createRandomContact-callback"</span>, (error, results) =&gt; &#123;</div><div class="line">			<span class="keyword">if</span> (error)</div><div class="line">				<span class="built_in">console</span>.error(error);</div><div class="line">			<span class="keyword">else</span> &#123;</div><div class="line">				<span class="keyword">const</span> data = <span class="built_in">JSON</span>.parse(results.text).results[<span class="number">0</span>];</div><div class="line">				<span class="keyword">const</span> contact = <span class="keyword">new</span> Contact(<span class="keyword">this</span>, data.dob, data.name, data.login.username, data.picture)</div><div class="line">				contact.addTag(<span class="string">'random-user'</span>);</div><div class="line">				<span class="keyword">this</span>.contacts.push(contact);</div><div class="line">				<span class="keyword">this</span>.pendingRequestCount--;</div><div class="line">			&#125;</div><div class="line">		&#125;));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这个🌰中可以看到，action的返回值作为superagent.end的回调，接收error和results两个参数，最后传入fn进行处理。这个例子也引出了另一个问题，action中如何处理一步操作。</p>
+<h2 id="async-action-和-runInAction"><a href="#async-action-和-runInAction" class="headerlink" title="async action 和 runInAction"></a>async action 和 runInAction</h2><p>action只能影响正在运行的函数，而无法影响当前函数调用的异步操作。也就是说如果fn中有setTimeout，promise.then，async函数，并且这些函数的回调里对state进行了修改，那么这些回调也应该用action包装一下（在非严格模式下，action和直接修改state值都能生效，所以并不会出现异常，如果是严格模式下就会报错）。</p>
+<p>还有，如果要使用<code>async</code>函数作为action，不能直接用action包装<code>async</code>函数，这里需要使用一个tricky，将一个<code>async</code>匿名函数赋值给一个变量或者属性再做包装。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@action updateDocument = <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> fetchDataFromUrl();</div><div class="line">    <span class="comment">/* required in strict mode to be allowed to update state: */</span></div><div class="line">    runInAction(<span class="string">"update state after fetching data"</span>, () =&gt; &#123;</div><div class="line">        <span class="keyword">this</span>.data.replace(data);</div><div class="line">        <span class="keyword">this</span>.isSaving = <span class="literal">true</span>;</div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的例子还用到了<code>runInAction</code>，它其实就是action(name,fn)()的语法糖，调用后action会立即执行，它的用法是：<code>runInAction(name?, fn, scope?)</code>，scope是fn调用时的this指向。</p>
+<h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><ul>
+<li><a href="http://mobxjs.github.io/mobx/refguide/action.html" target="_blank" rel="external">MobX Documentation – action</a></li>
+</ul>
 
       
     </div>
@@ -396,19 +421,13 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/osx/" rel="tag"># osx</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/10/21/邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉/" rel="next" title="邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉">
-                <i class="fa fa-chevron-left"></i> 邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉
+              <a href="/2016/11/23/MobX-simple-entry-1/" rel="next" title="React全家桶又填新成员 MobX入坑指南(1)">
+                <i class="fa fa-chevron-left"></i> React全家桶又填新成员 MobX入坑指南(1)
               </a>
             
           </div>
@@ -416,10 +435,6 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/11/16/新的开始/" rel="prev" title="新的开始">
-                新的开始 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -471,8 +486,8 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/11/21/Capitan之后JetBrains的产品都不能用了/"
-           data-title="Capitan之后JetBrains的产品都不能用了" data-url="http://brooch.me/2015/11/21/Capitan之后JetBrains的产品都不能用了/">
+      <div class="ds-thread" data-thread-key="2016/11/29/MobX-simple-entry-2/"
+           data-title="MobX入坑指南(2)" data-url="http://brooch.me/2016/11/29/MobX-simple-entry-2/">
       </div>
     
   </div>
@@ -496,8 +511,17 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -611,6 +635,22 @@ Intellij IDEAやAppCodeが起動しない場合に考えられること（需翻
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#action"><span class="nav-number">1.</span> <span class="nav-text">action</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#async-action-和-runInAction"><span class="nav-number">2.</span> <span class="nav-text">async action 和 runInAction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#相关文章"><span class="nav-number">3.</span> <span class="nav-text">相关文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
