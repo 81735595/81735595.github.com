@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2016-12-02T08:52:47.000Z</updated>
+  <updated>2016-12-02T08:56:16.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://brooch.me/2016/11/29/MobX-simple-entry-2/"/>
     <id>http://brooch.me/2016/11/29/MobX-simple-entry-2/</id>
     <published>2016-11-29T12:40:50.000Z</published>
-    <updated>2016-12-02T08:52:47.000Z</updated>
+    <updated>2016-12-02T08:56:16.000Z</updated>
     
     <content type="html"><![CDATA[<p><a href="/2016/11/29/MobX-simple-entry-2/">上一篇</a>简单介绍了下mobx常用的几个api(observable、computed、autorun)，以及mobx-react的api(observer)。这次说说action。</p>
 <h2 id="action"><a href="#action" class="headerlink" title="action"></a>action</h2><p>用法：</p>
@@ -75,6 +75,14 @@
     
     </summary>
     
+      <category term="教程" scheme="http://brooch.me/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+      <category term="javascript" scheme="http://brooch.me/tags/javascript/"/>
+    
+      <category term="mobx" scheme="http://brooch.me/tags/mobx/"/>
+    
+      <category term="react" scheme="http://brooch.me/tags/react/"/>
     
   </entry>
   
@@ -83,7 +91,7 @@
     <link href="http://brooch.me/2016/11/23/MobX-simple-entry-1/"/>
     <id>http://brooch.me/2016/11/23/MobX-simple-entry-1/</id>
     <published>2016-11-23T14:34:10.000Z</published>
-    <updated>2016-11-30T00:29:42.000Z</updated>
+    <updated>2016-12-02T08:55:15.000Z</updated>
     
     <content type="html"><![CDATA[<p>话说，吐槽被react全家桶坑的文章已经算是各大论坛上的月经贴了吧……行内样式、jsx里html和js混排、依赖太多、学习曲线陡峭……当然其中不乏抱怨redux反人类的……</p>
 <p>当然，这篇文章并不是来黑react不好的，毕竟以后涨工资还得靠它呢哈哈哈(￣▽￣)……</p>
@@ -121,6 +129,8 @@
 &lt;p&gt;今天咱们要说的是众多槽点之一，”反人类的redux”和其替代方案。&lt;br&gt;
     
     </summary>
+    
+      <category term="教程" scheme="http://brooch.me/categories/%E6%95%99%E7%A8%8B/"/>
     
     
   </entry>
