@@ -40,11 +40,13 @@ $(document).ready(function () {
       }
     });
 
-    $(document)
-      .on('affixed.bs.affix', function () {
-        updateTOCHeight(document.body.clientHeight - 100);
-      });
-  }
+	if (!~window.navigator.userAgent.toLowerCase().indexOf('mobile')) {
+	    $(document)
+	      .on('affixed.bs.affix', function () {
+	        updateTOCHeight(document.body.clientHeight - 100);
+	      });
+	    }
+	}
 
   function initTOCDimension () {
     var updateTOCHeightTimer;
