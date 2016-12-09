@@ -95,7 +95,7 @@ action(name, fn)
 @action(name) classMethod
 @action boundClassMethod">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MobX入坑指南(2)">
+<meta property="og:title" content="MobX入坑指南(2) -- action">
 <meta property="og:url" content="http://brooch.me/2016/11/29/MobX-simple-entry-2/index.html">
 <meta property="og:site_name" content="Keep Walking">
 <meta property="og:description" content="上一篇简单介绍了下mobx常用的几个api(observable、computed、autorun)，以及mobx-react的api(observer)。这次说说action。
@@ -106,9 +106,9 @@ action(name, fn)
 @action classMethod
 @action(name) classMethod
 @action boundClassMethod">
-<meta property="og:updated_time" content="2016-12-02T08:56:16.000Z">
+<meta property="og:updated_time" content="2016-12-09T05:43:55.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MobX入坑指南(2)">
+<meta name="twitter:title" content="MobX入坑指南(2) -- action">
 <meta name="twitter:description" content="上一篇简单介绍了下mobx常用的几个api(observable、computed、autorun)，以及mobx-react的api(observer)。这次说说action。
 action用法：
 
@@ -150,11 +150,11 @@ action(name, fn)
 
 
 
-  <title> MobX入坑指南(2) | Keep Walking </title>
+  <title> MobX入坑指南(2) -- action | Keep Walking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
+  <img src="/images/avatar.png" alt="投身烈火" style="display:none">
   
 
 
@@ -308,7 +308,7 @@ action(name, fn)
             
             
               
-                MobX入坑指南(2)
+                MobX入坑指南(2) -- action
               
             
           </h1>
@@ -340,8 +340,8 @@ action(name, fn)
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/教程/" itemprop="url" rel="index">
-                    <span itemprop="name">教程</span>
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
                   </a>
                 </span>
 
@@ -387,7 +387,7 @@ action(name, fn)
       
 
       
-        <p><a href="/2016/11/29/MobX-simple-entry-2/">上一篇</a>简单介绍了下mobx常用的几个api(observable、computed、autorun)，以及mobx-react的api(observer)。这次说说action。</p>
+        <p><a href="/2016/11/29/MobX-simple-entry-1/">上一篇</a>简单介绍了下mobx常用的几个api(observable、computed、autorun)，以及mobx-react的api(observer)。这次说说action。</p>
 <h2 id="action"><a href="#action" class="headerlink" title="action"></a>action</h2><p>用法：</p>
 <ul>
 <li>action(fn)</li>
@@ -414,7 +414,7 @@ action(name, fn)
 <h2 id="async-action-和-runInAction"><a href="#async-action-和-runInAction" class="headerlink" title="async action 和 runInAction"></a>async action 和 runInAction</h2><p>action只能影响正在运行的函数，而无法影响当前函数调用的异步操作。也就是说如果fn中有setTimeout，promise.then，async函数，并且这些函数的回调里对state进行了修改，那么这些回调也应该用action包装一下（在非严格模式下，action和直接修改state值都能生效，所以并不会出现异常，如果是严格模式下就会报错）。</p>
 <p>还有，如果要使用<code>async</code>函数作为action，不能直接用action包装<code>async</code>函数，这里需要使用一个tricky，将一个<code>async</code>匿名函数赋值给一个变量或者属性再做包装。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@action updateDocument = <span class="keyword">async</span> () =&gt; &#123;</div><div class="line">    <span class="keyword">const</span> data = <span class="keyword">await</span> fetchDataFromUrl();</div><div class="line">    <span class="comment">/* required in strict mode to be allowed to update state: */</span></div><div class="line">    runInAction(<span class="string">"update state after fetching data"</span>, () =&gt; &#123;</div><div class="line">        <span class="keyword">this</span>.data.replace(data);</div><div class="line">        <span class="keyword">this</span>.isSaving = <span class="literal">true</span>;</div><div class="line">    &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面的例子还用到了<code>runInAction</code>，它其实就是action(name,fn)()的语法糖，调用后action会立即执行，它的用法是：<code>runInAction(name?, fn, scope?)</code>，scope是fn调用时的this指向。</p>
+<p>上面的例子还用到了<code>runInAction</code>，它其实就是action(name,fn)()的语法糖，调用后action会立即执行，它的用法是：<code>runInAction(name?, fn, scope?)</code>，scope是fn调用时的this指向。注：2.3.0版本以后才能使用。</p>
 <h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><ul>
 <li><a href="http://mobxjs.github.io/mobx/refguide/action.html" target="_blank" rel="external">MobX Documentation – action</a></li>
 </ul>
@@ -463,6 +463,10 @@ action(name, fn)
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/09/MobX-simple-entry-3/" rel="prev" title="MobX入坑指南(3) -- Observable Objects & Arrays">
+                MobX入坑指南(3) -- Observable Objects & Arrays <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -515,7 +519,7 @@ action(name, fn)
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2016/11/29/MobX-simple-entry-2/"
-           data-title="MobX入坑指南(2)" data-url="http://brooch.me/2016/11/29/MobX-simple-entry-2/">
+           data-title="MobX入坑指南(2) -- action" data-url="http://brooch.me/2016/11/29/MobX-simple-entry-2/">
       </div>
     
   </div>
@@ -560,7 +564,7 @@ action(name, fn)
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -568,7 +572,7 @@ action(name, fn)
           
             <div class="site-state-item site-state-categories">
               
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">分类</span>
               
             </div>
@@ -577,7 +581,7 @@ action(name, fn)
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>

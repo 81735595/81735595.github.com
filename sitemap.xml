@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://brooch.me/2016/12/09/MobX-simple-entry-3/</loc>
+    
+    <lastmod>2016-12-09T13:11:45.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://brooch.me/2016/11/29/MobX-simple-entry-2/</loc>
     
-    <lastmod>2016-12-02T08:56:16.000Z</lastmod>
+    <lastmod>2016-12-09T05:43:55.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://brooch.me/2016/11/23/MobX-simple-entry-1/</loc>
     
-    <lastmod>2016-12-02T08:55:15.000Z</lastmod>
+    <lastmod>2016-12-09T05:43:53.000Z</lastmod>
     
   </url>
   
