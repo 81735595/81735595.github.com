@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2016-12-09T13:11:45.000Z</updated>
+  <updated>2016-12-09T13:13:06.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>MobX入坑指南(3) -- Observable Objects &amp; Arrays</title>
+    <title>MobX入坑指南(3) -- Observable Types</title>
     <link href="http://brooch.me/2016/12/09/MobX-simple-entry-3/"/>
     <id>http://brooch.me/2016/12/09/MobX-simple-entry-3/</id>
     <published>2016-12-09T05:29:04.000Z</published>
-    <updated>2016-12-09T13:11:45.000Z</updated>
+    <updated>2016-12-09T13:13:06.000Z</updated>
     
     <content type="html"><![CDATA[<p>这周阅读了一部分mobx的源码，和作者写的几篇介绍文章，发现这个库有些特性还挺有趣的。以下的内容大部分翻译自<a href="http://mobxjs.github.io/mobx/" target="_blank" rel="external">mobx文档</a>中 <code>Observable Types</code> 一节，奈何小生英文水平有限，没有划词软件帮忙就看不懂句子……所以翻的很渣，基本上都是掺杂了一些我的理解在里边，连蒙带猜拼出来的，有啥写的不对的，也请多指教了~(￣▽￣)~*</p>
 <p>在mobx中，如果你想监听某个变量的变化，需要先使用 <code>observable</code> 函数将其转化为生成Observable对象才行。这个章节主要讲的是 <code>observable</code> 函数生成的不同Observable对象</p>
