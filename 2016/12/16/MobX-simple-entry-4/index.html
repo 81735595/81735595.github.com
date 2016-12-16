@@ -1,0 +1,1081 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="javascript,mobx,react,中文渣翻," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Keep Walking" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="之前几篇大概介绍了mobx最常用的几个方法，这次准备把剩余的公共方法都介绍了。
+autorunAsyncautorunAsync(debugName?: string, action: () =&amp;gt; void, minimumDelay?: number, scope?): disposer
+autorunAsync 的功能与 autorun 相似，功能都是在观测对象发生变化时自动运行回调函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MobX入坑指南(4) -- Utility functions">
+<meta property="og:url" content="http://brooch.me/2016/12/16/MobX-simple-entry-4/index.html">
+<meta property="og:site_name" content="Keep Walking">
+<meta property="og:description" content="之前几篇大概介绍了mobx最常用的几个方法，这次准备把剩余的公共方法都介绍了。
+autorunAsyncautorunAsync(debugName?: string, action: () =&amp;gt; void, minimumDelay?: number, scope?): disposer
+autorunAsync 的功能与 autorun 相似，功能都是在观测对象发生变化时自动运行回调函数">
+<meta property="og:updated_time" content="2016-12-16T15:15:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MobX入坑指南(4) -- Utility functions">
+<meta name="twitter:description" content="之前几篇大概介绍了mobx最常用的几个方法，这次准备把剩余的公共方法都介绍了。
+autorunAsyncautorunAsync(debugName?: string, action: () =&amp;gt; void, minimumDelay?: number, scope?): disposer
+autorunAsync 的功能与 autorun 相似，功能都是在观测对象发生变化时自动运行回调函数">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://brooch.me/2016/12/16/MobX-simple-entry-4/"/>
+
+
+
+
+
+  <title> MobX入坑指南(4) -- Utility functions | Keep Walking </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+	<div style='margin:0 auto;display:none;'>
+		<img src="/images/avatar.png" alt="投身烈火" />
+	</div>
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?caa2c063c399746b1f44cb226584ab5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Keep Walking</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2016/12/16/MobX-simple-entry-4/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="投身烈火">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Keep Walking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                MobX入坑指南(4) -- Utility functions
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-16T13:11:29+08:00">
+                2016-12-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/12/16/MobX-simple-entry-4/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/16/MobX-simple-entry-4/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前几篇大概介绍了mobx最常用的几个方法，这次准备把剩余的公共方法都介绍了。</p>
+<h2 id="autorunAsync"><a href="#autorunAsync" class="headerlink" title="autorunAsync"></a>autorunAsync</h2><p><code>autorunAsync(debugName?: string, action: () =&gt; void, minimumDelay?: number, scope?): disposer</code></p>
+<p><code>autorunAsync</code> 的功能与 <code>autorun</code> 相似，功能都是在观测对象发生变化时自动运行回调函数 <code>action</code>。不同点在于 <code>autorun</code> 是在观测对象发生变化时立即执行的，而 <code>autorunAsync</code>是异步的，可以通过 <code>minimumDelay</code> 参数来指定延迟的时间。<br><a id="more"></a><br>如果被观测对象的在延迟过程中发生多次变化，<code>action</code> 也只会在延迟结束时触发一次，所以它和后面要介绍到的 <code>transaction</code> 方法效果类似。在某些场景下这个方法很有用，比如他可以被用来防止频繁向服务端发起请求。</p>
+<p>如果传了 <code>scope</code> 参数，那么 <code>scope</code> 将作为 <code>action</code> 运行时的this。</p>
+<p>如果传了第一个参数 <code>debugName</code>，那么在调试工具中将使用 <code>debugName</code> 作为调试信息。</p>
+<p>和 <code>autorun</code> 一样，<code>autorunAsync</code> 也会返回一个销毁函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">autorunAsync(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    <span class="comment">// 我们假设 searchBar.keyword 已经被观测, 是搜索输入框的值。当它发生变化时我们要把它发送到服务端请求搜索结果。</span></div><div class="line">	<span class="comment">// 如果这里使用autorun，那么每次变化都会向调用sendKeywordToServer。</span></div><div class="line">    <span class="comment">// 使用autorunAsync延迟300ms发送，当发送时，searchBar.keyword会是这300ms内变化的最终值。</span></div><div class="line">    <span class="comment">// 这样就可以有效的防止频繁请求造成服务抖动。</span></div><div class="line">    sendKeywordToServer(searchBar.keyword);</div><div class="line">&#125;, <span class="number">300</span>);</div></pre></td></tr></table></figure>
+<h2 id="Atom类-和-Reaction类"><a href="#Atom类-和-Reaction类" class="headerlink" title="Atom类 和 Reaction类"></a>Atom类 和 Reaction类</h2><h3 id="Atom"><a href="#Atom" class="headerlink" title="Atom"></a>Atom</h3><p>有些时候，你可能想要有更多的数据结构或其他的东西(比如streams)，也可以用于响应计算。可以使用 <code>Atom</code> 类简单快速的实现这一功能。<code>Atom</code> 实例可以通知mobx观测对象发生了变化，而mobx会在启用和停用观测对象的时候通知 <code>Atom</code> 实例。</p>
+<p>下面的例子展示了 <code>Atom</code> 的全部功能，这个例子展示了如何创建一个时钟，这个时钟只有在被观测时才会运行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;Atom, autorun&#125; <span class="keyword">from</span> <span class="string">"mobx"</span>;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Clock</span> </span>&#123;</div><div class="line">    atom;</div><div class="line">    intervalHandler = <span class="literal">null</span>;</div><div class="line">    currentDateTime;</div><div class="line"></div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        <span class="comment">// 创建一个Atom实例</span></div><div class="line">        <span class="keyword">this</span>.atom = <span class="keyword">new</span> Atom(</div><div class="line">            <span class="comment">// 第一个参数: Atom实例的名字, 调试用的</span></div><div class="line">            <span class="string">"Clock"</span>,</div><div class="line">            <span class="comment">// 第二个参数（可选）: 从不被监听到被监听时的回调函数.</span></div><div class="line">            () =&gt; <span class="keyword">this</span>.startTicking(),</div><div class="line">            <span class="comment">// 第三个参数（可选）: 从被监听到不被监听时的回调函数</span></div><div class="line">            <span class="comment">// 注意，atom实例会多次在这两种状态见转换</span></div><div class="line">            () =&gt; <span class="keyword">this</span>.stopTicking()</div><div class="line">        );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    getTime() &#123;</div><div class="line">        <span class="comment">// 如果Atom实例被响应函数调用，则reportObserved返回true。</span></div><div class="line">		<span class="comment">// 同时，reportObserved会通知mobx这个实例在响应回调中被使用了，它还会触发实例的第二个参数（startTicking）</span></div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.atom.reportObserved()) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.currentDateTime;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 当没有响应函数调用Atom实例的时候，就不会触发startTicking。</span></div><div class="line">            <span class="comment">// 根据不同的情况，这里也可以做不同的处理，比如抛出一个错误，返回一个默认值等等。</span></div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Date</span>();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    tick() &#123;</div><div class="line">        <span class="keyword">this</span>.currentDateTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</div><div class="line">		<span class="comment">// 通知mobx当前值发生了变化</span></div><div class="line">        <span class="keyword">this</span>.atom.reportChanged();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    startTicking() &#123;</div><div class="line">        <span class="keyword">this</span>.tick(); <span class="comment">// 初始化时钟</span></div><div class="line">        <span class="keyword">this</span>.intervalHandler = setInterval(</div><div class="line">            <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">this</span>.tick(),</div><div class="line">            <span class="number">1000</span></div><div class="line">        );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    stopTicking() &#123;</div><div class="line">        clearInterval(<span class="keyword">this</span>.intervalHandler);</div><div class="line">        <span class="keyword">this</span>.intervalHandler = <span class="literal">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> clock = <span class="keyword">new</span> Clock();</div><div class="line"></div><div class="line"><span class="keyword">const</span> disposer = autorun(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(clock.getTime()));</div><div class="line"></div><div class="line"><span class="comment">// ... 每秒打印时间</span></div><div class="line"></div><div class="line">disposer();</div><div class="line"></div><div class="line"><span class="comment">// 停止打印。如果没有响应函数调用当前clock实例，那么时钟将停止。会触发stopTicking函数。</span></div></pre></td></tr></table></figure>
+<h3 id="Reaction"><a href="#Reaction" class="headerlink" title="Reaction"></a>Reaction</h3><p>使用 <code>Reaction</code> 可以创建一个自定义的监听器。<code>Reaction</code> 接受一个函数作为参数，他会分析这个函数所依赖的被观测对象，然后追踪他们，当他们发生变化时发出事件。</p>
+<p>下面的例子展示了 <code>autorun</code> 是如何用 <code>Reaction</code> 实现的，其实这个例子我没看太懂，貌似必须调用 <code>Reaction</code> 的track方法才能追踪并发出信号，但是例子中是在 <code>Reaction</code> 接收的函数中调用，然后runReaction的时候开始，具体的得等我翻了源码之后才能知道了……</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">autorun</span>(<span class="params">view: Lambda, scope?: any</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (scope)</div><div class="line">        view = view.bind(scope);</div><div class="line"></div><div class="line">    <span class="keyword">const</span> reaction = <span class="keyword">new</span> Reaction(view.name || <span class="string">"Autorun"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.track(view);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="comment">// 开始或者排入队列</span></div><div class="line">    <span class="keyword">if</span> (isComputingDerivation() || globalState.inTransaction &gt; <span class="number">0</span>)</div><div class="line">        globalState.pendingReactions.push(reaction);</div><div class="line">    <span class="keyword">else</span></div><div class="line">        reaction.runReaction();</div><div class="line"></div><div class="line">    <span class="keyword">return</span> reaction.getDisposer();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="expr"><a href="#expr" class="headerlink" title="expr"></a>expr</h2><p><code>expr(worker: () =&gt; void)</code></p>
+<p><code>expr</code> 可以在计算属性的函数中创建一个临时的计算属性，其实就是<code>computed(func).get()</code>。作者在文档中说设计这个api的意图是为了提升计算属性的性能，比如下面的例子，如果使用 <code>expr</code> 替代直接用比较运算，可以利用计算属性的缓存，减少运算次数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> TodoView = observer(<span class="function">(<span class="params">&#123;todo, editorState&#125;</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">const</span> isSelected = mobx.expr(<span class="function"><span class="params">()</span> =&gt;</span> editorState.selection === todo);</div><div class="line">    <span class="keyword">return</span> &lt;div className=&#123;isSelected ? "todo todo-selected" : "todo"&#125;&gt;&#123;todo.title&#125;&lt;/div&gt;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="extendObservable"><a href="#extendObservable" class="headerlink" title="extendObservable"></a>extendObservable</h2><p><code>extendObservable(target: object, ...properties: object)</code></p>
+<p>在之前的几篇文章中，我们已经大概见过 <code>extendObservable</code> 应用的实例了。 <code>extendObservable</code>  和 <code>Object.assign</code> 类似，接受多个参数，将 <code>properties</code> 上所有的键值对，都合并到 <code>target</code> 上，同时把它们都转换成可观测的属性。</p>
+<p>如果属性值是一个没有参数的函数，那 <code>extendObservable</code> 将用 <code>computed</code> 把它转化为一个计算属性。</p>
+<p>所以，<code>observable(object)</code> 其实是 <code>extendObservable(object, object)</code>的别名。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Person = <span class="function"><span class="keyword">function</span>(<span class="params">firstName, lastName</span>) </span>&#123;</div><div class="line">    <span class="comment">// 在当前实例为观测对象</span></div><div class="line">    extendObservable(<span class="keyword">this</span>, &#123;</div><div class="line">        <span class="attr">firstName</span>: firstName,</div><div class="line">        <span class="attr">lastName</span>: lastName</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> matthew = <span class="keyword">new</span> Person(<span class="string">"Zheng"</span>, <span class="string">"Xingcheng"</span>);</div><div class="line"></div><div class="line"><span class="comment">// 向观测对象上添加属性</span></div><div class="line">extendObservable(matthew, &#123;</div><div class="line">    <span class="attr">age</span>: <span class="number">30</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="isObservable"><a href="#isObservable" class="headerlink" title="isObservable"></a>isObservable</h2><p><code>isObservable(testValue:object, propertyName?: string)</code></p>
+<p><code>isObservable</code> 是用来判断一个变量是不是用observable观测对象的，如果是就会返回true，如果想看变量的某个属性是否可观测，直接传入属性的引用是不行的，需要传第二个参数 <code>propertyName</code> 指定要判断哪个属性，如果属性可观测，就返回true</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person = observable(&#123;</div><div class="line">    <span class="attr">firstName</span>: <span class="string">"Zheng"</span>,</div><div class="line">    <span class="attr">lastName</span>: <span class="string">"Xingcheng"</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">person.age = <span class="number">30</span>;</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(isObservable(person)); <span class="comment">// true</span></div><div class="line"><span class="built_in">console</span>.log(isObservable(person, <span class="string">"firstName"</span>)); <span class="comment">// true</span></div><div class="line"><span class="built_in">console</span>.log(isObservable(person.firstName)); <span class="comment">// false (just a string)</span></div><div class="line"><span class="built_in">console</span>.log(isObservable(person, <span class="string">"age"</span>)); <span class="comment">// false</span></div></pre></td></tr></table></figure>
+<p>为了细化各种类型的判断，mobx还提供了map，array，object三种类型的判断，比起 <code>isObservable</code> ，他们的判断标准更严格，如果类型不符合就会返回false。</p>
+<h3 id="isObservableMap"><a href="#isObservableMap" class="headerlink" title="isObservableMap"></a>isObservableMap</h3><p><code>isObservableMap(testValue:object)</code></p>
+<p>如果<code>testValue</code>是用 <code>mobx.map</code> 创建的对象，则返回true。</p>
+<h3 id="isObservableArray"><a href="#isObservableArray" class="headerlink" title="isObservableArray"></a>isObservableArray</h3><p><code>isObservableArray(testValue:object)</code></p>
+<p>如果<code>testValue</code>是用 <code>mobx.observable(array)</code> 创建的对象，则返回true。</p>
+<h3 id="isObservableObject"><a href="#isObservableObject" class="headerlink" title="isObservableObject"></a>isObservableObject</h3><p><code>isObservableObject(testValue:object)</code></p>
+<p>如果<code>testValue</code>是用 <code>mobx.observable(object)</code> 创建的对象，则返回true。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> testValue = observable(&#123;</div><div class="line">	<span class="attr">arr</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</div><div class="line">    <span class="attr">obj</span>: &#123;</div><div class="line">    	<span class="attr">x</span>: <span class="number">1</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">map</span>: map([[<span class="string">'y'</span>,<span class="number">2</span>]])</div><div class="line">&#125;);</div><div class="line"><span class="built_in">console</span>.log(isObservableMap(testValue.map)); <span class="comment">// true</span></div><div class="line"><span class="built_in">console</span>.log(isObservableArray(testValue.arr)); <span class="comment">// true</span></div><div class="line"><span class="built_in">console</span>.log(isObservableObject(testValue.obj)); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h2 id="spy"><a href="#spy" class="headerlink" title="spy"></a>spy</h2><p><code>spy(listener)</code></p>
+<p><code>spy</code> 可以注册一个全局的监听函数，监听所有的mobx发出的事件，通常是用来做log或者做调试的。</p>
+<p>比如以下例子，会打印所有的action：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">spy(<span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (event.type === <span class="string">'action'</span>) &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;event.name&#125;</span> with args: <span class="subst">$&#123;event.<span class="built_in">arguments</span>&#125;</span>`</span>)</div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>不同的操作，event也会不一样，下面的表格是每种事件对应的参数：</p>
+<table>
+<thead>
+<tr>
+<th>event</th>
+<th>event带的属性</th>
+<th>是否可以嵌套发生</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>action</td>
+<td>name, target (scope), arguments, fn (source function of the action)</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>transaction</td>
+<td>name, target (scope)</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>scheduled-reaction</td>
+<td>object (Reaction instance)</td>
+<td>no</td>
+</tr>
+<tr>
+<td>reaction</td>
+<td>object (Reaction instance), fn (source of the reaction)</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>compute</td>
+<td>object (ComputedValue instance), target (scope), fn (source)</td>
+<td>no</td>
+</tr>
+<tr>
+<td>error</td>
+<td>message</td>
+<td>no</td>
+</tr>
+<tr>
+<td>update (array)</td>
+<td>object (the array), index, newValue, oldValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>update (map)</td>
+<td>object (observable map instance), name, newValue, oldValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>update (object)</td>
+<td>object (instance), name, newValue, oldValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>splice (array)</td>
+<td>object (the array), index, added, removed, addedCount, removedCount</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>add (map)</td>
+<td>object, name, newValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>add (object)</td>
+<td>object, name, newValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>delete (map)</td>
+<td>object, name, oldValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>create (boxed observable)</td>
+<td>object (ObservableValue instance), newValue</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="toJS"><a href="#toJS" class="headerlink" title="toJS"></a>toJS</h2><p><code>toJS(value: any, supportCycles?=true: boolean)</code></p>
+<p>toJS可以将一个observableObject下的转化为javascript原生的对象。他会递归转换array，object，map和基础类型的值，但是不会转换计算属性和其他不可枚举的值。默认情况下，toJS会缓存下每次运行的值，貌似作者设计这个api就是为了输出log用的，可以设置 <code>supportCycles</code> 参数为false来提高toJS的性能。</p>
+<p>对于更复杂的序列化反序列化场景，mobx的作者推荐使用他开发的<a href="https://github.com/mobxjs/serializr" target="_blank" rel="external">serializr</a>库。</p>
+<h2 id="transaction"><a href="#transaction" class="headerlink" title="transaction"></a>transaction</h2><p><code>transaction(worker: () =&gt; void)</code></p>
+<p>在之前的 <code>autorunAsync</code> 有提到过，除了 <code>autorunAsync</code> ，还可以使用 <code>transaction</code> 来做批量处理。</p>
+<p><code>transaction</code> 用来批处理一系列的更新，而不会通知观测对象，当所有更新结束，才会发出通知。<code>transaction</code> 接收一个没有参数的worker函数作为参数，在这个函数执行完成之前，不会通知观察者。<code>transaction</code> 的返回值就是worker函数的返回值。另外 <code>transaction</code> 是同步的，可以被嵌套，只有最外层的 <code>transaction</code> 执行完，才会触发响应。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;observable, transaction, autorun&#125; <span class="keyword">from</span> <span class="string">"mobx"</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> numbers = observable([]);</div><div class="line"></div><div class="line">autorun(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(numbers.length, <span class="string">"numbers!"</span>));</div><div class="line"><span class="comment">// Prints: '0 numbers!'</span></div><div class="line"></div><div class="line">transaction(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    transaction(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">        numbers.push(<span class="number">1</span>);</div><div class="line">        numbers.push(<span class="number">2</span>);</div><div class="line">    &#125;);</div><div class="line">    numbers.push(<span class="number">3</span>);</div><div class="line">&#125;);</div><div class="line"><span class="comment">// Prints: '3 numbers!'</span></div></pre></td></tr></table></figure>
+<h2 id="untracked"><a href="#untracked" class="headerlink" title="untracked"></a>untracked</h2><p><code>untracked(fn: () =&gt; void)</code></p>
+<p>使用 <code>untracked</code> 可以创建一个不被观测的代码块，通常 <code>untracked</code> 需要放在 <code>(@)action</code> 里面才有意义，比如以下的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> person = observable(&#123;</div><div class="line">    <span class="attr">firstName</span>: <span class="string">"Michel"</span>,</div><div class="line">    <span class="attr">lastName</span>: <span class="string">"Weststrate"</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">autorun(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(</div><div class="line">        person.lastName,</div><div class="line">        <span class="string">","</span>,</div><div class="line">        <span class="comment">// person.firstName放在了untracked的回调里面，所以不会跟这个autorun的监听函数绑定到一起</span></div><div class="line">		<span class="comment">// 在修改person.firstName时就不会触发这个监听函数</span></div><div class="line">        untracked(<span class="function"><span class="params">()</span> =&gt;</span> person.firstName)</div><div class="line">    );</div><div class="line">&#125;);</div><div class="line"><span class="comment">// prints: Weststrate, Michel</span></div><div class="line"></div><div class="line">person.firstName = <span class="string">"G.K."</span>;</div><div class="line"><span class="comment">// doesn't print!</span></div><div class="line"></div><div class="line">person.lastName = <span class="string">"Chesterton"</span>;</div><div class="line"><span class="comment">// prints: Chesterton, G.K.</span></div></pre></td></tr></table></figure>
+<h2 id="when"><a href="#when" class="headerlink" title="when"></a>when</h2><p><code>when(debugName?, predicate: () =&gt; boolean, effect: () =&gt; void, scope?)</code></p>
+<p><code>when</code> 会感测并运行参数predicate，predicate有点类似一个计算属性，当predicate为true的时候，则自动运行effect，然后销毁自己。所以 <code>when</code> 是一个只运行一次的 <code>autorun</code>。</p>
+<p>下面这个例子展示了用 <code>when</code> 来实现自动销毁组件的功能：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyResource</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        when(</div><div class="line">            <span class="comment">// 当断言为真...</span></div><div class="line">            () =&gt; !<span class="keyword">this</span>.isVisible,</div><div class="line">            <span class="comment">// ... 则运行一次然后销毁</span></div><div class="line">            () =&gt; <span class="keyword">this</span>.dispose()</div><div class="line">        );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @computed get isVisible() &#123;</div><div class="line">        <span class="comment">// 返回组件是否可见</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    dispose() &#123;</div><div class="line">        <span class="comment">// 销毁组件</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本篇整理了下mobx的公共方法和作用。就此，基础api算是都介绍完了。之后会再着重写些使用方法和介绍mobx原理的内容。</p>
+<p>话说最近懒癌又开始发作了……_(:3 」∠)_……看着朋友们跟打了鸡血一样写那么多blog好着急的说……希望以后能迎头赶上吧……</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/javascript/" rel="tag"># javascript</a>
+          
+            <a href="/tags/mobx/" rel="tag"># mobx</a>
+          
+            <a href="/tags/react/" rel="tag"># react</a>
+          
+            <a href="/tags/中文渣翻/" rel="tag"># 中文渣翻</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/09/MobX-simple-entry-3/" rel="next" title="MobX入坑指南(3) -- Observable Types">
+                <i class="fa fa-chevron-left"></i> MobX入坑指南(3) -- Observable Types
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/16/MobX-simple-entry-4/"
+           data-title="MobX入坑指南(4) -- Utility functions" data-url="http://brooch.me/2016/12/16/MobX-simple-entry-4/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="投身烈火" />
+          <p class="site-author-name" itemprop="name">投身烈火</p>
+          <p class="site-description motion-element" itemprop="description">白云苍狗，时光悠悠~ ￣ω￣=</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/81735595" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/p/1005051063629865" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              My Friends
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kouyun.me" title="寇云" target="_blank">寇云</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://testudy.cc" title="胡继伟" target="_blank">胡继伟</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yj1438.github.io/" title="尹杰" target="_blank">尹杰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/cnsnake11/blog" title="曹楠" target="_blank">曹楠</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ushtml.com/" title="武明礼" target="_blank">武明礼</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanyouwei.com/" title="占友伟" target="_blank">占友伟</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#autorunAsync"><span class="nav-number">1.</span> <span class="nav-text">autorunAsync</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Atom类-和-Reaction类"><span class="nav-number">2.</span> <span class="nav-text">Atom类 和 Reaction类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Atom"><span class="nav-number">2.1.</span> <span class="nav-text">Atom</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reaction"><span class="nav-number">2.2.</span> <span class="nav-text">Reaction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#expr"><span class="nav-number">3.</span> <span class="nav-text">expr</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#extendObservable"><span class="nav-number">4.</span> <span class="nav-text">extendObservable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#isObservable"><span class="nav-number">5.</span> <span class="nav-text">isObservable</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#isObservableMap"><span class="nav-number">5.1.</span> <span class="nav-text">isObservableMap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#isObservableArray"><span class="nav-number">5.2.</span> <span class="nav-text">isObservableArray</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#isObservableObject"><span class="nav-number">5.3.</span> <span class="nav-text">isObservableObject</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spy"><span class="nav-number">6.</span> <span class="nav-text">spy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#toJS"><span class="nav-number">7.</span> <span class="nav-text">toJS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transaction"><span class="nav-number">8.</span> <span class="nav-text">transaction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#untracked"><span class="nav-number">9.</span> <span class="nav-text">untracked</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#when"><span class="nav-number">10.</span> <span class="nav-text">when</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">投身烈火</span>
+</div>
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"81735595"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

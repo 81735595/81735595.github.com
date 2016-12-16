@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2016-12-09T13:13:06.000Z</updated>
+  <updated>2016-12-16T15:15:03.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -14,6 +14,170 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MobX入坑指南(4) -- Utility functions</title>
+    <link href="http://brooch.me/2016/12/16/MobX-simple-entry-4/"/>
+    <id>http://brooch.me/2016/12/16/MobX-simple-entry-4/</id>
+    <published>2016-12-16T05:11:29.000Z</published>
+    <updated>2016-12-16T15:15:03.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前几篇大概介绍了mobx最常用的几个方法，这次准备把剩余的公共方法都介绍了。</p>
+<h2 id="autorunAsync"><a href="#autorunAsync" class="headerlink" title="autorunAsync"></a>autorunAsync</h2><p><code>autorunAsync(debugName?: string, action: () =&gt; void, minimumDelay?: number, scope?): disposer</code></p>
+<p><code>autorunAsync</code> 的功能与 <code>autorun</code> 相似，功能都是在观测对象发生变化时自动运行回调函数 <code>action</code>。不同点在于 <code>autorun</code> 是在观测对象发生变化时立即执行的，而 <code>autorunAsync</code>是异步的，可以通过 <code>minimumDelay</code> 参数来指定延迟的时间。<br><a id="more"></a><br>如果被观测对象的在延迟过程中发生多次变化，<code>action</code> 也只会在延迟结束时触发一次，所以它和后面要介绍到的 <code>transaction</code> 方法效果类似。在某些场景下这个方法很有用，比如他可以被用来防止频繁向服务端发起请求。</p>
+<p>如果传了 <code>scope</code> 参数，那么 <code>scope</code> 将作为 <code>action</code> 运行时的this。</p>
+<p>如果传了第一个参数 <code>debugName</code>，那么在调试工具中将使用 <code>debugName</code> 作为调试信息。</p>
+<p>和 <code>autorun</code> 一样，<code>autorunAsync</code> 也会返回一个销毁函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">autorunAsync(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    <span class="comment">// 我们假设 searchBar.keyword 已经被观测, 是搜索输入框的值。当它发生变化时我们要把它发送到服务端请求搜索结果。</span></div><div class="line">	<span class="comment">// 如果这里使用autorun，那么每次变化都会向调用sendKeywordToServer。</span></div><div class="line">    <span class="comment">// 使用autorunAsync延迟300ms发送，当发送时，searchBar.keyword会是这300ms内变化的最终值。</span></div><div class="line">    <span class="comment">// 这样就可以有效的防止频繁请求造成服务抖动。</span></div><div class="line">    sendKeywordToServer(searchBar.keyword);</div><div class="line">&#125;, <span class="number">300</span>);</div></pre></td></tr></table></figure>
+<h2 id="Atom类-和-Reaction类"><a href="#Atom类-和-Reaction类" class="headerlink" title="Atom类 和 Reaction类"></a>Atom类 和 Reaction类</h2><h3 id="Atom"><a href="#Atom" class="headerlink" title="Atom"></a>Atom</h3><p>有些时候，你可能想要有更多的数据结构或其他的东西(比如streams)，也可以用于响应计算。可以使用 <code>Atom</code> 类简单快速的实现这一功能。<code>Atom</code> 实例可以通知mobx观测对象发生了变化，而mobx会在启用和停用观测对象的时候通知 <code>Atom</code> 实例。</p>
+<p>下面的例子展示了 <code>Atom</code> 的全部功能，这个例子展示了如何创建一个时钟，这个时钟只有在被观测时才会运行。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;Atom, autorun&#125; <span class="keyword">from</span> <span class="string">"mobx"</span>;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Clock</span> </span>&#123;</div><div class="line">    atom;</div><div class="line">    intervalHandler = <span class="literal">null</span>;</div><div class="line">    currentDateTime;</div><div class="line"></div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        <span class="comment">// 创建一个Atom实例</span></div><div class="line">        <span class="keyword">this</span>.atom = <span class="keyword">new</span> Atom(</div><div class="line">            <span class="comment">// 第一个参数: Atom实例的名字, 调试用的</span></div><div class="line">            <span class="string">"Clock"</span>,</div><div class="line">            <span class="comment">// 第二个参数（可选）: 从不被监听到被监听时的回调函数.</span></div><div class="line">            () =&gt; <span class="keyword">this</span>.startTicking(),</div><div class="line">            <span class="comment">// 第三个参数（可选）: 从被监听到不被监听时的回调函数</span></div><div class="line">            <span class="comment">// 注意，atom实例会多次在这两种状态见转换</span></div><div class="line">            () =&gt; <span class="keyword">this</span>.stopTicking()</div><div class="line">        );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    getTime() &#123;</div><div class="line">        <span class="comment">// 如果Atom实例被响应函数调用，则reportObserved返回true。</span></div><div class="line">		<span class="comment">// 同时，reportObserved会通知mobx这个实例在响应回调中被使用了，它还会触发实例的第二个参数（startTicking）</span></div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.atom.reportObserved()) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.currentDateTime;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 当没有响应函数调用Atom实例的时候，就不会触发startTicking。</span></div><div class="line">            <span class="comment">// 根据不同的情况，这里也可以做不同的处理，比如抛出一个错误，返回一个默认值等等。</span></div><div class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Date</span>();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    tick() &#123;</div><div class="line">        <span class="keyword">this</span>.currentDateTime = <span class="keyword">new</span> <span class="built_in">Date</span>();</div><div class="line">		<span class="comment">// 通知mobx当前值发生了变化</span></div><div class="line">        <span class="keyword">this</span>.atom.reportChanged();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    startTicking() &#123;</div><div class="line">        <span class="keyword">this</span>.tick(); <span class="comment">// 初始化时钟</span></div><div class="line">        <span class="keyword">this</span>.intervalHandler = setInterval(</div><div class="line">            <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">this</span>.tick(),</div><div class="line">            <span class="number">1000</span></div><div class="line">        );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    stopTicking() &#123;</div><div class="line">        clearInterval(<span class="keyword">this</span>.intervalHandler);</div><div class="line">        <span class="keyword">this</span>.intervalHandler = <span class="literal">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> clock = <span class="keyword">new</span> Clock();</div><div class="line"></div><div class="line"><span class="keyword">const</span> disposer = autorun(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(clock.getTime()));</div><div class="line"></div><div class="line"><span class="comment">// ... 每秒打印时间</span></div><div class="line"></div><div class="line">disposer();</div><div class="line"></div><div class="line"><span class="comment">// 停止打印。如果没有响应函数调用当前clock实例，那么时钟将停止。会触发stopTicking函数。</span></div></pre></td></tr></table></figure>
+<h3 id="Reaction"><a href="#Reaction" class="headerlink" title="Reaction"></a>Reaction</h3><p>使用 <code>Reaction</code> 可以创建一个自定义的监听器。<code>Reaction</code> 接受一个函数作为参数，他会分析这个函数所依赖的被观测对象，然后追踪他们，当他们发生变化时发出事件。</p>
+<p>下面的例子展示了 <code>autorun</code> 是如何用 <code>Reaction</code> 实现的，其实这个例子我没看太懂，貌似必须调用 <code>Reaction</code> 的track方法才能追踪并发出信号，但是例子中是在 <code>Reaction</code> 接收的函数中调用，然后runReaction的时候开始，具体的得等我翻了源码之后才能知道了……</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">autorun</span>(<span class="params">view: Lambda, scope?: any</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (scope)</div><div class="line">        view = view.bind(scope);</div><div class="line"></div><div class="line">    <span class="keyword">const</span> reaction = <span class="keyword">new</span> Reaction(view.name || <span class="string">"Autorun"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.track(view);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    <span class="comment">// 开始或者排入队列</span></div><div class="line">    <span class="keyword">if</span> (isComputingDerivation() || globalState.inTransaction &gt; <span class="number">0</span>)</div><div class="line">        globalState.pendingReactions.push(reaction);</div><div class="line">    <span class="keyword">else</span></div><div class="line">        reaction.runReaction();</div><div class="line"></div><div class="line">    <span class="keyword">return</span> reaction.getDisposer();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="expr"><a href="#expr" class="headerlink" title="expr"></a>expr</h2><p><code>expr(worker: () =&gt; void)</code></p>
+<p><code>expr</code> 可以在计算属性的函数中创建一个临时的计算属性，其实就是<code>computed(func).get()</code>。作者在文档中说设计这个api的意图是为了提升计算属性的性能，比如下面的例子，如果使用 <code>expr</code> 替代直接用比较运算，可以利用计算属性的缓存，减少运算次数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> TodoView = observer(<span class="function">(<span class="params">&#123;todo, editorState&#125;</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">const</span> isSelected = mobx.expr(<span class="function"><span class="params">()</span> =&gt;</span> editorState.selection === todo);</div><div class="line">    <span class="keyword">return</span> &lt;div className=&#123;isSelected ? "todo todo-selected" : "todo"&#125;&gt;&#123;todo.title&#125;&lt;/div&gt;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="extendObservable"><a href="#extendObservable" class="headerlink" title="extendObservable"></a>extendObservable</h2><p><code>extendObservable(target: object, ...properties: object)</code></p>
+<p>在之前的几篇文章中，我们已经大概见过 <code>extendObservable</code> 应用的实例了。 <code>extendObservable</code>  和 <code>Object.assign</code> 类似，接受多个参数，将 <code>properties</code> 上所有的键值对，都合并到 <code>target</code> 上，同时把它们都转换成可观测的属性。</p>
+<p>如果属性值是一个没有参数的函数，那 <code>extendObservable</code> 将用 <code>computed</code> 把它转化为一个计算属性。</p>
+<p>所以，<code>observable(object)</code> 其实是 <code>extendObservable(object, object)</code>的别名。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Person = <span class="function"><span class="keyword">function</span>(<span class="params">firstName, lastName</span>) </span>&#123;</div><div class="line">    <span class="comment">// 在当前实例为观测对象</span></div><div class="line">    extendObservable(<span class="keyword">this</span>, &#123;</div><div class="line">        <span class="attr">firstName</span>: firstName,</div><div class="line">        <span class="attr">lastName</span>: lastName</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> matthew = <span class="keyword">new</span> Person(<span class="string">"Zheng"</span>, <span class="string">"Xingcheng"</span>);</div><div class="line"></div><div class="line"><span class="comment">// 向观测对象上添加属性</span></div><div class="line">extendObservable(matthew, &#123;</div><div class="line">    <span class="attr">age</span>: <span class="number">30</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="isObservable"><a href="#isObservable" class="headerlink" title="isObservable"></a>isObservable</h2><p><code>isObservable(testValue:object, propertyName?: string)</code></p>
+<p><code>isObservable</code> 是用来判断一个变量是不是用observable观测对象的，如果是就会返回true，如果想看变量的某个属性是否可观测，直接传入属性的引用是不行的，需要传第二个参数 <code>propertyName</code> 指定要判断哪个属性，如果属性可观测，就返回true</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> person = observable(&#123;</div><div class="line">    <span class="attr">firstName</span>: <span class="string">"Zheng"</span>,</div><div class="line">    <span class="attr">lastName</span>: <span class="string">"Xingcheng"</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">person.age = <span class="number">30</span>;</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(isObservable(person)); <span class="comment">// true</span></div><div class="line"><span class="built_in">console</span>.log(isObservable(person, <span class="string">"firstName"</span>)); <span class="comment">// true</span></div><div class="line"><span class="built_in">console</span>.log(isObservable(person.firstName)); <span class="comment">// false (just a string)</span></div><div class="line"><span class="built_in">console</span>.log(isObservable(person, <span class="string">"age"</span>)); <span class="comment">// false</span></div></pre></td></tr></table></figure>
+<p>为了细化各种类型的判断，mobx还提供了map，array，object三种类型的判断，比起 <code>isObservable</code> ，他们的判断标准更严格，如果类型不符合就会返回false。</p>
+<h3 id="isObservableMap"><a href="#isObservableMap" class="headerlink" title="isObservableMap"></a>isObservableMap</h3><p><code>isObservableMap(testValue:object)</code></p>
+<p>如果<code>testValue</code>是用 <code>mobx.map</code> 创建的对象，则返回true。</p>
+<h3 id="isObservableArray"><a href="#isObservableArray" class="headerlink" title="isObservableArray"></a>isObservableArray</h3><p><code>isObservableArray(testValue:object)</code></p>
+<p>如果<code>testValue</code>是用 <code>mobx.observable(array)</code> 创建的对象，则返回true。</p>
+<h3 id="isObservableObject"><a href="#isObservableObject" class="headerlink" title="isObservableObject"></a>isObservableObject</h3><p><code>isObservableObject(testValue:object)</code></p>
+<p>如果<code>testValue</code>是用 <code>mobx.observable(object)</code> 创建的对象，则返回true。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> testValue = observable(&#123;</div><div class="line">	<span class="attr">arr</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</div><div class="line">    <span class="attr">obj</span>: &#123;</div><div class="line">    	<span class="attr">x</span>: <span class="number">1</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">map</span>: map([[<span class="string">'y'</span>,<span class="number">2</span>]])</div><div class="line">&#125;);</div><div class="line"><span class="built_in">console</span>.log(isObservableMap(testValue.map)); <span class="comment">// true</span></div><div class="line"><span class="built_in">console</span>.log(isObservableArray(testValue.arr)); <span class="comment">// true</span></div><div class="line"><span class="built_in">console</span>.log(isObservableObject(testValue.obj)); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<h2 id="spy"><a href="#spy" class="headerlink" title="spy"></a>spy</h2><p><code>spy(listener)</code></p>
+<p><code>spy</code> 可以注册一个全局的监听函数，监听所有的mobx发出的事件，通常是用来做log或者做调试的。</p>
+<p>比如以下例子，会打印所有的action：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">spy(<span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (event.type === <span class="string">'action'</span>) &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;event.name&#125;</span> with args: <span class="subst">$&#123;event.<span class="built_in">arguments</span>&#125;</span>`</span>)</div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>不同的操作，event也会不一样，下面的表格是每种事件对应的参数：</p>
+<table>
+<thead>
+<tr>
+<th>event</th>
+<th>event带的属性</th>
+<th>是否可以嵌套发生</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>action</td>
+<td>name, target (scope), arguments, fn (source function of the action)</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>transaction</td>
+<td>name, target (scope)</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>scheduled-reaction</td>
+<td>object (Reaction instance)</td>
+<td>no</td>
+</tr>
+<tr>
+<td>reaction</td>
+<td>object (Reaction instance), fn (source of the reaction)</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>compute</td>
+<td>object (ComputedValue instance), target (scope), fn (source)</td>
+<td>no</td>
+</tr>
+<tr>
+<td>error</td>
+<td>message</td>
+<td>no</td>
+</tr>
+<tr>
+<td>update (array)</td>
+<td>object (the array), index, newValue, oldValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>update (map)</td>
+<td>object (observable map instance), name, newValue, oldValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>update (object)</td>
+<td>object (instance), name, newValue, oldValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>splice (array)</td>
+<td>object (the array), index, added, removed, addedCount, removedCount</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>add (map)</td>
+<td>object, name, newValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>add (object)</td>
+<td>object, name, newValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>delete (map)</td>
+<td>object, name, oldValue</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>create (boxed observable)</td>
+<td>object (ObservableValue instance), newValue</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="toJS"><a href="#toJS" class="headerlink" title="toJS"></a>toJS</h2><p><code>toJS(value: any, supportCycles?=true: boolean)</code></p>
+<p>toJS可以将一个observableObject下的转化为javascript原生的对象。他会递归转换array，object，map和基础类型的值，但是不会转换计算属性和其他不可枚举的值。默认情况下，toJS会缓存下每次运行的值，貌似作者设计这个api就是为了输出log用的，可以设置 <code>supportCycles</code> 参数为false来提高toJS的性能。</p>
+<p>对于更复杂的序列化反序列化场景，mobx的作者推荐使用他开发的<a href="https://github.com/mobxjs/serializr" target="_blank" rel="external">serializr</a>库。</p>
+<h2 id="transaction"><a href="#transaction" class="headerlink" title="transaction"></a>transaction</h2><p><code>transaction(worker: () =&gt; void)</code></p>
+<p>在之前的 <code>autorunAsync</code> 有提到过，除了 <code>autorunAsync</code> ，还可以使用 <code>transaction</code> 来做批量处理。</p>
+<p><code>transaction</code> 用来批处理一系列的更新，而不会通知观测对象，当所有更新结束，才会发出通知。<code>transaction</code> 接收一个没有参数的worker函数作为参数，在这个函数执行完成之前，不会通知观察者。<code>transaction</code> 的返回值就是worker函数的返回值。另外 <code>transaction</code> 是同步的，可以被嵌套，只有最外层的 <code>transaction</code> 执行完，才会触发响应。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;observable, transaction, autorun&#125; <span class="keyword">from</span> <span class="string">"mobx"</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> numbers = observable([]);</div><div class="line"></div><div class="line">autorun(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(numbers.length, <span class="string">"numbers!"</span>));</div><div class="line"><span class="comment">// Prints: '0 numbers!'</span></div><div class="line"></div><div class="line">transaction(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    transaction(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">        numbers.push(<span class="number">1</span>);</div><div class="line">        numbers.push(<span class="number">2</span>);</div><div class="line">    &#125;);</div><div class="line">    numbers.push(<span class="number">3</span>);</div><div class="line">&#125;);</div><div class="line"><span class="comment">// Prints: '3 numbers!'</span></div></pre></td></tr></table></figure>
+<h2 id="untracked"><a href="#untracked" class="headerlink" title="untracked"></a>untracked</h2><p><code>untracked(fn: () =&gt; void)</code></p>
+<p>使用 <code>untracked</code> 可以创建一个不被观测的代码块，通常 <code>untracked</code> 需要放在 <code>(@)action</code> 里面才有意义，比如以下的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> person = observable(&#123;</div><div class="line">    <span class="attr">firstName</span>: <span class="string">"Michel"</span>,</div><div class="line">    <span class="attr">lastName</span>: <span class="string">"Weststrate"</span></div><div class="line">&#125;);</div><div class="line"></div><div class="line">autorun(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(</div><div class="line">        person.lastName,</div><div class="line">        <span class="string">","</span>,</div><div class="line">        <span class="comment">// person.firstName放在了untracked的回调里面，所以不会跟这个autorun的监听函数绑定到一起</span></div><div class="line">		<span class="comment">// 在修改person.firstName时就不会触发这个监听函数</span></div><div class="line">        untracked(<span class="function"><span class="params">()</span> =&gt;</span> person.firstName)</div><div class="line">    );</div><div class="line">&#125;);</div><div class="line"><span class="comment">// prints: Weststrate, Michel</span></div><div class="line"></div><div class="line">person.firstName = <span class="string">"G.K."</span>;</div><div class="line"><span class="comment">// doesn't print!</span></div><div class="line"></div><div class="line">person.lastName = <span class="string">"Chesterton"</span>;</div><div class="line"><span class="comment">// prints: Chesterton, G.K.</span></div></pre></td></tr></table></figure>
+<h2 id="when"><a href="#when" class="headerlink" title="when"></a>when</h2><p><code>when(debugName?, predicate: () =&gt; boolean, effect: () =&gt; void, scope?)</code></p>
+<p><code>when</code> 会感测并运行参数predicate，predicate有点类似一个计算属性，当predicate为true的时候，则自动运行effect，然后销毁自己。所以 <code>when</code> 是一个只运行一次的 <code>autorun</code>。</p>
+<p>下面这个例子展示了用 <code>when</code> 来实现自动销毁组件的功能：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyResource</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>() &#123;</div><div class="line">        when(</div><div class="line">            <span class="comment">// 当断言为真...</span></div><div class="line">            () =&gt; !<span class="keyword">this</span>.isVisible,</div><div class="line">            <span class="comment">// ... 则运行一次然后销毁</span></div><div class="line">            () =&gt; <span class="keyword">this</span>.dispose()</div><div class="line">        );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @computed get isVisible() &#123;</div><div class="line">        <span class="comment">// 返回组件是否可见</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    dispose() &#123;</div><div class="line">        <span class="comment">// 销毁组件</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本篇整理了下mobx的公共方法和作用。就此，基础api算是都介绍完了。之后会再着重写些使用方法和介绍mobx原理的内容。</p>
+<p>话说最近懒癌又开始发作了……_(:3 」∠)_……看着朋友们跟打了鸡血一样写那么多blog好着急的说……希望以后能迎头赶上吧……</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;之前几篇大概介绍了mobx最常用的几个方法，这次准备把剩余的公共方法都介绍了。&lt;/p&gt;
+&lt;h2 id=&quot;autorunAsync&quot;&gt;&lt;a href=&quot;#autorunAsync&quot; class=&quot;headerlink&quot; title=&quot;autorunAsync&quot;&gt;&lt;/a&gt;autorunAsync&lt;/h2&gt;&lt;p&gt;&lt;code&gt;autorunAsync(debugName?: string, action: () =&amp;gt; void, minimumDelay?: number, scope?): disposer&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;autorunAsync&lt;/code&gt; 的功能与 &lt;code&gt;autorun&lt;/code&gt; 相似，功能都是在观测对象发生变化时自动运行回调函数 &lt;code&gt;action&lt;/code&gt;。不同点在于 &lt;code&gt;autorun&lt;/code&gt; 是在观测对象发生变化时立即执行的，而 &lt;code&gt;autorunAsync&lt;/code&gt;是异步的，可以通过 &lt;code&gt;minimumDelay&lt;/code&gt; 参数来指定延迟的时间。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="http://brooch.me/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="javascript" scheme="http://brooch.me/tags/javascript/"/>
+    
+      <category term="mobx" scheme="http://brooch.me/tags/mobx/"/>
+    
+      <category term="react" scheme="http://brooch.me/tags/react/"/>
+    
+      <category term="中文渣翻" scheme="http://brooch.me/tags/%E4%B8%AD%E6%96%87%E6%B8%A3%E7%BF%BB/"/>
+    
+  </entry>
   
   <entry>
     <title>MobX入坑指南(3) -- Observable Types</title>
