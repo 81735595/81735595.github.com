@@ -1,7 +1,9 @@
 /* global NexT: true */
 
 $(document).ready(function () {
-
+	if (~window.navigator.userAgent.toLowerCase().indexOf('mobile')) {
+		return;
+	}
   initScrollSpy();
   NexT.utils.needAffix() && initAffix();
   initTOCDimension();
@@ -40,29 +42,27 @@ $(document).ready(function () {
       }
     });
 
-	if (!~window.navigator.userAgent.toLowerCase().indexOf('mobile')) {
-	    $(document)
-	      .on('affixed.bs.affix', function () {
-	        updateTOCHeight(document.body.clientHeight - 100);
-	      });
-	    }
-	}
+    $(document)
+      .on('affixed.bs.affix', function () {
+        updateTOCHeight(document.body.clientHeight - 100);
+      });
+    }
 
   function initTOCDimension () {
     var updateTOCHeightTimer;
 
-    // $(window).on('resize', function () {
-    //   updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
-	//
-    //   updateTOCHeightTimer = setTimeout(function () {
-    //     var tocWrapperHeight = document.body.clientHeight - 100;
-	//
-    //     updateTOCHeight(tocWrapperHeight);
-    //   }, 0);
-    // });
+    $(window).on('resize', function () {
+      updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
+
+      updateTOCHeightTimer = setTimeout(function () {
+        var tocWrapperHeight = document.body.clientHeight - 100;
+
+        updateTOCHeight(tocWrapperHeight);
+      }, 0);
+    });
 
     // Initialize TOC Height.
-    updateTOCHeight(document.body.clientHeight - 100);
+	updateTOCHeight(document.body.clientHeight - 100);
 
     // Initialize TOC Width.
     var scrollbarWidth = NexT.utils.getScrollbarWidth();
