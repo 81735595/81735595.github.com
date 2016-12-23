@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://brooch.me/2016/12/23/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps/</loc>
+    
+    <lastmod>2016-12-23T13:17:03.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://brooch.me/2016/12/16/MobX-simple-entry-4/</loc>
     
-    <lastmod>2016-12-16T15:15:03.000Z</lastmod>
+    <lastmod>2016-12-20T14:03:13.000Z</lastmod>
     
   </url>
   
