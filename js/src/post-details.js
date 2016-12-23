@@ -51,15 +51,15 @@ $(document).ready(function () {
   function initTOCDimension () {
     var updateTOCHeightTimer;
 
-    $(window).on('resize', function () {
-      updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
-
-      updateTOCHeightTimer = setTimeout(function () {
-        var tocWrapperHeight = document.body.clientHeight - 100;
-
-        updateTOCHeight(tocWrapperHeight);
-      }, 0);
-    });
+    // $(window).on('resize', function () {
+    //   updateTOCHeightTimer && clearTimeout(updateTOCHeightTimer);
+	//
+    //   updateTOCHeightTimer = setTimeout(function () {
+    //     var tocWrapperHeight = document.body.clientHeight - 100;
+	//
+    //     updateTOCHeight(tocWrapperHeight);
+    //   }, 0);
+    // });
 
     // Initialize TOC Height.
     updateTOCHeight(document.body.clientHeight - 100);
