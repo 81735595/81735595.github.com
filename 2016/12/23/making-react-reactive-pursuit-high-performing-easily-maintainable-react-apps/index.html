@@ -96,19 +96,20 @@
 <meta property="og:description" content="这篇文章翻译自mobx作者 Michel Weststrate 的一篇博客，虽然我也想做到信达雅，奈何英语水平有限……所以我写的内容自动屏蔽了一些前因后果没营养的话，只翻译我觉得重点的内容。我的原则是，捞干的说，不BB~想了解细节的话可移步原文
 
 使用react开发应用有啥好处，我想是个前端都能数出个十条八条来。但是如果你的项目需要在浏览器中绘制成千上万的对象，而且这些对象之前还有大量的耦合关系">
-<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-1.png">
-<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-2.png">
-<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-3.png">
-<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-4.png">
-<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-5.png">
-<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-6.png">
-<meta property="og:updated_time" content="2016-12-23T13:17:03.000Z">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-1.png?1">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-2.png?1">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-3.jpg?1">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-4.png?1">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-5.png?1">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-6.png?1">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-7.png?1">
+<meta property="og:updated_time" content="2016-12-23T13:59:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="响应式react：构建高效易用的react应用">
 <meta name="twitter:description" content="这篇文章翻译自mobx作者 Michel Weststrate 的一篇博客，虽然我也想做到信达雅，奈何英语水平有限……所以我写的内容自动屏蔽了一些前因后果没营养的话，只翻译我觉得重点的内容。我的原则是，捞干的说，不BB~想了解细节的话可移步原文
 
 使用react开发应用有啥好处，我想是个前端都能数出个十条八条来。但是如果你的项目需要在浏览器中绘制成千上万的对象，而且这些对象之前还有大量的耦合关系">
-<meta name="twitter:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-1.png">
+<meta name="twitter:image" content="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-1.png?1">
 
 
 
@@ -388,10 +389,10 @@
 <p>于是，mobx被开发出来了。简单来说，他使用了函数响应式编程的概念 Observables 来解决上述的问题，其实 mobx 并不是第一个使用这一概念的前端库，ember、knockout还有vue其实都使用了这一概念，我个人感觉，mobx就好像把vue和knockout的数据绑定那部分抽出来然后揉到一起一样……真的能发现很多有相似的地方……使用 Observables 的好处就在于，你可以很容易实现自动更新关联数据和sideways data loading，从而解放生产力，提升应用的性能。后面测试数据一章可以看到具体的对比结果。</p>
 <a id="more"></a>
 <p>下面我们以一个简单的购物应用为例：</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-1.png" alt="shoping"></p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-1.png?1" alt="shoping"></p>
 <p>里面包含商品列表，购物车，结算等部分。完整的例子可以再<a href="https://jsfiddle.net/mweststrate/46vL0phw/embedded/result/" target="_blank" rel="external">jsfiddle</a>上看到（需要翻墙）。</p>
 <h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><p>首先，我们先看下数据模型。商品列表（Articles）里的每个商品，有名称（name）和价格（price）属性，购物车（Cart）有已加入购物车列表（Entries）和总价（Total）属性。已加入购物车列表中的每个商品除了名字和价格属性以外，还有数量属性（amount）、根据数量和单价计算出的总价。数据之间的关系如下图所示。</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-2.png" alt="data model"></p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-2.png?1" alt="data model"></p>
 <p>从上图中我们可以看出，如果对一个数据进行修改，那么就会带动其他的数据修改，同时还得修改ui。<br>大概列一下数据联动的逻辑：</p>
 <ul>
 <li>如果商品列表里的商品价格发生改变，购物车里的商品价格也需要更新。</li>
@@ -401,7 +402,7 @@
 <li>……购物车里对应的商品也得更新。</li>
 <li>如果添加新文章合计购物车……</li>
 </ul>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-3.png" alt="create"></p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-3.jpg?1" alt="(╯‵□′)╯︵┻━┻"></p>
 <p>作为一个程序员，就是这么闹心……你不得不写大量的代码来处理各种可能的状态，处理速度还得快，让用户老爷等着急了你担待得起吗……</p>
 <p>那么，让我们来看看怎么用mobx来日翻这些问题：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Article</span>(<span class="params">name, price</span>) </span>&#123;</div><div class="line">    mobx.extendObservable(<span class="keyword">this</span>, &#123;</div><div class="line">        <span class="attr">name</span>: name,</div><div class="line">        <span class="attr">price</span>: price</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">ShoppingCartEntry</span>(<span class="params">article</span>) </span>&#123;</div><div class="line">    mobx.extendObservable(<span class="keyword">this</span>, &#123;</div><div class="line">        <span class="attr">article</span>: article,</div><div class="line">        <span class="attr">amount</span>: <span class="number">1</span>,</div><div class="line">        <span class="attr">price</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.article ? <span class="keyword">this</span>.article.price * <span class="keyword">this</span>.amount : <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">ShoppingCart</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    mobx.extendObservable(<span class="keyword">this</span>, &#123;</div><div class="line">        <span class="attr">entries</span>: [],</div><div class="line">        <span class="attr">total</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.entries.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">sum, entry</span>) </span>&#123;</div><div class="line">                <span class="keyword">return</span> sum + entry.price;</div><div class="line">            &#125;, <span class="number">0</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -414,12 +415,12 @@
 <p>这里 <code>observer</code> 函数为我们做了两件事。首先，它将组件的 <code>render</code> 函数变成一个可观察到的函数。然后，把组件注册到观察者函数，所以每次 <code>render</code> 需要更新了他都会自动更新。<code>mobxReact.observer</code>（如果你使用ES6的话是 <code>@observer</code>）确保每当数据改变，只更新UI的相关部分，就是刚才上面提到的sideways data loading。你可以自己点点试试，注意看下方的日志面板，看看UI更新的数据，你会发现，每次操作，组件的重绘数量都是最低的。</p>
 <p>另外，由于每个组件都只跟踪自己的依赖，通常不需要重新渲染子组件。比如，如果购物车的总价重新渲染了，在不必要的情况下就不会重新渲染购物车里的商品列表。</p>
 <h2 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h2><p>东西好不好,主要看疗效。<a href="https://jsfiddle.net/mweststrate/wr2hcdwL/" target="_blank" rel="external">这里</a>你可以找到一个一毛一样的应用，但没有使用mobx，而是简单的使用每次替换数据的方法构建的。只有几个商品，不会感觉到有任何区别，但一旦商品数量上升，就会提现出真正意义上的性能差异。</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-4.png" alt="update"></p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-4.png?1" alt="create"><br><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-5.png?1" alt="update"></p>
 <p>创建大量的数据和组件的时候，基本没啥差别。但是在修改数据时，强弱立分高下力判。如果在有10000个元素的列表中更新其中10个元素的数据，速度大约快了十倍。2.5秒下降到250毫秒……那么这种差别是从哪里来的呢？让我们来瞅瞅不适用mobx时React的渲染报告：</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-5.png" alt="without mobx render reports"></p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-6.png?1" alt="without mobx render reports"></p>
 <p>可以看到，ArticleViews 和 CartEntryViews一共渲染了20000次。2433毫秒的渲染时间中，2145毫秒的渲染时间是被浪费的（Wasted time）。Wasted time的意思是：花费在执行渲染函数上的时间，实际上并没有更新任何一个DOM元素。这有力地说明了，无脑更新是一件很浪费cup资源的，组件越多浪费的时间就越多。</p>
 <p>相较之下，这是使用mobx的报告：</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-6.png" alt="with mobx render reports"></p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-7.png?1" alt="with mobx render reports"></p>
 <p>重绘的只有31个组件，完全没有一点浪费。就是说每个重新渲染的组件都是确实需要修改的。这正是我们想要实现的效果！</p>
 <p>然而，这样你就满足了吗？我们还可以再进一步优化！</p>
 <p>从报告中我们还可以看出，267毫秒的总体渲染时间里，大部分剩余的渲染时间消耗在CartView的渲染上（243毫秒）。那是在更新购物车的总价属性。值得注意的是，要重新渲染CartView，也就意味着要检查购物车中一万个商品是否有修改，是否要更新CartEntryView。而这就浪费了大部分时间。我们可以把总价再单独做一个控件，CartTotalView。通过这个简单的处理，如果只是总价的变化，就可以跳过CartView的重新渲染。这使得渲染时间进一步下降到约60毫秒（见上图中的灰色那一条），这比没有使用Mobx的React应用大约快了40倍!</p>
