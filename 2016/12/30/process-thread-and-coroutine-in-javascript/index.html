@@ -1,0 +1,1009 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="nodejs,webworkers,cluster,child_process,tagg2,yield,generator,async,await," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Keep Walking" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="这周一直在编前端构建的脚本，用到了多进程去解决一个效率问题。期间差了很多进程、线程、协程的资料，在这里记录回顾一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript中的进程、线程和协程">
+<meta property="og:url" content="http://brooch.me/2016/12/30/process-thread-and-coroutine-in-javascript/index.html">
+<meta property="og:site_name" content="Keep Walking">
+<meta property="og:description" content="这周一直在编前端构建的脚本，用到了多进程去解决一个效率问题。期间差了很多进程、线程、协程的资料，在这里记录回顾一下。">
+<meta property="og:updated_time" content="2016-12-30T15:30:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javascript中的进程、线程和协程">
+<meta name="twitter:description" content="这周一直在编前端构建的脚本，用到了多进程去解决一个效率问题。期间差了很多进程、线程、协程的资料，在这里记录回顾一下。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://brooch.me/2016/12/30/process-thread-and-coroutine-in-javascript/"/>
+
+
+
+
+
+  <title> javascript中的进程、线程和协程 | Keep Walking </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+	<div style='margin:0 auto;display:none;'>
+		<img src="/images/avatar.png" alt="投身烈火" />
+	</div>
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?caa2c063c399746b1f44cb226584ab5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Keep Walking</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2016/12/30/process-thread-and-coroutine-in-javascript/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="投身烈火">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Keep Walking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                javascript中的进程、线程和协程
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-30T23:26:28+08:00">
+                2016-12-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机原理/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/12/30/process-thread-and-coroutine-in-javascript/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/12/30/process-thread-and-coroutine-in-javascript/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这周一直在编前端构建的脚本，用到了多进程去解决一个效率问题。期间差了很多进程、线程、协程的资料，在这里记录回顾一下。</p>
+<a id="more"></a>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>关于进程、线程、协程的概念这里就不再赘述了，具体的可以参考wiki百科：</p>
+<ul>
+<li><p><a href="https://zh.wikipedia.org/wiki/%E8%A1%8C%E7%A8%8B" target="_blank" rel="external">进程</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/%E7%BA%BF%E7%A8%8B" target="_blank" rel="external">线程</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/%E5%8D%8F%E7%A8%8B" target="_blank" rel="external">协程</a></p>
+</li>
+</ul>
+<h1 id="简单概括一下它们间的区别"><a href="#简单概括一下它们间的区别" class="headerlink" title="简单概括一下它们间的区别"></a>简单概括一下它们间的区别</h1><p>就是相对线程和协程，进程更独立，有自己的内存空间，所以进程间通信比较困难。线程比进程轻量级，属于同一进程的多个线程间可以共享全部资源。协程与线程类似，不同点在于，线程由系统控制切换，协程是由用户控制切换。</p>
+<p>那么，控制切换，指的是控制什么的切换呢？</p>
+<p>在一个进程中执行的程序，有时需要同时处理多个工作，这时我们可以创建多个线程，让每个线程处理一个工作。但是，进程只有一个。就好比一个人，你给他分配了多个工作，帮他把每个工作单独拉了一个列表，可还是他一个人干，他只能一会儿干干这一会儿干干那，来模拟多个工作同时进行的状态，这就是所谓的系统控制切换，系统不停的在多个线程间切换来达到并行的效果。你可能会说，那根一件一件干不是一样吗？没错，是一样的，在只有一个cpu的电脑上，用不用多线程程序执行的时间是一样的。但是，如果这个人长了两个脑袋呢？那么他就能同时处理两件工作了。多核cpu就是那个长了好多个脑地的人……而协程的切换是要由用户手动来控制的，所以协程并适合并行计算，而更多的用来优化程序结构。</p>
+<h1 id="js都支持吗？"><a href="#js都支持吗？" class="headerlink" title="js都支持吗？"></a>js都支持吗？</h1><p>这要看js在什么环境运行。</p>
+<p>在浏览器中，可以通过webworkers创建进程，可以通过async/await，yield/Generator/GeneratorFunction实现协程，控制程序切换。</p>
+<p>在node中，除了可以使用上面浏览器中可以使用的方法，还可以通过cluster，child_process创建进程，通过libuv，tagg创建线程</p>
+<h1 id="刚才提到的那些都是啥？怎么用？"><a href="#刚才提到的那些都是啥？怎么用？" class="headerlink" title="刚才提到的那些都是啥？怎么用？"></a>刚才提到的那些都是啥？怎么用？</h1><h2 id="webworkers"><a href="#webworkers" class="headerlink" title="webworkers"></a>webworkers</h2><p>简单点儿说就是使用webworkers你可以在全新的环境中运行一个你指定的js文件。这个全新的环境是独立的，既一个全新的进程，有点儿像一个新iframe还没有window.top，window.parent属性，哈哈……</p>
+<p>webworkers创建的进程和主进程之间可以通过message事件传递消息，但是消息只能是字符串，所以想要传对象和数组就只能传json了……这也是他不方便的地方。</p>
+<p>具体使用方法可以看MDN上的文章：<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers" target="_blank" rel="external">使用 Web Workers</a></p>
+<h2 id="async-await"><a href="#async-await" class="headerlink" title="async/await"></a>async/await</h2><p>async/await是es7中新加的两个关键字，async 可以声明一个异步函数，此函数需要返回一个 Promise 对象。await 可以等待一个 Promise 对象 resolve，并拿到结果。</p>
+<p>其实就是类似汇编的寄存器和跳转指令……呃，通俗的说就是可以根据状态跳转态另一个函数半中间。</p>
+<p>由于es7还未在各个环境实现，想要使用的话还的用一些babel-polyfill之类的库做兼容……</p>
+<p>更详细介绍请看阿阮的文章：<a href="http://es6.ruanyifeng.com/?search=async&amp;x=0&amp;y=0#docs/async" target="_blank" rel="external">异步操作和Async函数</a></p>
+<h2 id="yield-Generator-GeneratorFunction"><a href="#yield-Generator-GeneratorFunction" class="headerlink" title="yield/Generator/GeneratorFunction"></a>yield/Generator/GeneratorFunction</h2><p>generator是es6中新增的函数，本质是可以将一个函数执行暂停，并保存上下文，再次调用时恢复当时的状态。但是用来解决协程切换的问题貌似有点儿滥用特性的感觉呢……</p>
+<p>更详细介绍请看阿阮的文章：<a href="http://es6.ruanyifeng.com/?search=async&amp;x=0&amp;y=0#docs/generator" target="_blank" rel="external">Generator 函数</a></p>
+<h2 id="cluster"><a href="#cluster" class="headerlink" title="cluster"></a>cluster</h2><p>cluster是node官方提供的一个多进程模块，效果和C语言的fork函数类似，当前文件完全重新执行一遍，通过cluster.isMaster判断是不是主进程，在区分不同的操作。进程间通过事件回调来通信，NodeJS 0.6.x 以上的版本开始支持。</p>
+<p>示例代码就不放了，node官方文档上写的很详细：<a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a></p>
+<h2 id="child-process"><a href="#child-process" class="headerlink" title="child_process"></a>child_process</h2><p>node自带的child_process模块里的fork函数可以实现类似浏览器里webworkers的效果，使用方法和webworker一毛一样，都是通过读取新文件开启新进程，通过message通信。</p>
+<p>具体介绍请看文档：<a href="https://nodejs.org/api/child_process.html#child_process_child_process_fork_modulepath_args_options" target="_blank" rel="external">child_process.fork(modulePath[, args][, options])</a></p>
+<p>官方文档没有示例，下面给出一个web服务接收参数计算斐波那契数组的例子：</p>
+<h3 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a>index.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</div><div class="line"><span class="keyword">var</span> fork = <span class="built_in">require</span>(<span class="string">'child_process'</span>).fork;</div><div class="line"><span class="keyword">var</span> app = express();</div><div class="line">app.get(<span class="string">'/'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> worker = fork(<span class="string">'./work_fibo.js'</span>) <span class="comment">//创建一个工作进程</span></div><div class="line">	worker.on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">m</span>) </span>&#123;<span class="comment">//接收工作进程计算结果</span></div><div class="line">		<span class="keyword">if</span>(<span class="string">'object'</span> === <span class="keyword">typeof</span> m &amp;&amp; m.type === <span class="string">'fibo'</span>)&#123;</div><div class="line">			worker.kill();<span class="comment">//发送杀死进程的信号</span></div><div class="line">			res.send(m.result.toString());<span class="comment">//将结果返回客户端</span></div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">	worker.send(&#123;<span class="attr">type</span>:<span class="string">'fibo'</span>,<span class="attr">num</span>:~~req.query.n || <span class="number">1</span>&#125;);<span class="comment">//发送给工作进程计算fibo的数量</span></div><div class="line">&#125;);</div><div class="line">app.listen(<span class="number">8124</span>);</div></pre></td></tr></table></figure>
+<h3 id="work-fibo-js"><a href="#work-fibo-js" class="headerlink" title="work_fibo.js"></a>work_fibo.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fibo = <span class="function"><span class="keyword">function</span> <span class="title">fibo</span> (<span class="params">n</span>) </span>&#123;<span class="comment">//定义算法</span></div><div class="line">	<span class="keyword">return</span> n &gt; <span class="number">1</span> ? fibo(n - <span class="number">1</span>) + fibo(n - <span class="number">2</span>) : <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line">process.on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">m</span>) </span>&#123;</div><div class="line"><span class="comment">//接收主进程发送过来的消息</span></div><div class="line">	<span class="keyword">if</span>(<span class="keyword">typeof</span> m === <span class="string">'object'</span> &amp;&amp; m.type === <span class="string">'fibo'</span>)&#123;</div><div class="line">		<span class="keyword">var</span> num = fibo(~~m.num);</div><div class="line">		<span class="comment">//计算jibo</span></div><div class="line">		process.send(&#123;<span class="attr">type</span>: <span class="string">'fibo'</span>,<span class="attr">result</span>:num&#125;)</div><div class="line">		<span class="comment">//计算完毕返回结果        </span></div><div class="line">	&#125;</div><div class="line">&#125;);</div><div class="line">process.on(<span class="string">'SIGHUP'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	process.exit();<span class="comment">//收到kill信息，进程退出</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="libuv"><a href="#libuv" class="headerlink" title="libuv"></a>libuv</h2><p>libuv是node底层实现使用的c++库……呃，所以如果你想使用这个库来实现多线程，那么你就得编写c++的代码了，不得不说，要想真正理解程序的本质，不多掌握几门语言真是不行啊……</p>
+<p>对c++不了解我就不瞎BB了，推荐两篇文章延伸阅读：</p>
+<ul>
+<li><a href="http://blog.csdn.net/limite_god/article/details/43668235" target="_blank" rel="external">libuv多线程处理的简单示例</a></li>
+<li><a href="http://snoopyxdy.blog.163.com/blog/static/601174402013422103614385/" target="_blank" rel="external">利用libuv编写异步多线程的addon实例</a></li>
+</ul>
+<h2 id="tagg"><a href="#tagg" class="headerlink" title="tagg"></a>tagg</h2><p>tagg(Threads a gogo for Node.js)是Jorge Chamorro Bieling开发的一个node包。使用c语言phread库实现的多线程。</p>
+<p>还是那刚才的斐波那契数组计算为例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Threads = <span class="built_in">require</span>(<span class="string">'threads_a_gogo'</span>);<span class="comment">//加载tagg包</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibo</span>(<span class="params">n</span>) </span>&#123;<span class="comment">//定义斐波那契数组计算函数</span></div><div class="line">	<span class="keyword">return</span> n &gt; <span class="number">1</span> ? fibo(n - <span class="number">1</span>) + fibo(n - <span class="number">2</span>) : <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> t = Threads.create().eval(fibo);</div><div class="line">t.eval(<span class="string">'fibo(35)'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, result</span>) </span>&#123;<span class="comment">//将fibo(35)丢入子线程运行</span></div><div class="line">	<span class="keyword">if</span> (err) <span class="keyword">throw</span> err; <span class="comment">//线程创建失败</span></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'fibo(35)='</span> + result);<span class="comment">//打印fibo执行35次的结果</span></div><div class="line">&#125;);</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'not block'</span>);<span class="comment">//打印信息了，表示没有阻塞</span></div></pre></td></tr></table></figure>
+<p>最后结果：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">not block</div><div class="line">fibo(<span class="number">35</span>)=<span class="number">14930352</span></div></pre></td></tr></table></figure></p>
+<p>我们可以看到执行效果与webworker类似，不同的是通信使用了异步回调的方式。</p>
+<p>值得一提的是tagg包目前只能在linux下安装运行，这里再推荐一个tagg2包，是跨平台的。</p>
+<p>这里需要重点提一下的是，不论tagg还是tagg2包都是利用phtread库和v8的v8::Isolate Class类来实现js多线程功能的。</p>
+<blockquote>
+<p>Isolate代表着一个独立的v8引擎实例，v8的Isolate拥有完全分开的状态，在一个Isolate实例中的对象不能够在另外一个Isolate实例中使用。嵌入式开发者可以在其他线程创建一些额外的Isolate实例并行运行。在任何时刻，一个Isolate实例只能够被一个线程进行访问，可以利用加锁/解锁进行同步操作。</p>
+</blockquote>
+<p>换而言之，我们在进行v8的嵌入式开发时，无法在多线程中访问js变量，这条规则将直接导致我们之前的tagg2里面线程执行的函数无法使用Node.js的核心api，比如fs，crypto等模块。</p>
+<p>延伸阅读：</p>
+<ul>
+<li><a href="https://github.com/xk/node-threads-a-gogo" target="_blank" rel="external">tagg</a></li>
+<li><a href="https://github.com/DoubleSpout/node-threads-a-gogo2" target="_blank" rel="external">tagg2</a></li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>经过以上的学习，我们大概应该了解到进程、线程、协程的使用场景了，进程、线程适合用来处理计算密集型操作，协程适合用来优化代码结构，解决回调函数嵌套问题。线程比进程更轻，更节省资源，但是由于上面提到的线程问题，针对一些可以使用js原生的大量计算或循环还可以用用，涉及到使用nodejs核心api的操作，就要用进程解决了。</p>
+<h1 id="p-s-我的问题"><a href="#p-s-我的问题" class="headerlink" title="p.s. 我的问题"></a>p.s. 我的问题</h1><p>我在工作中使用的是fis配合grunt调用打包。由于要同时打包多个项目，grunt和fis都会定义全局变量，各个模块之间的配置可能会相互影响，各个模块在打包过程中又没有相互的通信，同时为了提高效率，非常时候适合使用多进程的方式来运行脚本。所以用cluster实现了多进程打包的。</p>
+<p>最后，祝大家新年快乐，1号胖三斤，3号金三胖~ ┑(￣Д ￣)┍</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nodejs/" rel="tag"># nodejs</a>
+          
+            <a href="/tags/webworkers/" rel="tag"># webworkers</a>
+          
+            <a href="/tags/cluster/" rel="tag"># cluster</a>
+          
+            <a href="/tags/child-process/" rel="tag"># child_process</a>
+          
+            <a href="/tags/tagg2/" rel="tag"># tagg2</a>
+          
+            <a href="/tags/yield/" rel="tag"># yield</a>
+          
+            <a href="/tags/generator/" rel="tag"># generator</a>
+          
+            <a href="/tags/async/" rel="tag"># async</a>
+          
+            <a href="/tags/await/" rel="tag"># await</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/23/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps/" rel="next" title="响应式react：构建高效易用的react应用">
+                <i class="fa fa-chevron-left"></i> 响应式react：构建高效易用的react应用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/12/30/process-thread-and-coroutine-in-javascript/"
+           data-title="javascript中的进程、线程和协程" data-url="http://brooch.me/2016/12/30/process-thread-and-coroutine-in-javascript/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="投身烈火" />
+          <p class="site-author-name" itemprop="name">投身烈火</p>
+          <p class="site-description motion-element" itemprop="description">白云苍狗，时光悠悠~ ￣ω￣=</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/81735595" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/p/1005051063629865" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              My Friends
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kouyun.me" title="寇云" target="_blank">寇云</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://testudy.cc" title="胡继伟" target="_blank">胡继伟</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yj1438.github.io/" title="尹杰" target="_blank">尹杰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/cnsnake11/blog" title="曹楠" target="_blank">曹楠</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ushtml.com/" title="武明礼" target="_blank">武明礼</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanyouwei.com/" title="占友伟" target="_blank">占友伟</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概念"><span class="nav-number">1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#简单概括一下它们间的区别"><span class="nav-number">2.</span> <span class="nav-text">简单概括一下它们间的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#js都支持吗？"><span class="nav-number">3.</span> <span class="nav-text">js都支持吗？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#刚才提到的那些都是啥？怎么用？"><span class="nav-number">4.</span> <span class="nav-text">刚才提到的那些都是啥？怎么用？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#webworkers"><span class="nav-number">4.1.</span> <span class="nav-text">webworkers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#async-await"><span class="nav-number">4.2.</span> <span class="nav-text">async/await</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#yield-Generator-GeneratorFunction"><span class="nav-number">4.3.</span> <span class="nav-text">yield/Generator/GeneratorFunction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cluster"><span class="nav-number">4.4.</span> <span class="nav-text">cluster</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#child-process"><span class="nav-number">4.5.</span> <span class="nav-text">child_process</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#index-js"><span class="nav-number">4.5.1.</span> <span class="nav-text">index.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#work-fibo-js"><span class="nav-number">4.5.2.</span> <span class="nav-text">work_fibo.js</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#libuv"><span class="nav-number">4.6.</span> <span class="nav-text">libuv</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tagg"><span class="nav-number">4.7.</span> <span class="nav-text">tagg</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#p-s-我的问题"><span class="nav-number">6.</span> <span class="nav-text">p.s. 我的问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">投身烈火</span>
+</div>
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"81735595"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>

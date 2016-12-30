@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2016-12-23T13:59:43.000Z</updated>
+  <updated>2016-12-30T15:30:49.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -14,6 +14,102 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>javascript中的进程、线程和协程</title>
+    <link href="http://brooch.me/2016/12/30/process-thread-and-coroutine-in-javascript/"/>
+    <id>http://brooch.me/2016/12/30/process-thread-and-coroutine-in-javascript/</id>
+    <published>2016-12-30T15:26:28.000Z</published>
+    <updated>2016-12-30T15:30:49.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>这周一直在编前端构建的脚本，用到了多进程去解决一个效率问题。期间差了很多进程、线程、协程的资料，在这里记录回顾一下。</p>
+<a id="more"></a>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><p>关于进程、线程、协程的概念这里就不再赘述了，具体的可以参考wiki百科：</p>
+<ul>
+<li><p><a href="https://zh.wikipedia.org/wiki/%E8%A1%8C%E7%A8%8B" target="_blank" rel="external">进程</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/%E7%BA%BF%E7%A8%8B" target="_blank" rel="external">线程</a></p>
+</li>
+<li><p><a href="https://zh.wikipedia.org/wiki/%E5%8D%8F%E7%A8%8B" target="_blank" rel="external">协程</a></p>
+</li>
+</ul>
+<h1 id="简单概括一下它们间的区别"><a href="#简单概括一下它们间的区别" class="headerlink" title="简单概括一下它们间的区别"></a>简单概括一下它们间的区别</h1><p>就是相对线程和协程，进程更独立，有自己的内存空间，所以进程间通信比较困难。线程比进程轻量级，属于同一进程的多个线程间可以共享全部资源。协程与线程类似，不同点在于，线程由系统控制切换，协程是由用户控制切换。</p>
+<p>那么，控制切换，指的是控制什么的切换呢？</p>
+<p>在一个进程中执行的程序，有时需要同时处理多个工作，这时我们可以创建多个线程，让每个线程处理一个工作。但是，进程只有一个。就好比一个人，你给他分配了多个工作，帮他把每个工作单独拉了一个列表，可还是他一个人干，他只能一会儿干干这一会儿干干那，来模拟多个工作同时进行的状态，这就是所谓的系统控制切换，系统不停的在多个线程间切换来达到并行的效果。你可能会说，那根一件一件干不是一样吗？没错，是一样的，在只有一个cpu的电脑上，用不用多线程程序执行的时间是一样的。但是，如果这个人长了两个脑袋呢？那么他就能同时处理两件工作了。多核cpu就是那个长了好多个脑地的人……而协程的切换是要由用户手动来控制的，所以协程并适合并行计算，而更多的用来优化程序结构。</p>
+<h1 id="js都支持吗？"><a href="#js都支持吗？" class="headerlink" title="js都支持吗？"></a>js都支持吗？</h1><p>这要看js在什么环境运行。</p>
+<p>在浏览器中，可以通过webworkers创建进程，可以通过async/await，yield/Generator/GeneratorFunction实现协程，控制程序切换。</p>
+<p>在node中，除了可以使用上面浏览器中可以使用的方法，还可以通过cluster，child_process创建进程，通过libuv，tagg创建线程</p>
+<h1 id="刚才提到的那些都是啥？怎么用？"><a href="#刚才提到的那些都是啥？怎么用？" class="headerlink" title="刚才提到的那些都是啥？怎么用？"></a>刚才提到的那些都是啥？怎么用？</h1><h2 id="webworkers"><a href="#webworkers" class="headerlink" title="webworkers"></a>webworkers</h2><p>简单点儿说就是使用webworkers你可以在全新的环境中运行一个你指定的js文件。这个全新的环境是独立的，既一个全新的进程，有点儿像一个新iframe还没有window.top，window.parent属性，哈哈……</p>
+<p>webworkers创建的进程和主进程之间可以通过message事件传递消息，但是消息只能是字符串，所以想要传对象和数组就只能传json了……这也是他不方便的地方。</p>
+<p>具体使用方法可以看MDN上的文章：<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers" target="_blank" rel="external">使用 Web Workers</a></p>
+<h2 id="async-await"><a href="#async-await" class="headerlink" title="async/await"></a>async/await</h2><p>async/await是es7中新加的两个关键字，async 可以声明一个异步函数，此函数需要返回一个 Promise 对象。await 可以等待一个 Promise 对象 resolve，并拿到结果。</p>
+<p>其实就是类似汇编的寄存器和跳转指令……呃，通俗的说就是可以根据状态跳转态另一个函数半中间。</p>
+<p>由于es7还未在各个环境实现，想要使用的话还的用一些babel-polyfill之类的库做兼容……</p>
+<p>更详细介绍请看阿阮的文章：<a href="http://es6.ruanyifeng.com/?search=async&amp;x=0&amp;y=0#docs/async" target="_blank" rel="external">异步操作和Async函数</a></p>
+<h2 id="yield-Generator-GeneratorFunction"><a href="#yield-Generator-GeneratorFunction" class="headerlink" title="yield/Generator/GeneratorFunction"></a>yield/Generator/GeneratorFunction</h2><p>generator是es6中新增的函数，本质是可以将一个函数执行暂停，并保存上下文，再次调用时恢复当时的状态。但是用来解决协程切换的问题貌似有点儿滥用特性的感觉呢……</p>
+<p>更详细介绍请看阿阮的文章：<a href="http://es6.ruanyifeng.com/?search=async&amp;x=0&amp;y=0#docs/generator" target="_blank" rel="external">Generator 函数</a></p>
+<h2 id="cluster"><a href="#cluster" class="headerlink" title="cluster"></a>cluster</h2><p>cluster是node官方提供的一个多进程模块，效果和C语言的fork函数类似，当前文件完全重新执行一遍，通过cluster.isMaster判断是不是主进程，在区分不同的操作。进程间通过事件回调来通信，NodeJS 0.6.x 以上的版本开始支持。</p>
+<p>示例代码就不放了，node官方文档上写的很详细：<a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a></p>
+<h2 id="child-process"><a href="#child-process" class="headerlink" title="child_process"></a>child_process</h2><p>node自带的child_process模块里的fork函数可以实现类似浏览器里webworkers的效果，使用方法和webworker一毛一样，都是通过读取新文件开启新进程，通过message通信。</p>
+<p>具体介绍请看文档：<a href="https://nodejs.org/api/child_process.html#child_process_child_process_fork_modulepath_args_options" target="_blank" rel="external">child_process.fork(modulePath[, args][, options])</a></p>
+<p>官方文档没有示例，下面给出一个web服务接收参数计算斐波那契数组的例子：</p>
+<h3 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a>index.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</div><div class="line"><span class="keyword">var</span> fork = <span class="built_in">require</span>(<span class="string">'child_process'</span>).fork;</div><div class="line"><span class="keyword">var</span> app = express();</div><div class="line">app.get(<span class="string">'/'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> worker = fork(<span class="string">'./work_fibo.js'</span>) <span class="comment">//创建一个工作进程</span></div><div class="line">	worker.on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">m</span>) </span>&#123;<span class="comment">//接收工作进程计算结果</span></div><div class="line">		<span class="keyword">if</span>(<span class="string">'object'</span> === <span class="keyword">typeof</span> m &amp;&amp; m.type === <span class="string">'fibo'</span>)&#123;</div><div class="line">			worker.kill();<span class="comment">//发送杀死进程的信号</span></div><div class="line">			res.send(m.result.toString());<span class="comment">//将结果返回客户端</span></div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">	worker.send(&#123;<span class="attr">type</span>:<span class="string">'fibo'</span>,<span class="attr">num</span>:~~req.query.n || <span class="number">1</span>&#125;);<span class="comment">//发送给工作进程计算fibo的数量</span></div><div class="line">&#125;);</div><div class="line">app.listen(<span class="number">8124</span>);</div></pre></td></tr></table></figure>
+<h3 id="work-fibo-js"><a href="#work-fibo-js" class="headerlink" title="work_fibo.js"></a>work_fibo.js</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fibo = <span class="function"><span class="keyword">function</span> <span class="title">fibo</span> (<span class="params">n</span>) </span>&#123;<span class="comment">//定义算法</span></div><div class="line">	<span class="keyword">return</span> n &gt; <span class="number">1</span> ? fibo(n - <span class="number">1</span>) + fibo(n - <span class="number">2</span>) : <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line">process.on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">m</span>) </span>&#123;</div><div class="line"><span class="comment">//接收主进程发送过来的消息</span></div><div class="line">	<span class="keyword">if</span>(<span class="keyword">typeof</span> m === <span class="string">'object'</span> &amp;&amp; m.type === <span class="string">'fibo'</span>)&#123;</div><div class="line">		<span class="keyword">var</span> num = fibo(~~m.num);</div><div class="line">		<span class="comment">//计算jibo</span></div><div class="line">		process.send(&#123;<span class="attr">type</span>: <span class="string">'fibo'</span>,<span class="attr">result</span>:num&#125;)</div><div class="line">		<span class="comment">//计算完毕返回结果        </span></div><div class="line">	&#125;</div><div class="line">&#125;);</div><div class="line">process.on(<span class="string">'SIGHUP'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	process.exit();<span class="comment">//收到kill信息，进程退出</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="libuv"><a href="#libuv" class="headerlink" title="libuv"></a>libuv</h2><p>libuv是node底层实现使用的c++库……呃，所以如果你想使用这个库来实现多线程，那么你就得编写c++的代码了，不得不说，要想真正理解程序的本质，不多掌握几门语言真是不行啊……</p>
+<p>对c++不了解我就不瞎BB了，推荐两篇文章延伸阅读：</p>
+<ul>
+<li><a href="http://blog.csdn.net/limite_god/article/details/43668235" target="_blank" rel="external">libuv多线程处理的简单示例</a></li>
+<li><a href="http://snoopyxdy.blog.163.com/blog/static/601174402013422103614385/" target="_blank" rel="external">利用libuv编写异步多线程的addon实例</a></li>
+</ul>
+<h2 id="tagg"><a href="#tagg" class="headerlink" title="tagg"></a>tagg</h2><p>tagg(Threads a gogo for Node.js)是Jorge Chamorro Bieling开发的一个node包。使用c语言phread库实现的多线程。</p>
+<p>还是那刚才的斐波那契数组计算为例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Threads = <span class="built_in">require</span>(<span class="string">'threads_a_gogo'</span>);<span class="comment">//加载tagg包</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibo</span>(<span class="params">n</span>) </span>&#123;<span class="comment">//定义斐波那契数组计算函数</span></div><div class="line">	<span class="keyword">return</span> n &gt; <span class="number">1</span> ? fibo(n - <span class="number">1</span>) + fibo(n - <span class="number">2</span>) : <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> t = Threads.create().eval(fibo);</div><div class="line">t.eval(<span class="string">'fibo(35)'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, result</span>) </span>&#123;<span class="comment">//将fibo(35)丢入子线程运行</span></div><div class="line">	<span class="keyword">if</span> (err) <span class="keyword">throw</span> err; <span class="comment">//线程创建失败</span></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'fibo(35)='</span> + result);<span class="comment">//打印fibo执行35次的结果</span></div><div class="line">&#125;);</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'not block'</span>);<span class="comment">//打印信息了，表示没有阻塞</span></div></pre></td></tr></table></figure>
+<p>最后结果：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">not block</div><div class="line">fibo(<span class="number">35</span>)=<span class="number">14930352</span></div></pre></td></tr></table></figure></p>
+<p>我们可以看到执行效果与webworker类似，不同的是通信使用了异步回调的方式。</p>
+<p>值得一提的是tagg包目前只能在linux下安装运行，这里再推荐一个tagg2包，是跨平台的。</p>
+<p>这里需要重点提一下的是，不论tagg还是tagg2包都是利用phtread库和v8的v8::Isolate Class类来实现js多线程功能的。</p>
+<blockquote>
+<p>Isolate代表着一个独立的v8引擎实例，v8的Isolate拥有完全分开的状态，在一个Isolate实例中的对象不能够在另外一个Isolate实例中使用。嵌入式开发者可以在其他线程创建一些额外的Isolate实例并行运行。在任何时刻，一个Isolate实例只能够被一个线程进行访问，可以利用加锁/解锁进行同步操作。</p>
+</blockquote>
+<p>换而言之，我们在进行v8的嵌入式开发时，无法在多线程中访问js变量，这条规则将直接导致我们之前的tagg2里面线程执行的函数无法使用Node.js的核心api，比如fs，crypto等模块。</p>
+<p>延伸阅读：</p>
+<ul>
+<li><a href="https://github.com/xk/node-threads-a-gogo" target="_blank" rel="external">tagg</a></li>
+<li><a href="https://github.com/DoubleSpout/node-threads-a-gogo2" target="_blank" rel="external">tagg2</a></li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>经过以上的学习，我们大概应该了解到进程、线程、协程的使用场景了，进程、线程适合用来处理计算密集型操作，协程适合用来优化代码结构，解决回调函数嵌套问题。线程比进程更轻，更节省资源，但是由于上面提到的线程问题，针对一些可以使用js原生的大量计算或循环还可以用用，涉及到使用nodejs核心api的操作，就要用进程解决了。</p>
+<h1 id="p-s-我的问题"><a href="#p-s-我的问题" class="headerlink" title="p.s. 我的问题"></a>p.s. 我的问题</h1><p>我在工作中使用的是fis配合grunt调用打包。由于要同时打包多个项目，grunt和fis都会定义全局变量，各个模块之间的配置可能会相互影响，各个模块在打包过程中又没有相互的通信，同时为了提高效率，非常时候适合使用多进程的方式来运行脚本。所以用cluster实现了多进程打包的。</p>
+<p>最后，祝大家新年快乐，1号胖三斤，3号金三胖~ ┑(￣Д ￣)┍</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这周一直在编前端构建的脚本，用到了多进程去解决一个效率问题。期间差了很多进程、线程、协程的资料，在这里记录回顾一下。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="计算机原理" scheme="http://brooch.me/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="nodejs" scheme="http://brooch.me/tags/nodejs/"/>
+    
+      <category term="webworkers" scheme="http://brooch.me/tags/webworkers/"/>
+    
+      <category term="cluster" scheme="http://brooch.me/tags/cluster/"/>
+    
+      <category term="child_process" scheme="http://brooch.me/tags/child-process/"/>
+    
+      <category term="tagg2" scheme="http://brooch.me/tags/tagg2/"/>
+    
+      <category term="yield" scheme="http://brooch.me/tags/yield/"/>
+    
+      <category term="generator" scheme="http://brooch.me/tags/generator/"/>
+    
+      <category term="async" scheme="http://brooch.me/tags/async/"/>
+    
+      <category term="await" scheme="http://brooch.me/tags/await/"/>
+    
+  </entry>
   
   <entry>
     <title>响应式react：构建高效易用的react应用</title>
