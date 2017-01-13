@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-01-13T14:22:20.000Z</updated>
+  <updated>2017-01-13T14:26:17.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://brooch.me/2017/01/13/an-in-depthexplanation-of-mobx/"/>
     <id>http://brooch.me/2017/01/13/an-in-depthexplanation-of-mobx/</id>
     <published>2017-01-13T13:53:00.000Z</published>
-    <updated>2017-01-13T14:22:20.000Z</updated>
+    <updated>2017-01-13T14:26:17.000Z</updated>
     
     <content type="html"><![CDATA[<blockquote>
 <p>这篇文章翻译自mobx作者 Michel Weststrate 的一篇博客，虽然我也想做到信达雅，奈何英语水平有限……所以其中掺杂了很多我自己的理解。想了解细节的话可移步<a href="https://medium.com/@mweststrate/becoming-fully-reactive-an-in-depth-explanation-of-mobservable-55995262a254#.2lcdbiz5f" target="_blank" rel="external">原文</a></p>
@@ -112,6 +112,14 @@
     
     </summary>
     
+      <category term="学习笔记" scheme="http://brooch.me/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="javascript" scheme="http://brooch.me/tags/javascript/"/>
+    
+      <category term="mobx" scheme="http://brooch.me/tags/mobx/"/>
+    
+      <category term="中文渣翻" scheme="http://brooch.me/tags/%E4%B8%AD%E6%96%87%E6%B8%A3%E7%BF%BB/"/>
     
   </entry>
   
