@@ -1,9 +1,7 @@
 /* global NexT: true */
 
 $(document).ready(function () {
-	if (~window.navigator.userAgent.toLowerCase().indexOf('mobile')) {
-		return;
-	}
+
   initScrollSpy();
   NexT.utils.needAffix() && initAffix();
   initTOCDimension();
@@ -46,7 +44,7 @@ $(document).ready(function () {
       .on('affixed.bs.affix', function () {
         updateTOCHeight(document.body.clientHeight - 100);
       });
-    }
+  }
 
   function initTOCDimension () {
     var updateTOCHeightTimer;
@@ -62,7 +60,7 @@ $(document).ready(function () {
     });
 
     // Initialize TOC Height.
-	updateTOCHeight(document.body.clientHeight - 100);
+    updateTOCHeight(document.body.clientHeight - 100);
 
     // Initialize TOC Width.
     var scrollbarWidth = NexT.utils.getScrollbarWidth();
