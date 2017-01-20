@@ -93,7 +93,7 @@
 <meta property="og:site_name" content="Keep Walking">
 <meta property="og:description" content="起因今年年会的抽奖算法写的实在是太烂。整个整个抽奖流程大概是这样的：每次抽奖是抽奖人先说开始，于是开始播放动画遍历队列，然后过一段时间，抽奖人说停，遍历结束，停在哪儿谁就中奖。可是不用看代码我都知道，每次抽奖时没有对队列进行随机排序。因为有动画效果，遍历的速度不可能很快，抽奖人又不会等很久才说停，所以排在后面的怎么可能中奖（我就是排在后面的）……于是我开始思考，如果是我，我会怎么写这个抽奖的程序呢">
 <meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/gab-draw-1.png">
-<meta property="og:updated_time" content="2017-01-20T10:23:55.000Z">
+<meta property="og:updated_time" content="2017-01-20T10:26:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一场抽奖引发的扯淡">
 <meta name="twitter:description" content="起因今年年会的抽奖算法写的实在是太烂。整个整个抽奖流程大概是这样的：每次抽奖是抽奖人先说开始，于是开始播放动画遍历队列，然后过一段时间，抽奖人说停，遍历结束，停在哪儿谁就中奖。可是不用看代码我都知道，每次抽奖时没有对队列进行随机排序。因为有动画效果，遍历的速度不可能很快，抽奖人又不会等很久才说停，所以排在后面的怎么可能中奖（我就是排在后面的）……于是我开始思考，如果是我，我会怎么写这个抽奖的程序呢">
@@ -371,6 +371,7 @@
 
       
         <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>今年年会的抽奖算法写的实在是太烂。整个整个抽奖流程大概是这样的：每次抽奖是抽奖人先说开始，于是开始播放动画遍历队列，然后过一段时间，抽奖人说停，遍历结束，停在哪儿谁就中奖。可是不用看代码我都知道，每次抽奖时没有对队列进行随机排序。因为有动画效果，遍历的速度不可能很快，抽奖人又不会等很久才说停，所以排在后面的怎么可能中奖（我就是排在后面的）……于是我开始思考，如果是我，我会怎么写这个抽奖的程序呢。</p>
+<a id="more"></a>
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>抽奖可以概括的描述为：从一个指定的集合中，随机选出若干个元素。</p>
 <p>ok，用编程语言翻译翻译：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">draw</span>(<span class="params">list = [], number = <span class="number">0</span></span>) </span>&#123;</div><div class="line">	list = list.concat()</div><div class="line">	<span class="keyword">let</span> result = []</div><div class="line">	<span class="keyword">while</span> (number--) &#123;</div><div class="line">		result.push(list.splice(<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random()*list.length), <span class="number">1</span>)[<span class="number">0</span>])</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> result</div><div class="line">&#125;</div><div class="line"><span class="keyword">let</span> drawResult = draw([<span class="string">'刘能'</span>, <span class="string">'谢大脚'</span>, <span class="string">'王长贵'</span>, <span class="string">'赵四'</span>, <span class="string">'刘英'</span>, <span class="string">'李大国'</span>, <span class="string">'赵玉田'</span>, <span class="string">'刘大脑袋'</span>, <span class="string">'王天来'</span>, <span class="string">'王大拿'</span>, <span class="string">'李秋歌'</span>], <span class="number">3</span>)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">`中奖者为：<span class="subst">$&#123;drawResult.join(<span class="string">'，'</span>)&#125;</span>`</span>)</div></pre></td></tr></table></figure>
