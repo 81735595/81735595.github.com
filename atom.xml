@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-01-20T10:26:39.000Z</updated>
+  <updated>2017-01-25T08:53:00.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -14,6 +14,139 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>javascript实现年终奖避税程序</title>
+    <link href="http://brooch.me/2017/01/24/javascript-year-bonus-evade-tax/"/>
+    <id>http://brooch.me/2017/01/24/javascript-year-bonus-evade-tax/</id>
+    <published>2017-01-24T07:50:40.000Z</published>
+    <updated>2017-01-25T08:53:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>昨天公司发了年终奖，扣了我20%的税…我就操了，肉疼啊…T^T…话说年终奖避税不是没有办法啊，为毛不给整整呢，总觉得肯定有什么不可告人的秘密…</p>
+<p>于是我决定写个年终奖避税的程序去去火，不然这口气憋在心里非憋坏了不可…</p>
+<a id="more"></a>
+<h2 id="政策调查"><a href="#政策调查" class="headerlink" title="政策调查"></a>政策调查</h2><p>调查了下相关的政策，根据现有个人所得税计税办法，个人薪酬计税有两种方式，一种为月工资（含月奖金）计税，一种为年终奖综合计税。在年终奖综合计税发放过程中，在某些区间会出现税前奖金增加，税后实际收入反而减少的情况。</p>
+<p>具体的税收办法是这样的，</p>
+<p>月工资计税公式：</p>
+<ul>
+<li>应纳税额 = 月工资应纳税所得额 * 适用税率 - 速算扣除数</li>
+<li>月工资应纳税所得额 = 计税月工资额 - 个人所得税起征点</li>
+<li>个人所得税起征点 = 3500</li>
+</ul>
+<p>解释两个概念：</p>
+<ul>
+<li><strong>个人所得税起征点</strong><br>既税法规定的费用扣除额。</li>
+<li><strong>速算扣除数</strong><br>速算扣除数并非税法规定，而是根据税法推算出来的一个方便计算的系数。<br>税法中关于个税的计算应该是分阶段的。不超过1500元的收3%，超过1500元至4500元的部分收10%，超过4500元至9000元的部分20%… 如果某人扣保险后工资10000，怎么计算呢？10000 = 3500 + 1500 + 3000 + 2000。 其中3500免征；1500按3%，征税45元；3000按10%，征300元；2000按20%，征400元。整个算下来征税745元。这么算很麻烦，所以会计们发明了速算扣除数。税率3%对应速算扣除数为0；税率10%对应速算扣除数为 1500 * (10% - 3%) + 0 = 105；税率20%对应速算扣除数为 4500 * (20% - 10%) + 105 = 555；以此类推，得到级别的速算扣除数。</li>
+</ul>
+<p>放上汇总之后的个人所得税税率表，之后会用到：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">级数</th>
+<th style="text-align:center">全月应纳税所得额（元）</th>
+<th style="text-align:center">税率（%）</th>
+<th style="text-align:center">速算扣除数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0 ~ 1500</td>
+<td style="text-align:center">3</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">1500.01 ~ 4500</td>
+<td style="text-align:center">10</td>
+<td style="text-align:center">105</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">4500.01 ~ 9000</td>
+<td style="text-align:center">20</td>
+<td style="text-align:center">555</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">9000.01 ~ 35000</td>
+<td style="text-align:center">25</td>
+<td style="text-align:center">1005</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">35000.01 ~ 55000</td>
+<td style="text-align:center">30</td>
+<td style="text-align:center">2755</td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">55000.01 ~ 80000</td>
+<td style="text-align:center">35</td>
+<td style="text-align:center">5505</td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">80000.01 ~ ∞</td>
+<td style="text-align:center">45</td>
+<td style="text-align:center">13505</td>
+</tr>
+</tbody>
+</table>
+<p>年终奖综合计税办法：</p>
+<p>纳税人取得全年一次性奖金，单独作为一个月工资、薪金所得计算纳税，并按以下办法计税。</p>
+<ul>
+<li><p>(一) 先将雇员当月内取得的全年一次性奖金，除以12个月，按其商数确定适用税率和速算扣除数。 如果在发放年终一次性奖金的当月，雇员当月计税工资额低于税法规定的费用扣除额（个人所得税起征点3500元），应将全年一次性奖金减除”雇员当月计税工资额与费用扣除额的差额”后的余额，按上述办法确定全年一次性奖金的适用税率和速算扣除数。</p>
+</li>
+<li><p>(二) 将雇员个人当月内取得的全年一次性奖金，按第(一)项确定的适用税率和速算扣除数计算征税，计算公式如下：</p>
+<ol>
+<li>如果雇员当月工资薪金所得高于(或等于)税法规定的费用扣除额的，适用公式为： 应纳税额 ＝ 雇员当月取得全年一次性奖金 * 适用税率 - 速算扣除数</li>
+<li>如果雇员当月计税工资额低于税法规定的费用扣除额的，适用公式为： 应纳税额 ＝ (雇员当月取得全年一次性奖金 - 雇员当月计税工资额与费用扣除额的差额) * 适用税率 - 速算扣除数</li>
+</ol>
+</li>
+<li><p>(三) 在一个纳税年度内，对每一个纳税人，该计税办法只允许采用一次。</p>
+</li>
+</ul>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>看过刚才的政策，咱们再来看三个例子：</p>
+<ul>
+<li><p>员工A，月薪2500，年终奖为5000，应缴个税为150，计算过程如下： 先算计税基础，(5000 - (3500 - 2500)) / 12 = 333.33，查税率表，适用3%的税率。 再算应纳所得税，5000 * 3% - 0 = 150，税后所得为 5000 - 150 = 4850。</p>
+</li>
+<li><p>员工B，月薪9000，年终奖18000，应缴个税为540，计算过程如下： 先算计税基础，18000 / 12 = 1500，查税率表，适用3%的税率。 再算应纳所得税，18000 * 3% - 0 = 540，税后所得为 18000 - 540 = 17460。</p>
+</li>
+<li><p>员工C，月薪9500，年终奖19000，应缴个税为1795，计算过程更上面一样，计算过程如下： 先算计税基础，19000 / 12 = 1583.3，查税率表，适用10%的税率。 再算应纳所得税，19000 * 10% - 105 = 1795，税后所得为 19000 - 1795 = 17205。</p>
+</li>
+</ul>
+<p>看过之前三个例子你发现了吗？员工C虽然账面上比员工B多拿了1000的年终奖，但是实际所得却比员工B还少…这就是之前咱们说到的那个问题…也是年终奖需要避税的主要原因…</p>
+<p>造成这个问题的主要原因，是由于税率虽然按照年终奖的12分之1计算了，但是速算扣除数却没有对应的扩大12倍。</p>
+<p>假如速算扣除数也相应扩大12倍，那么年终奖19000的应缴个税为19000 * 10% - 105 * 12 = 640，这样和年终奖18000纳所得税540是不是差异就很小了？</p>
+<p>据说之所以没有执行这样的政策，是因为年终奖一般都会超过一个月工资，直接按照个人所得税的税率纳税，肯定是要多缴税的。除以12个月作为计税基础，已经是税务局给予纳税人很大的优惠了，所以速算扣除数不能再给予优惠…</p>
+<h2 id="避税"><a href="#避税" class="headerlink" title="避税"></a>避税</h2><p>常见的年终奖避税方式是将年终奖拆分，一部分按年终奖综合计税发放，一部分随月工资发放，一般1到2个月发完。</p>
+<p>比如，月薪9500，年终奖19000，如果不做拆分直接纳税，应缴个税1795。如果拆分为年终发18000，之后月工资多发1000奖金，年终奖部分应缴个税应为18000 * 3% = 540，工资部分应缴个税(9500 + 1000 - 3500) * 20% - 555 = 845，比按月薪9500缴纳个税多缴了 200，所以总共少缴纳个税1795 - (540 + 200) = 1055</p>
+<p>按照这个思路就来设计一个程序，来自动计算怎么拆分最好，能让收入最多。</p>
+<h2 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h2><p>首先考虑下这个程序的输入输出，输入月工资和年终奖，然后打印出年终奖发多少，剩余的怎么拆分。</p>
+<p>然后考虑具体的功能，缴税额计算都有现成的公式，封装成独立的函数就行了。年终奖的拆分应该会出现三种情况：不拆分最优，拆分入一个月最优，拆分入两个月最优。</p>
+<p>因为暂时还没想到什么好算法，所以就不考虑性能，先实现了功能再说，用遍历把所有可能的拆分都试一遍，以后在考虑做剪枝。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> baseQuota = <span class="number">3500</span>;</div><div class="line"><span class="keyword">var</span> taxQuota = [<span class="number">1500</span>, <span class="number">4500</span>, <span class="number">9000</span>, <span class="number">35000</span>, <span class="number">55000</span>, <span class="number">80000</span>];</div><div class="line"><span class="keyword">var</span> taxRat = [<span class="number">0.03</span>, <span class="number">0.10</span>, <span class="number">0.20</span>, <span class="number">0.25</span>, <span class="number">0.30</span>, <span class="number">0.35</span>, <span class="number">0.45</span>];</div><div class="line"><span class="keyword">var</span> taxQuick = [<span class="number">0</span>, <span class="number">105</span>, <span class="number">555</span>, <span class="number">1005</span>, <span class="number">2755</span>, <span class="number">5505</span>, <span class="number">13505</span>];</div><div class="line"></div><div class="line"><span class="comment">// 获取不拆分年奖交税总额</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getOnlyBonusTax</span>(<span class="params">yearBonus, monthSalary</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> tax = <span class="number">0</span>;</div><div class="line">    <span class="keyword">if</span> (monthSalary &gt; baseQuota) &#123;</div><div class="line">        perMonth = yearBonus / <span class="number">12</span>;</div><div class="line">        tax = round(yearBonus * getTaxRat(perMonth) - getTaxQuick(perMonth), <span class="number">2</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">if</span> (yearBonus &lt; baseQuota - monthSalary) &#123;</div><div class="line">            tax = <span class="number">0</span>;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            perMonth = (yearBonus - (baseQuota - monthSalary)) / <span class="number">10</span>;</div><div class="line">            tax = (yearBonus - (baseQuota - monthSalary)) * getTaxRat(perMonth) - getTaxQuick(perMonth);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> tax;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取税率等级</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getTaxNum</span>(<span class="params">money</span>)</span>&#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>, l = taxQuota.length; i &lt; l; i++) &#123;</div><div class="line">        <span class="keyword">if</span> (money &lt;= taxQuota[i]) &#123;</div><div class="line">            <span class="keyword">return</span> i;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> i;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取税率</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getTaxRat</span>(<span class="params">money</span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> taxRat[getTaxNum(money)];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取速算扣除数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getTaxQuick</span>(<span class="params">money</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> taxQuick[getTaxNum(money)];</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取平常月交税金额</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getMonthTax</span>(<span class="params">money</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (money &gt; baseQuota) &#123;</div><div class="line">        <span class="keyword">return</span> getTax(money - baseQuota);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取年奖平均月交税金额</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getPerMonthTax</span>(<span class="params">money</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> getTax(money);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 计算个人所得税金额</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getTax</span>(<span class="params">money</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> round(money * getTaxRat(money) - getTaxQuick(money), <span class="number">2</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 计算增加的交税金额</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getMonthTaxAdd</span>(<span class="params">monthSalary, addNum</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> monthAddSalary = monthSalary + addNum;</div><div class="line">    monthTaxAdd = round(getMonthTax(monthAddSalary) - getMonthTax(monthSalary), <span class="number">2</span>);</div><div class="line">    <span class="keyword">return</span> monthTaxAdd;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 计算金额小数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">round</span>(<span class="params">num, toFix</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">parseFloat</span>(num.toFixed(toFix), <span class="number">10</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取拆分为一个月交税总额</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getOneMonthBonus</span>(<span class="params">yearBonus, monthSalary</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> nowBonusTax = getOnlyBonusTax(yearBonus, monthSalary);</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; yearBonus; i++) &#123;</div><div class="line">        <span class="keyword">var</span> bonusRemain = yearBonus - i;</div><div class="line">        <span class="keyword">var</span> monthTaxAdd = getMonthTaxAdd(monthSalary, i);</div><div class="line">        <span class="keyword">var</span> bonusTax = round(getOnlyBonusTax(bonusRemain, monthSalary) + monthTaxAdd, <span class="number">2</span>);</div><div class="line">        <span class="keyword">if</span> (bonusTax &lt; nowBonusTax) &#123;</div><div class="line">            nowBonusTax = bonusTax;</div><div class="line">            oneMonth = i;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">		<span class="attr">tax</span>: nowBonusTax,</div><div class="line">		<span class="attr">bonus</span>: i</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 获取拆分为两个月交税总额</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">getTwoMonthBonus</span>(<span class="params">yearBonus, monthSalary</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> nowBonusTax = getOnlyBonusTax(yearBonus, monthSalary);</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">1</span>; i &lt; yearBonus; i++) &#123;</div><div class="line">        <span class="keyword">var</span> bonusRemain = yearBonus - i;</div><div class="line">        <span class="keyword">var</span> monthTaxAdd = getMonthTaxAdd(monthSalary, (i / <span class="number">2</span>)) * <span class="number">2</span>;</div><div class="line">        <span class="keyword">var</span> bonusTax = round(getOnlyBonusTax(bonusRemain, monthSalary) + monthTaxAdd, <span class="number">2</span>);</div><div class="line">        <span class="keyword">if</span> (bonusTax &lt; nowBonusTax) &#123;</div><div class="line">            nowBonusTax = bonusTax;</div><div class="line">            twoMonth = i / <span class="number">2</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">		<span class="attr">tax</span>: nowBonusTax,</div><div class="line">		<span class="attr">bonus</span>: i</div><div class="line">	&#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">run</span>(<span class="params">yearBonus, monthSalary</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> startTime = (<span class="keyword">new</span> <span class="built_in">Date</span>).getTime();</div><div class="line">    <span class="keyword">var</span> yearBonusTax = getOnlyBonusTax(yearBonus, monthSalary);</div><div class="line">    <span class="keyword">var</span> oneMonthTax = getOneMonthBonus(yearBonus, monthSalary);</div><div class="line">    <span class="keyword">var</span> twoMonthTax = getTwoMonthBonus(yearBonus, monthSalary);</div><div class="line">    <span class="keyword">var</span> minTax = <span class="built_in">Math</span>.min(yearBonusTax, oneMonthTax.tax, twoMonthTax.tax);</div><div class="line">    <span class="keyword">var</span> bonusRemain = yearBonus - minTax;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (minTax == yearBonusTax) &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'年终奖发放：'</span> + yearBonus, <span class="string">'第一个月发放：'</span> + <span class="number">0</span>, <span class="string">'第二个月发放：'</span> + <span class="number">0</span>, <span class="string">'实际收入：'</span> + bonusRemain);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (minTax == oneMonthTax.tax) &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'年终奖发放：'</span> + (yearBonus - oneMonthTax.bonus), <span class="string">'第一个月发放：'</span> + oneMonthTax.bonus, <span class="string">'第二个月发放：'</span> + <span class="number">0</span>, <span class="string">'实际收入：'</span> + bonusRemain);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (minTax == twoMonthTax.tax) &#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'年终奖发放：'</span> + (yearBonus - (twoMonthTax.bonus * <span class="number">2</span>)), <span class="string">'第一个月发放：'</span> + twoMonthTax.bonus, <span class="string">'第一个月发放：'</span> + twoMonthTax.bonus, <span class="string">'实际收入：'</span> + bonusRemain);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">var</span> endTime = (<span class="keyword">new</span> <span class="built_in">Date</span>).getTime();</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'耗时：'</span> + (endTime - startTime) + <span class="string">'ms'</span>);</div><div class="line">&#125;</div><div class="line"></div><div class="line">run(<span class="number">19000</span>, <span class="number">9500</span>);</div></pre></td></tr></table></figure>
+<p>ok，这次就先到这里，下次再更新这个程序的优化方案吧。如果不出意外的话，maybe可能大概下周五会更新吧~马上要过年了，这里先祝米娜桑鸡年大吉咯~！\（￣︶￣）/</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;昨天公司发了年终奖，扣了我20%的税…我就操了，肉疼啊…T^T…话说年终奖避税不是没有办法啊，为毛不给整整呢，总觉得肯定有什么不可告人的秘密…&lt;/p&gt;
+&lt;p&gt;于是我决定写个年终奖避税的程序去去火，不然这口气憋在心里非憋坏了不可…&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="随手一记" scheme="http://brooch.me/categories/%E9%9A%8F%E6%89%8B%E4%B8%80%E8%AE%B0/"/>
+    
+    
+      <category term="javascript" scheme="http://brooch.me/tags/javascript/"/>
+    
+      <category term="年终奖" scheme="http://brooch.me/tags/%E5%B9%B4%E7%BB%88%E5%A5%96/"/>
+    
+      <category term="避税" scheme="http://brooch.me/tags/%E9%81%BF%E7%A8%8E/"/>
+    
+  </entry>
   
   <entry>
     <title>一场抽奖引发的扯淡</title>
