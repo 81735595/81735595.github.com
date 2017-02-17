@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT, javascript, css, html, git, workflow, vue, react, angular, webpack, rx, redux, 自动化, 想法, 随笔, 思考, 笔记" />
+  <meta name="keywords" content="动态规划," />
 
 
 
@@ -86,15 +86,19 @@
 
 
 
-<meta name="description" content="白云苍狗，时光悠悠~ ￣ω￣=">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Keep Walking">
-<meta property="og:url" content="http://brooch.me/categories/计算机原理/index.html">
+<meta name="description" content="之前某天面试了个年轻的工程师，习惯性的问了几个简单的算法题，冒泡排序二分查找之类的。他没有答上来，解释道这些平时开发中根本不会用到，就算需要，各种开源框架也都封装的烂大街了，根本不用自己写。
+听他这么说着，仿佛看到了几年前的自己。当时我也觉得不用了解算法知识，知道冒泡快排能应付面试就得了。前端面向的是界面及交互实现，除非你填游戏或者富文本的坑，不然哪儿用的上什么算法。真需要了，上网搜呗。Max H">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊动态规划(1) -- 概念">
+<meta property="og:url" content="http://brooch.me/2017/02/17/dynamic-programming/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="白云苍狗，时光悠悠~ ￣ω￣=">
+<meta property="og:description" content="之前某天面试了个年轻的工程师，习惯性的问了几个简单的算法题，冒泡排序二分查找之类的。他没有答上来，解释道这些平时开发中根本不会用到，就算需要，各种开源框架也都封装的烂大街了，根本不用自己写。
+听他这么说着，仿佛看到了几年前的自己。当时我也觉得不用了解算法知识，知道冒泡快排能应付面试就得了。前端面向的是界面及交互实现，除非你填游戏或者富文本的坑，不然哪儿用的上什么算法。真需要了，上网搜呗。Max H">
+<meta property="og:updated_time" content="2017-02-17T12:09:38.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Keep Walking">
-<meta name="twitter:description" content="白云苍狗，时光悠悠~ ￣ω￣=">
+<meta name="twitter:title" content="聊聊动态规划(1) -- 概念">
+<meta name="twitter:description" content="之前某天面试了个年轻的工程师，习惯性的问了几个简单的算法题，冒泡排序二分查找之类的。他没有答上来，解释道这些平时开发中根本不会用到，就算需要，各种开源框架也都封装的烂大街了，根本不用自己写。
+听他这么说着，仿佛看到了几年前的自己。当时我也觉得不用了解算法知识，知道冒泡快排能应付面试就得了。前端面向的是界面及交互实现，除非你填游戏或者富文本的坑，不然哪儿用的上什么算法。真需要了，上网搜呗。Max H">
 
 
 
@@ -122,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://brooch.me/categories/计算机原理/"/>
+  <link rel="canonical" href="http://brooch.me/2017/02/17/dynamic-programming/"/>
 
 
 
 
 
-  <title> 分类: 计算机原理 | Keep Walking </title>
+  <title> 聊聊动态规划(1) -- 概念 | Keep Walking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -161,7 +165,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -254,82 +258,236 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        计算机原理
-        <small>分类</small>
-      </h2>
-    </div>
-
+  <div id="posts" class="posts-expand">
     
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/12/30/process-thread-and-coroutine-in-javascript/" itemprop="url">
-              
-                <span itemprop="name">javascript中的进程、线程和协程</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-12-30T23:26:28+08:00"
-              content="2016-12-30" >
-          12-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/11/17/浮点数计算为什么不精确/" itemprop="url">
-              
-                <span itemprop="name">浮点数计算为什么不精确</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-11-17T10:22:47+08:00"
-              content="2016-11-17" >
-          11-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-    
-  </section>
 
   
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/02/17/dynamic-programming/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="投身烈火">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Keep Walking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                聊聊动态规划(1) -- 概念
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-17T10:58:00+08:00">
+                2017-02-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/02/17/dynamic-programming/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/17/dynamic-programming/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前某天面试了个年轻的工程师，习惯性的问了几个简单的算法题，冒泡排序二分查找之类的。他没有答上来，解释道这些平时开发中根本不会用到，就算需要，各种开源框架也都封装的烂大街了，根本不用自己写。</p>
+<p>听他这么说着，仿佛看到了几年前的自己。当时我也觉得不用了解算法知识，知道冒泡快排能应付面试就得了。前端面向的是界面及交互实现，除非你填游戏或者富文本的坑，不然哪儿用的上什么算法。真需要了，上网搜呗。Max Howell 连个<a href="http://www.lintcode.com/zh-cn/problem/invert-binary-tree/" target="_blank" rel="external">翻转二叉树</a>都不会，不也照样把 Homebrew 做出来了吗。</p>
+<a id="more"></a>
+<p>直到我听了一次之前的领导的分享。他在分享中介绍，面试中考察算法知识，并不是想看你背了多少题，而是想考察你解决复杂问题的能力。算法能力体现的不只是知识储备，还能体现一个人的聪明才智。</p>
+<p>听完之后我茅厕顿开。我的理解是，所谓的算法，其实就是你解决问题的方法。所以就算你不知道最佳答案，用你知道的知识解决问题，也算是一种算法。比如你要去个地方，可以坐公交坐地铁，你都不知道怎么坐，走过去也算是一种算法。算法题也并不是跟实际开发没有关联。就好比 “水池能装100L水，进水管每分钟进水10L，出水管每分钟出水5L，多长时间水池能满？” 这种傻逼的问题，如果改成 “一个驴牌的包包1万，你一个月挣5000，花2000，多长时间能买的起？” 不就有了实际的意义了吗……话说我还真是喜欢打比方的(￣▽￣)……</p>
+<p>那么，怎么才算真正具备一定算法能力，入了算法的门儿了呢？显然只会个排序肯定是不行的……当然我并不是说排序算法就简单，各种排序算法优化啥的我觉得也挺难的……我个人觉得，在各种常见的算法中，动态规划应该算是一道坎儿，过去了就算入门儿了。winter大神也<a href="http://weibo.com/1196343093/EqtTv7Nlm" target="_blank" rel="external">说过</a>，写出动态规划，再谈算法。</p>
+<p>那么动态规划到底是什么呢？</p>
+<p>动态规划(dynamic programming)是求解多阶段决策过程(multistep decision process)最优化的数学方法。</p>
+<p>第一次听到这个定义的时候我脑子里只有 “说人话” 这三个字……ok，让我们来仔细掰吃掰吃。</p>
+<p>仔细观察发现，这个定义可以拆分成以下两部分：</p>
+<ol>
+<li>动态规划用来求解问题的最优化方案的</li>
+<li>问题表现为多阶段决策过程</li>
+</ol>
+<p>最优化方案比较好理解。所谓多阶段决策，是将决策问题的全过程恰当地划分为若干个相互联系的子过程（每个子过程为一个阶段），以便按照一定的次序去求解。也就是说，一个大的问题可以被划分为若干个相互联系的子问题。这种相互联系的子问题，又叫交叠子问题。举个例子来说明交叠子问题，以<a href="http://baike.baidu.com/link?url=0EtGUr1kes840H550BpbqXbjVrUn1GmVu3HBIqrz1aFM6MI7p3NPNYNNvmYTb1nxA7LS3w9zeh5C6OcpLclmpvdg-RLJ5MIEKKe1vD3xgRAO9PE1HMkiJ2LjDGsLjxa7QiTj15vcw7yvUBpJOREm7K" target="_blank" rel="external">斐波拉契(Fibonacci)数列</a>为例，计算第100项的时候，需要计算第99项和98项；在计算第101项的时候，需要第100项和第99项，这时候你还需要重新计算第99项吗？不需要，你只需要在第一次计算的时候把它记下来就可以了。上述的需要再次计算的“第99项”，就叫交叠子问题。</p>
+<p>在理解了上面每个学术名词的概念以后，可以得出一个结论，所谓动态规划，就是对于<b><i>某一类问题</i></b>的解决方法……呃……可能会有人觉得这是废话，但其实我们正在一步步接近问题的核心。个人觉得，动态规划的重点就在于如何鉴定“某一类问题”是动态规划可解的，而不是纠结用什么解决方法。因为用什么解决方法，取决于你从什么角度观察问题，拆分子问题。寻找看问题的角度，才是动态规划的核心。</p>
+<p>那么，如何鉴定动态规划可解的问题呢？这会是一个 long long story……所以，咱们下期再讲<del>(￣▽￣)</del>！！！好的那么由于时间不足本次的博客就到这里，简单预告一下，下期博客会从计算机是怎么工作的说起了……</p>
+<p>如果不出意外的话，大概可能maybe也许下周五会更新吧~！能不能准时更新，就全看米娜桑点赞打赏转发安利发评论的热情啦~！</p>
+<p>白了个白~！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/动态规划/" rel="tag"># 动态规划</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/03/javascript-year-bonus-evade-tax-2/" rel="next" title="年终奖避税程序优化">
+                <i class="fa fa-chevron-left"></i> 年终奖避税程序优化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
 
 
           </div>
           
 
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/02/17/dynamic-programming/"
+           data-title="聊聊动态规划(1) -- 概念" data-url="http://brooch.me/2017/02/17/dynamic-programming/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -594,6 +752,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
