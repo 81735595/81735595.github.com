@@ -90,11 +90,11 @@
 听他这么说着，仿佛看到了几年前的自己。当时我也觉得不用了解算法知识，知道冒泡快排能应付面试就得了。前端面向的是界面及交互实现，除非你填游戏或者富文本的坑，不然哪儿用的上什么算法。真需要了，上网搜呗。Max H">
 <meta property="og:type" content="article">
 <meta property="og:title" content="聊聊动态规划(1) -- 概念">
-<meta property="og:url" content="http://brooch.me/2017/02/17/dynamic-programming/index.html">
+<meta property="og:url" content="http://brooch.me/2017/02/17/dynamic-programming-1/index.html">
 <meta property="og:site_name" content="Keep Walking">
 <meta property="og:description" content="之前某天面试了个年轻的工程师，习惯性的问了几个简单的算法题，冒泡排序二分查找之类的。他没有答上来，解释道这些平时开发中根本不会用到，就算需要，各种开源框架也都封装的烂大街了，根本不用自己写。
 听他这么说着，仿佛看到了几年前的自己。当时我也觉得不用了解算法知识，知道冒泡快排能应付面试就得了。前端面向的是界面及交互实现，除非你填游戏或者富文本的坑，不然哪儿用的上什么算法。真需要了，上网搜呗。Max H">
-<meta property="og:updated_time" content="2017-02-17T12:09:38.000Z">
+<meta property="og:updated_time" content="2017-02-24T06:43:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="聊聊动态规划(1) -- 概念">
 <meta name="twitter:description" content="之前某天面试了个年轻的工程师，习惯性的问了几个简单的算法题，冒泡排序二分查找之类的。他没有答上来，解释道这些平时开发中根本不会用到，就算需要，各种开源框架也都封装的烂大街了，根本不用自己写。
@@ -126,7 +126,7 @@
 
 
 
-  <link rel="canonical" href="http://brooch.me/2017/02/17/dynamic-programming/"/>
+  <link rel="canonical" href="http://brooch.me/2017/02/17/dynamic-programming-1/"/>
 
 
 
@@ -268,7 +268,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/02/17/dynamic-programming/">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/02/17/dynamic-programming-1/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="投身烈火">
@@ -339,8 +339,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/02/17/dynamic-programming/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/17/dynamic-programming/" itemprop="commentCount"></span>
+                <a href="/2017/02/17/dynamic-programming-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/17/dynamic-programming-1/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -387,7 +387,8 @@
 </ol>
 <p>最优化方案比较好理解。所谓多阶段决策，是将决策问题的全过程恰当地划分为若干个相互联系的子过程（每个子过程为一个阶段），以便按照一定的次序去求解。也就是说，一个大的问题可以被划分为若干个相互联系的子问题。这种相互联系的子问题，又叫交叠子问题。举个例子来说明交叠子问题，以<a href="http://baike.baidu.com/link?url=0EtGUr1kes840H550BpbqXbjVrUn1GmVu3HBIqrz1aFM6MI7p3NPNYNNvmYTb1nxA7LS3w9zeh5C6OcpLclmpvdg-RLJ5MIEKKe1vD3xgRAO9PE1HMkiJ2LjDGsLjxa7QiTj15vcw7yvUBpJOREm7K" target="_blank" rel="external">斐波拉契(Fibonacci)数列</a>为例，计算第100项的时候，需要计算第99项和98项；在计算第101项的时候，需要第100项和第99项，这时候你还需要重新计算第99项吗？不需要，你只需要在第一次计算的时候把它记下来就可以了。上述的需要再次计算的“第99项”，就叫交叠子问题。</p>
 <p>在理解了上面每个学术名词的概念以后，可以得出一个结论，所谓动态规划，就是对于<b><i>某一类问题</i></b>的解决方法……呃……可能会有人觉得这是废话，但其实我们正在一步步接近问题的核心。个人觉得，动态规划的重点就在于如何鉴定“某一类问题”是动态规划可解的，而不是纠结用什么解决方法。因为用什么解决方法，取决于你从什么角度观察问题，拆分子问题。寻找看问题的角度，才是动态规划的核心。</p>
-<p>那么，如何鉴定动态规划可解的问题呢？这会是一个 long long story……所以，咱们下期再讲<del>(￣▽￣)</del>！！！好的那么由于时间不足本次的博客就到这里，简单预告一下，下期博客会从计算机是怎么工作的说起了……</p>
+<p>那么，如何鉴定动态规划可解的问题呢？这会是一个 long long story……所以，咱们下期再讲~~(￣▽￣)~~！！！</p>
+<p>好的那么由于时间不足本次的博客就到这里，简单预告一下，下期博客会从计算机是怎么工作的说起了……</p>
 <p>如果不出意外的话，大概可能maybe也许下周五会更新吧~！能不能准时更新，就全看米娜桑点赞打赏转发安利发评论的热情啦~！</p>
 <p>白了个白~！</p>
 
@@ -431,6 +432,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/24/dynamic-programming-2/" rel="prev" title="聊聊动态规划(2) -- 特征">
+                聊聊动态规划(2) -- 特征 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -482,8 +487,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/17/dynamic-programming/"
-           data-title="聊聊动态规划(1) -- 概念" data-url="http://brooch.me/2017/02/17/dynamic-programming/">
+      <div class="ds-thread" data-thread-key="2017/02/17/dynamic-programming-1/"
+           data-title="聊聊动态规划(1) -- 概念" data-url="http://brooch.me/2017/02/17/dynamic-programming-1/">
       </div>
     
   </div>
@@ -519,7 +524,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-count">19</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>

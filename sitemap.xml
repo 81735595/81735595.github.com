@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://brooch.me/2017/02/17/dynamic-programming/</loc>
+    <loc>http://brooch.me/2017/02/24/dynamic-programming-2/</loc>
     
-    <lastmod>2017-02-17T12:09:38.000Z</lastmod>
+    <lastmod>2017-02-24T15:22:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://brooch.me/2017/02/17/dynamic-programming-1/</loc>
+    
+    <lastmod>2017-02-24T06:43:07.000Z</lastmod>
     
   </url>
   
