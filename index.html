@@ -381,8 +381,8 @@
 <p>这个方案也是我觉得比较有趣的一个方案，他可以保证窗口大小在变化时，真个页面也等比例缩放。目前淘宝和饿了么使用的就是这个方案。</p>
 <p>本来还想抄一段淘宝计算html元素font-size大小的代码，后来一搜发下阿里无线团队已经把脚本开源了，附上地址好了：<a href="https://github.com/amfe/lib-flexible/" target="_blank" rel="external">lib-flexible</a></p>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>除了以上两种方案，其他把root的font-size设死，又使用rem做单位的方案我就真不能理解了……貌似没什么意义吧？希望能白话的同学给我套靠谱的解释，这样以后别人喷我的时候我也好一嘟噜一串儿的喷回去……(￣▽￣)”</p>
-<h2 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h2><p>刚才提到了，在使用rem的时候不得不对做rem和px的转换。我个人是信奉“一切重复工作都应该交给电脑去做”这一理念的，所以我觉得转换的工作也应该交给电脑去做才对。其实前人早的轮子也已经很多了，这件事less、sass、postcss、stylus等预处理器都支持，也可以用<a href="https://www.npmjs.com/package/px2rem" target="_blank" rel="external">px2rem</a>这个npm模块，使用webpack的也有对应的loader可用<a href="https://www.npmjs.com/package/px2rem-loader" target="_blank" rel="external">px2rem-loader </a>。所以根本不用操心重复劳动的事，某种意义上来说，只要你够勤快，就根本累不着~</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在查资料的过程中，也发现有人在说，字体大小自适应是一种错误的想法，因为就算是响应式布局，其实也没必要做到这一步……使用媒体查询、calc、vw单位一样能够完成一个体验优秀的页面，当然，有的时候咱们程序员说了不算，到底要不要做到完全等比例缩放这一步，还是得听产品经理的……毕竟产品小白分分钟就能让技术大牛加班啊~哈哈哈ｂ（￣▽￣）ｄ</p>
+<h2 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h2><p>刚才提到了，在使用rem的时候不得不对rem和px做转换。我个人是信奉“一切重复工作都应该交给电脑去做”这一理念的，所以我觉得转换的工作也应该交给电脑去做才对。其实前人早的轮子也已经很多了，这件事less、sass、postcss、stylus等预处理器都支持，也可以用<a href="https://www.npmjs.com/package/px2rem" target="_blank" rel="external">px2rem</a>这个npm模块，使用webpack的也有对应的loader可用<a href="https://www.npmjs.com/package/px2rem-loader" target="_blank" rel="external">px2rem-loader </a>。所以根本不用操心重复劳动的事，某种意义上来说，只要你够勤快，就根本累不着~</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在查资料的过程中，也发现有人在说，字体大小自适应是一种错误的想法，因为就算是响应式布局，其实也没必要做到这一步……使用媒体查询、calc、vw单位、flex一样能够完成一个体验优秀的页面。在这件事上，我觉得还是仁者见仁吧，虽然rem实现响应式布局的感觉都有些hack，但是肯定还是有他存在的意义的，屠龙之技学会了，砍谁不是砍不是？何况有的时候，咱们程序员说了真不算，到底要不要做到完全等比例缩放这一步，还是得听产品经理的……毕竟产品小白分分钟就能让技术大牛加班啊~哈哈哈ｂ（￣▽￣）ｄ</p>
 
           
         
