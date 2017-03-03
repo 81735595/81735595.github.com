@@ -368,23 +368,15 @@
 
       
         
-          
-            <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>前两天小徒弟问我，老看到有人说用rem实现响应式布局，具体要怎么做呢？这可问住我了，之前我只知道rem的概念却不知道要怎么用rem来实现响应式布局……赶紧忽悠她一顿，让她先去各大网站上学习下别人是怎么做的，看不懂了再来问我。自己则私底下恶补了rem实现响应式布局的知识来应付她的问题，这才算糊弄过去……</p>
+          <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>前两天小徒弟问我，老看到有人说用rem实现响应式布局，具体要怎么做呢？这可问住我了，之前我只知道rem的概念却不知道要怎么用rem来实现响应式布局……赶紧忽悠她一顿，让她先去各大网站上学习下别人是怎么做的，看不懂了再来问我。自己则私底下恶补了rem实现响应式布局的知识来应付她的问题，这才算糊弄过去……</p>
 <p>话说，临阵磨不能白磨了不是，总结下当时搜索到的资料供大家参考，以后真被问起来嘡嘡嘡一说，就准备接受萌新崇拜的目光吧，哈哈(￣▽￣)</p>
-<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>在说rem之前不得不先介绍下em，em这种单位最早源自印刷界，一个em表示一种特殊字体的大写字母M的高度。后来到了网页上，em作为一种相对长度单位，相对于当前对象内文本的字体大小。没有被css设置过的网页，一般页面字体的默认大小是16px，所以1em就等于16px。当然em除了可以作为font-size属性值得单位，还能作为width和height属性值的单位。于是前端工程师们就脑洞大开了，如果所有的宽高单位都用em，那么在做响应式布局的时候，只要改变页面上的字体大小不就能直接调整页面各个部分的大小了吗？</p>
-<p>但是事与愿违，em是针对当前对象内文本的，就是说针对的是被设置过字体大小的元素的字体大小。有点绕是不是？举个例子好了，比如现在又这样一个结构，body&gt;div.A&gt;div.B，body的font-size是20px，div.B的width和height都是1em，所以当前页面上div.B的宽高就是20px，这时候如果div.A被设置了font-size为10px，div.B的宽高就是10px了，这个特性让em非常不好被应用，要用em就整个页面所有的font-size都要用em，这在没有node做自动化工具的年代简直是异常噩梦……你想写个页面，还得不停的换算px和em，想想就头疼……</p>
-<p>后来rem出现了，其实rem就是root em，故名思意，rem单位就是相对于根节点（html元素）字体大小的单位。这个单位跟em不一样的区别也在这里，他是不受继承影响的，这样就可以各种单位混用，回避了不停换算的问题。当然要想使用换算的过程还是不能少，不过只是根据根节点的字体大小换算，列个换算表需要的时候查表就好了，当然这个问题在有了前端打包工具之后就彻底解决了，咱们后面再具体说。</p>
-<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>理解了rem的概念，揭下来说说利用rem实现响应式布局的方案。一般响应式布局分两种：</p>
-<h3 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h3><p>使用rem定义想要响应式的部分的宽高，使用媒体查询来修改html元素的font-size属性</p>
-<p>简单举个例子：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">html</span> &#123;</div><div class="line">    <span class="attribute">font-size</span>:<span class="number">16px</span>;</div><div class="line">&#125;</div><div class="line">@<span class="keyword">media</span> screen and (max-width: <span class="number">480px</span>) &#123;</div><div class="line">    <span class="selector-tag">html</span> &#123;</div><div class="line">        <span class="attribute">font-size</span>:<span class="number">14px</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">@<span class="keyword">media</span> screen and (max-width: <span class="number">960px</span>) &#123;</div><div class="line">    <span class="selector-tag">html</span> &#123;</div><div class="line">        <span class="attribute">font-size</span>:<span class="number">15px</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="selector-class">.some-class</span> &#123;</div><div class="line">    <span class="attribute">width</span>: <span class="number">10rem</span>;</div><div class="line">    <span class="attribute">height</span>: <span class="number">10rem</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><p>使用rem定义想要响应式的部分的宽高，在页面resize时动态的改变html的font-size属性。</p>
-<p>这个方案也是我觉得比较有趣的一个方案，他可以保证窗口大小在变化时，真个页面也等比例缩放。目前淘宝和饿了么使用的就是这个方案。</p>
-<p>本来还想抄一段淘宝计算html元素font-size大小的代码，后来一搜发下阿里无线团队已经把脚本开源了，附上地址好了：<a href="https://github.com/amfe/lib-flexible/" target="_blank" rel="external">lib-flexible</a></p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>除了以上两种方案，其他把root的font-size设死，又使用rem做单位的方案我就真不能理解了……貌似没什么意义吧？希望能白话的同学给我套靠谱的解释，这样以后别人喷我的时候我也好一嘟噜一串儿的喷回去……(￣▽￣)”</p>
-<h2 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h2><p>刚才提到了，在使用rem的时候不得不对rem和px做转换。我个人是信奉“一切重复工作都应该交给电脑去做”这一理念的，所以我觉得转换的工作也应该交给电脑去做才对。其实前人早的轮子也已经很多了，这件事less、sass、postcss、stylus等预处理器都支持，也可以用<a href="https://www.npmjs.com/package/px2rem" target="_blank" rel="external">px2rem</a>这个npm模块，使用webpack的也有对应的loader可用<a href="https://www.npmjs.com/package/px2rem-loader" target="_blank" rel="external">px2rem-loader </a>。所以根本不用操心重复劳动的事，某种意义上来说，只要你够勤快，就根本累不着~</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在查资料的过程中，也发现有人在说，字体大小自适应是一种错误的想法，因为就算是响应式布局，其实也没必要做到这一步……使用媒体查询、calc、vw单位、flex一样能够完成一个体验优秀的页面。在这件事上，我觉得还是仁者见仁吧，虽然rem实现响应式布局的感觉都有些hack，但是肯定还是有他存在的意义的，屠龙之技学会了，砍谁不是砍不是？何况有的时候，咱们程序员说了真不算，到底要不要做到完全等比例缩放这一步，还是得听产品经理的……毕竟产品小白分分钟就能让技术大牛加班啊~哈哈哈ｂ（￣▽￣）ｄ</p>
-
-          
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/03/03/a-method-of-using-rem/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
