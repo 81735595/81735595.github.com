@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-03-10T15:55:28.000Z</updated>
+  <updated>2017-03-10T16:06:13.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://brooch.me/2017/03/10/difference-between-fetch-and-XHR/"/>
     <id>http://brooch.me/2017/03/10/difference-between-fetch-and-XHR/</id>
     <published>2017-03-10T11:59:29.000Z</published>
-    <updated>2017-03-10T15:55:28.000Z</updated>
+    <updated>2017-03-10T16:06:13.000Z</updated>
     
     <content type="html"><![CDATA[<p>前两天刷微博的时候刷到了<a href="http://weibo.com/1708684567/EyzaJpJtS" target="_blank" rel="external">紫云飞的一条微博</a>，遂决定好好整理下，方便以后面试别人或者别人面我的时候装逼用~ ╮(￣▽￣)╭</p>
 <a id="more"></a>
@@ -45,6 +45,7 @@
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Service_Worker_API/Using_Service_Workers" target="_blank" rel="external">使用 Service Workers</a></li>
 <li><a href="http://www.alloyteam.com/2016/01/9274/" target="_blank" rel="external">Service Worker初体验</a></li>
 </ul>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>虽然现在很多Fetch API 的功能还是实验性的，但是虽然现代浏览器的普及，以及诸如promise、async/await等异步语法的实现，相信不久的将来，Fetch 肯定会取代 XHR吧。到时候希望这篇文章能帮助你装逼成功，哈哈~ ╮(￣▽￣)╭</p>
 <p>好的那么由于时间不足本次的博客就到这里，如果不出意外的话，大概可能maybe也许下周五会更新吧~！能不能准时更新，就全看米娜桑点赞打赏转发安利发评论的热情啦~！</p>
 <p>白了个白~！</p>
 ]]></content>
