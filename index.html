@@ -350,28 +350,14 @@
 
       
         
-          
-            <p>其实我早就开始读vue的源码了，那会儿还是1.x版本，但是因为懒没有坚持下来，现在都已经更新到2.x了……总之坚持读完吧。vue的源码还是比较好读的，因为注释清楚又有中文文档对照，所以作为读源码练手的对象非常合适。这次我读的2.20的release版本，我阅读的习惯是，不只看大概流程，会把每个函数都看一遍，学习借鉴细节。之后的笔记也会以这个思路来写，希望能给自己和看的人带来帮助吧。</p>
-<h2 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h2><p>分支：master<br>commit id：2a19f911dc8631d44b7c7e63c4db57ef28ac5e69<br>版本：2.20 release</p>
-<h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><p>vue打包用的是rollup，在build目录下有相关的配置。整个构建过程写的还是挺有趣的，会根据不同的场景选择不同的入口文件，同时使用了facebook的<a href="https://flowtype.org" target="_blank" rel="external">flow</a>做类型检查，如果要是自己开发库的话，vue的项目架构和工作流就是个非常好的模板。单元测试的部分等读完了源码也会去读一读，据说写的很好，目前看到的是用karma跑浏览器的单元测试，用jasmine跑server side render的单测，用到了typescript跑类型检查。在类型检查这方面真是费了牛劲了……</p>
-<p>另外在使用rollup打包时使用了部分插件作为补充（所有配置都放在 build/config.js 中了）。</p>
-<p>rollup-plugin-flow-no-whitespace 插件用来去掉flow使用的类型检查代码。有趣的是，插件是还是作者自己写的，只是想去掉打包后遗留的空格……还真是洁癖呢，科科……</p>
-<p>rollup-plugin-buble 插件用来替代babel，用来转换es5用的。</p>
-<p>rollup-plugin-alias 用来配置打包过程中各个模块的路径映射，具体的配置写在 build/alias.js 中。这样代码中就可以用src作为根目录引用模块了。值得注意的是，src/platforms 目录下的 web 模块和 weex 模块，也都做了映射，所以在看代码时有 import xxx from ‘web/xxx’的引用，就都是从 platforms 下引用的。貌似这是缩短引用路径、区分目录结构和代码逻辑的好方法呢，可以借鉴一下。</p>
-<p>所以根据 alias 的配置，vue模块对应的就是 src/entries/web-runtime-with-compiler.js 文件，我是以这个文件作为入口开始阅读的……</p>
-<h2 id="web-runtime-with-compiler-js"><a href="#web-runtime-with-compiler-js" class="headerlink" title="web-runtime-with-compiler.js"></a>web-runtime-with-compiler.js</h2><p>这个文件主要用于绑定vue的编译器。真正的Vue构造函数在 src/entries/web-runtime.js 中定义。</p>
-<p>这个文件中主要定义了 <a href="https://cn.vuejs.org/v2/api/#vm-mount" target="_blank" rel="external">vue.$mount</a> 和 <a href="https://cn.vuejs.org/v2/api/#Vue-compile" target="_blank" rel="external">Vue.compile</a>。</p>
-<p>Vue.compile 使用来解析模板用的，对应的是 src/compiler 模块，粗略的看了下是使用new Function来转换字符串为js代码的，所以对于不支持或者认为这样不安全的环境，vue会给出错误提示。具体的源码后续再继续详细读。</p>
-<p>vue.$mount 是用来挂载vue实例的，方法虽然也是在这里定义的，但是真正核心的mount方法又是从Vue构造函数上的……呃……这里有点绕呢，大概就是类似这样：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> mount = Vue.prototype.$mount</div><div class="line">Vue.prototype.$mount = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">// ...</span></div><div class="line">    mount.call(<span class="keyword">this</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>做了个替换。总之其他模块了用到的$mount和真正暴露出来的其实并不是一个方法呢。</p>
-<p>这里 Vue.prototype.$mount 函数的大概逻辑是：先检查传入的el参数是不是body或者html元素，要是body或者html元素就报错了 –&gt; 如果当前实例的$options中有<a href="https://cn.vuejs.org/v2/guide/render-function.html" target="_blank" rel="external">render函数</a>，直接根据render编译，创建后续的实例 –&gt; 如果当前实例没有render函数 –&gt; 检查是否$options中是否有template属性，如果有使用template属性 –&gt; 如果没有，使用传入的el元素的outHTML作为template…… –&gt; 最后把template转化为render函数……</p>
-<p>其中，在使用现有的template时，会对字符串型的template进行缓存，使用dom节点做template的，就取节点的innerHTML。</p>
-<p>好的那么由于时间不足本次的博客就到这里，话说这次时间实在是太仓促了，而且解读源码的表达方法我也还没有探索好……我的感觉就是，虽然我都看懂了，但是却说不明白，下次会尝试着配上些流程图或者思维导图来记录，这样也更容易理解吧。</p>
-<p>那么如果不出意外的话，大概可能maybe也许下周五会更新吧~！这次就不让大家安利了，毕竟我自己都觉得好坑啊……就这样了……</p>
-<p>白了个白~！</p>
-
-          
+          <p>其实我早就开始读vue的源码了，那会儿还是1.x版本，但是因为懒没有坚持下来，现在都已经更新到2.x了……总之坚持读完吧。vue的源码还是比较好读的，因为注释清楚又有中文文档对照，所以作为读源码练手的对象非常合适。这次我读的2.20的release版本，我阅读的习惯是，不只看大概流程，会把每个函数都看一遍，学习借鉴细节。之后的笔记也会以这个思路来写，希望能给自己和看的人带来帮助吧。<br>
+          <!--noindex-->
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/03/17/vue-source-notes-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
