@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="javascript," />
+  <meta name="keywords" content="Hexo, NexT, javascript, css, html, git, workflow, vue, react, angular, webpack, rx, redux, 自动化, 想法, 随笔, 思考, 笔记" />
 
 
 
@@ -86,18 +86,19 @@
 
 
 
-<meta name="description" content="起因今年年会的抽奖算法写的实在是太烂。整个整个抽奖流程大概是这样的：每次抽奖是抽奖人先说开始，于是开始播放动画遍历队列，然后过一段时间，抽奖人说停，遍历结束，停在哪儿谁就中奖。可是不用看代码我都知道，每次抽奖时没有对队列进行随机排序。因为有动画效果，遍历的速度不可能很快，抽奖人又不会等很久才说停，所以排在后面的怎么可能中奖（我就是排在后面的）……于是我开始思考，如果是我，我会怎么写这个抽奖的程序呢">
+<meta name="description" content="其实我早就开始读vue的源码了，那会儿还是1.x版本，但是因为懒没有坚持下来，现在都已经更新到2.x了……总之坚持读完吧。vue的源码还是比较好读的，因为注释清楚又有中文文档对照，所以作为读源码练手的对象非常合适。这次我读的2.20的release版本，我阅读的习惯是，不只看大概流程，会把每个函数都看一遍，学习借鉴细节。之后的笔记也会以这个思路来写，希望能给自己和看的人带来帮助吧。
+版本分支：ma">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一场抽奖引发的扯淡">
-<meta property="og:url" content="http://brooch.me/2017/01/19/gab-draw/index.html">
+<meta property="og:title" content="vue源码阅读笔记(1)">
+<meta property="og:url" content="http://brooch.me/2017/03/17/vue-source-notes-1/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="起因今年年会的抽奖算法写的实在是太烂。整个整个抽奖流程大概是这样的：每次抽奖是抽奖人先说开始，于是开始播放动画遍历队列，然后过一段时间，抽奖人说停，遍历结束，停在哪儿谁就中奖。可是不用看代码我都知道，每次抽奖时没有对队列进行随机排序。因为有动画效果，遍历的速度不可能很快，抽奖人又不会等很久才说停，所以排在后面的怎么可能中奖（我就是排在后面的）……于是我开始思考，如果是我，我会怎么写这个抽奖的程序呢">
-<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/gab-draw-1.png">
-<meta property="og:updated_time" content="2017-01-20T10:26:39.000Z">
+<meta property="og:description" content="其实我早就开始读vue的源码了，那会儿还是1.x版本，但是因为懒没有坚持下来，现在都已经更新到2.x了……总之坚持读完吧。vue的源码还是比较好读的，因为注释清楚又有中文文档对照，所以作为读源码练手的对象非常合适。这次我读的2.20的release版本，我阅读的习惯是，不只看大概流程，会把每个函数都看一遍，学习借鉴细节。之后的笔记也会以这个思路来写，希望能给自己和看的人带来帮助吧。
+版本分支：ma">
+<meta property="og:updated_time" content="2017-03-17T15:48:21.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="一场抽奖引发的扯淡">
-<meta name="twitter:description" content="起因今年年会的抽奖算法写的实在是太烂。整个整个抽奖流程大概是这样的：每次抽奖是抽奖人先说开始，于是开始播放动画遍历队列，然后过一段时间，抽奖人说停，遍历结束，停在哪儿谁就中奖。可是不用看代码我都知道，每次抽奖时没有对队列进行随机排序。因为有动画效果，遍历的速度不可能很快，抽奖人又不会等很久才说停，所以排在后面的怎么可能中奖（我就是排在后面的）……于是我开始思考，如果是我，我会怎么写这个抽奖的程序呢">
-<meta name="twitter:image" content="http://oin1wqn2f.bkt.clouddn.com/gab-draw-1.png">
+<meta name="twitter:title" content="vue源码阅读笔记(1)">
+<meta name="twitter:description" content="其实我早就开始读vue的源码了，那会儿还是1.x版本，但是因为懒没有坚持下来，现在都已经更新到2.x了……总之坚持读完吧。vue的源码还是比较好读的，因为注释清楚又有中文文档对照，所以作为读源码练手的对象非常合适。这次我读的2.20的release版本，我阅读的习惯是，不只看大概流程，会把每个函数都看一遍，学习借鉴细节。之后的笔记也会以这个思路来写，希望能给自己和看的人带来帮助吧。
+版本分支：ma">
 
 
 
@@ -125,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://brooch.me/2017/01/19/gab-draw/"/>
+  <link rel="canonical" href="http://brooch.me/2017/03/17/vue-source-notes-1/"/>
 
 
 
 
 
-  <title> 一场抽奖引发的扯淡 | Keep Walking </title>
+  <title> vue源码阅读笔记(1) | Keep Walking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -267,7 +268,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/01/19/gab-draw/">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/03/17/vue-source-notes-1/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="投身烈火">
@@ -291,7 +292,7 @@
             
             
               
-                一场抽奖引发的扯淡
+                vue源码阅读笔记(1)
               
             
           </h1>
@@ -304,8 +305,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-19T09:57:38+08:00">
-                2017-01-19
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-17T16:37:50+08:00">
+                2017-03-17
               </time>
             
 
@@ -315,31 +316,13 @@
           </span>
 
           
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/随手一记/" itemprop="url" rel="index">
-                    <span itemprop="name">随手一记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
 
           
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/01/19/gab-draw/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/19/gab-draw/" itemprop="commentCount"></span>
+                <a href="/2017/03/17/vue-source-notes-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/17/vue-source-notes-1/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -370,41 +353,25 @@
       
 
       
-        <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>今年年会的抽奖算法写的实在是太烂。整个整个抽奖流程大概是这样的：每次抽奖是抽奖人先说开始，于是开始播放动画遍历队列，然后过一段时间，抽奖人说停，遍历结束，停在哪儿谁就中奖。可是不用看代码我都知道，每次抽奖时没有对队列进行随机排序。因为有动画效果，遍历的速度不可能很快，抽奖人又不会等很久才说停，所以排在后面的怎么可能中奖（我就是排在后面的）……于是我开始思考，如果是我，我会怎么写这个抽奖的程序呢。</p>
-<a id="more"></a>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>抽奖可以概括的描述为：从一个指定的集合中，随机选出若干个元素。</p>
-<p>ok，用编程语言翻译翻译：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">draw</span>(<span class="params">list = [], number = <span class="number">0</span></span>) </span>&#123;</div><div class="line">	list = list.concat()</div><div class="line">	<span class="keyword">let</span> result = []</div><div class="line">	<span class="keyword">while</span> (number--) &#123;</div><div class="line">		result.push(list.splice(<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random()*list.length), <span class="number">1</span>)[<span class="number">0</span>])</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> result</div><div class="line">&#125;</div><div class="line"><span class="keyword">let</span> drawResult = draw([<span class="string">'刘能'</span>, <span class="string">'谢大脚'</span>, <span class="string">'王长贵'</span>, <span class="string">'赵四'</span>, <span class="string">'刘英'</span>, <span class="string">'李大国'</span>, <span class="string">'赵玉田'</span>, <span class="string">'刘大脑袋'</span>, <span class="string">'王天来'</span>, <span class="string">'王大拿'</span>, <span class="string">'李秋歌'</span>], <span class="number">3</span>)</div><div class="line"><span class="built_in">console</span>.log(<span class="string">`中奖者为：<span class="subst">$&#123;drawResult.join(<span class="string">'，'</span>)&#125;</span>`</span>)</div></pre></td></tr></table></figure>
-<h2 id="质疑"><a href="#质疑" class="headerlink" title="质疑"></a>质疑</h2><p>程序是写好了，但是这个程序真的能保证公平公正的抽奖吗？从上面的程序中一眼就能看出来，我们的抽奖程序是依赖于Math.random生成的随机数的。</p>
-<p>但是，可能会有人质疑，Math.random生成的随机数真的是随机的，没有规律的吗？有没有可能通过预测出规律从而控制中奖结果？</p>
-<h2 id="Math-random"><a href="#Math-random" class="headerlink" title="Math.random"></a>Math.random</h2><p>说到javascript的Math.random，ECMAScript是这么规定的：</p>
-<blockquote>
-<p>‘20.2.2.27Math.random ( )’</p>
-<p>Returns a Number value with positive sign, greater than or equal to 0 but less than 1, chosen randomly or pseudo randomly with approximately uniform distribution over that range, using an implementation-dependent algorithm or strategy. This function takes no arguments.</p>
-<p>Each ‘Math.random’ function created for distinct realms must produce a distinct sequence of values from successive calls.</p>
-</blockquote>
-<p>并没有提到是如何实现的。所以各家浏览器实现的方法也都不一样。</p>
-<p>比如，V8是这样实现的<a href="https://github.com/v8/v8/blob/fab14341f508c2260d5640608d6d035e335e5ca4/src/builtins/builtins-math.cc#409" target="_blank" rel="external">MathRandom</a>，SpiderMonkey是这样实现的<a href="http://hg.mozilla.org/mozilla-central/file/tip/js/src/jsmath.cpp#713" target="_blank" rel="external">ensureRandomNumberGenerator</a>，webkit是这样实现的<a href="https://github.com/WebKit/webkit/blob/c595dc9b3993d095e25311b0ec1797bd665447e8/Source/WTF/wtf/WeakRandom.h" target="_blank" rel="external">WeakRandom</a>。</p>
-<p>但是，不管是什么方法生成，基本规则都是基于一个种子（seed），经过一系列计算，最终生成一个值。也就是说，如果种子是确定的，那么最终生成的值也一定是确定的……</p>
-<p>那么种子又是根据什么确定的呢？一般是使用函数调用时的当前时间作为种子的。</p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>既然上面说到了，所有的结果都是计算的结果，那么是不是说明抽奖结果并不是随机的是可预测的呢？其实也不是，因为在抽奖的过程中引入了随机的外部输入。没错，抽奖函数的执行时机是由人掌控的，而人的思想是不可掌控的，所以可以把抽奖的时机当做随机事件，这样抽奖的结果也肯定是随机的了……大概吧……</p>
-<p>但是，如果提前确定下了抽奖的时间了，理论上，抽奖的结果就是可预测的了。</p>
-<p>那么有没有办法不依赖用户输入来产生随机的结果呢？只要引入一些无法认为控制的元素就可以了，比如使用一些无法预测和控制的物理信息或者自然现象来生成随机数。</p>
-<p>例如，Linux中的接口/dev/random就是引入了物理噪音作为输入来产生随机数的。</p>
-<p>还有<a href="http://RANDOM.ORG" target="_blank" rel="external">RANDOM.ORG</a>，这个网站使用大气噪音来生成随机数。（他们提供的服务还是免费的，可以再<a href="https://www.random.org/clients/http/" target="_blank" rel="external">这里</a>查看他们提供的服务列表）</p>
-<h2 id="P-S"><a href="#P-S" class="headerlink" title="P.S."></a>P.S.</h2><p>其实所有的伪随机数生成器都长周期相关现象，不过只要这个周期足够长，短时间内是不会出现问题的。之前V8就爆出过乱度不足的<a href="https://stackoverflow.com/questions/9550796/why-is-google-chromes-math-random-number-generator-not-that-random" target="_blank" rel="external">问题</a>，后来在49版本改用xorshift128+算法解决了这个问题。<br><img src="http://oin1wqn2f.bkt.clouddn.com/gab-draw-1.png" alt="gab-draw-1"><br><a href="http://vigna.di.unimi.it/ftp/papers/xorshiftplus.pdf" target="_blank" rel="external">xorshift128+</a>算法拥有极长的周期长度：</p>
-<blockquote>
-<p>This has been pointed out to us, and having understood the problem and after some research, we decided to reimplement Math.random based on an algorithm called xorshift128+. It uses 128 bits of internal state, has a period length of 2<sup>128</sup> - 1, and passes all tests from the TestU01 suite.</p>
-</blockquote>
-<p>应付年会抽奖这种小范围的活动肯定是绰绰有余的了。但是如果要在密码或者安全领域使用伪随机数，最好还是使用CSPRNG（密码学安全伪随机数生成器）来生成。浏览器环境可以使用<a href="https://developer.mozilla.org/en-US/docs/Web/API/RandomSource/getRandomValues" target="_blank" rel="external">crypto.getRandomValues</a>，nodejs环境可以使用<a href="https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback" target="_blank" rel="external">crypto.randomBytes</a>。</p>
-<p>需要注意的是crypto.getRandomValues函数接收的是一个TypedArray（Int8Array，Uint8Array……）而不是普通的数组，然后返回一个随机数队列。crypto.randomBytes函数接受一个字符指定返回值得长度，然后返回一个buffer而不是数字。要想转换为数字的话需要先用toString(‘hex’)转换为16进制字符串，再用parseInt将其转化为数字。</p>
-<p>ok，那么这次的扯淡就到这里，感谢您的收看，咱们下次再扯，完结撒花~\（￣︶￣）/</p>
-<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ul>
-<li><a href="https://zhuanlan.zhihu.com/p/19930815" target="_blank" rel="external">伪随机的上位和真随机的逆袭</a></li>
-<li><a href="https://blog.gslin.org/archives/2015/11/25/6159/v8-%E7%9A%84-math-random-%E4%BA%82%E5%BA%A6%E4%B8%8D%E8%B6%B3%E7%9A%84%E5%95%8F%E9%A1%8C/" target="_blank" rel="external">V8 的 Math.random() 亂度不足的問題</a></li>
-<li><a href="http://blog.sina.com.cn/s/blog_15da22ed10102wpl6.html" target="_blank" rel="external">Math.random()</a></li>
-<li><a href="http://cyukang.com/2014/03/06/random-number.html" target="_blank" rel="external">关于随机数</a></li>
-</ul>
+        <p>其实我早就开始读vue的源码了，那会儿还是1.x版本，但是因为懒没有坚持下来，现在都已经更新到2.x了……总之坚持读完吧。vue的源码还是比较好读的，因为注释清楚又有中文文档对照，所以作为读源码练手的对象非常合适。这次我读的2.20的release版本，我阅读的习惯是，不只看大概流程，会把每个函数都看一遍，学习借鉴细节。之后的笔记也会以这个思路来写，希望能给自己和看的人带来帮助吧。</p>
+<h2 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h2><p>分支：master<br>commit id：2a19f911dc8631d44b7c7e63c4db57ef28ac5e69<br>版本：2.20 release</p>
+<h2 id="入口"><a href="#入口" class="headerlink" title="入口"></a>入口</h2><p>vue打包用的是rollup，在build目录下有相关的配置。整个构建过程写的还是挺有趣的，会根据不同的场景选择不同的入口文件，同时使用了facebook的<a href="https://flowtype.org" target="_blank" rel="external">flow</a>做类型检查，如果要是自己开发库的话，vue的项目架构和工作流就是个非常好的模板。单元测试的部分等读完了源码也会去读一读，据说写的很好，目前看到的是用karma跑浏览器的单元测试，用jasmine跑server side render的单测，用到了typescript跑类型检查。在类型检查这方面真是费了牛劲了……</p>
+<p>另外在使用rollup打包时使用了部分插件作为补充（所有配置都放在 build/config.js 中了）。</p>
+<p>rollup-plugin-flow-no-whitespace 插件用来去掉flow使用的类型检查代码。有趣的是，插件是还是作者自己写的，只是想去掉打包后遗留的空格……还真是洁癖呢，科科……</p>
+<p>rollup-plugin-buble 插件用来替代babel，用来转换es5用的。</p>
+<p>rollup-plugin-alias 用来配置打包过程中各个模块的路径映射，具体的配置写在 build/alias.js 中。这样代码中就可以用src作为根目录引用模块了。值得注意的是，src/platforms 目录下的 web 模块和 weex 模块，也都做了映射，所以在看代码时有 import xxx from ‘web/xxx’的引用，就都是从 platforms 下引用的。貌似这是缩短引用路径、区分目录结构和代码逻辑的好方法呢，可以借鉴一下。</p>
+<p>所以根据 alias 的配置，vue模块对应的就是 src/entries/web-runtime-with-compiler.js 文件，我是以这个文件作为入口开始阅读的……</p>
+<h2 id="web-runtime-with-compiler-js"><a href="#web-runtime-with-compiler-js" class="headerlink" title="web-runtime-with-compiler.js"></a>web-runtime-with-compiler.js</h2><p>这个文件主要用于绑定vue的编译器。真正的Vue构造函数在 src/entries/web-runtime.js 中定义。</p>
+<p>这个文件中主要定义了 <a href="https://cn.vuejs.org/v2/api/#vm-mount" target="_blank" rel="external">vue.$mount</a> 和 <a href="https://cn.vuejs.org/v2/api/#Vue-compile" target="_blank" rel="external">Vue.compile</a>。</p>
+<p>Vue.compile 使用来解析模板用的，对应的是 src/compiler 模块，粗略的看了下是使用new Function来转换字符串为js代码的，所以对于不支持或者认为这样不安全的环境，vue会给出错误提示。具体的源码后续再继续详细读。</p>
+<p>vue.$mount 是用来挂载vue实例的，方法虽然也是在这里定义的，但是真正核心的mount方法又是从Vue构造函数上的……呃……这里有点绕呢，大概就是类似这样：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> mount = Vue.prototype.$mount</div><div class="line">Vue.prototype.$mount = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">// ...</span></div><div class="line">    mount.call(<span class="keyword">this</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>做了个替换。总之其他模块了用到的$mount和真正暴露出来的其实并不是一个方法呢。</p>
+<p>这里 Vue.prototype.$mount 函数的大概逻辑是：先检查传入的el参数是不是body或者html元素，要是body或者html元素就报错了 –&gt; 如果当前实例的$options中有<a href="https://cn.vuejs.org/v2/guide/render-function.html" target="_blank" rel="external">render函数</a>，直接根据render编译，创建后续的实例 –&gt; 如果当前实例没有render函数 –&gt; 检查是否$options中是否有template属性，如果有使用template属性 –&gt; 如果没有，使用传入的el元素的outHTML作为template…… –&gt; 最后把template转化为render函数……</p>
+<p>其中，在使用现有的template时，会对字符串型的template进行缓存，使用dom节点做template的，就取节点的innerHTML。</p>
+<p>好的那么由于时间不足本次的博客就到这里，话说这次时间实在是太仓促了，而且解读源码的表达方法我也还没有探索好……我的感觉就是，虽然我都看懂了，但是却说不明白，下次会尝试着配上些流程图或者思维导图来记录，这样也更容易理解吧。</p>
+<p>那么如果不出意外的话，大概可能maybe也许下周五会更新吧~！这次就不让大家安利了，毕竟我自己都觉得好坑啊……就这样了……</p>
+<p>白了个白~！</p>
 
       
     </div>
@@ -426,19 +393,13 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/javascript/" rel="tag"># javascript</a>
-          
-        </div>
-      
 
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/13/an-in-depthexplanation-of-mobx/" rel="next" title="深入mobx原理">
-                <i class="fa fa-chevron-left"></i> 深入mobx原理
+              <a href="/2017/03/10/difference-between-fetch-and-XHR/" rel="next" title="fetch 能做哪些 XHR(XMLHttpRequest) 不能做的事">
+                <i class="fa fa-chevron-left"></i> fetch 能做哪些 XHR(XMLHttpRequest) 不能做的事
               </a>
             
           </div>
@@ -446,10 +407,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/01/24/javascript-year-bonus-evade-tax/" rel="prev" title="javascript实现年终奖避税程序">
-                javascript实现年终奖避税程序 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -501,8 +458,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/01/19/gab-draw/"
-           data-title="一场抽奖引发的扯淡" data-url="http://brooch.me/2017/01/19/gab-draw/">
+      <div class="ds-thread" data-thread-key="2017/03/17/vue-source-notes-1/"
+           data-title="vue源码阅读笔记(1)" data-url="http://brooch.me/2017/03/17/vue-source-notes-1/">
       </div>
     
   </div>
@@ -680,7 +637,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#起因"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#质疑"><span class="nav-number">3.</span> <span class="nav-text">质疑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Math-random"><span class="nav-number">4.</span> <span class="nav-text">Math.random</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结论"><span class="nav-number">5.</span> <span class="nav-text">结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#P-S"><span class="nav-number">6.</span> <span class="nav-text">P.S.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展阅读"><span class="nav-number">7.</span> <span class="nav-text">扩展阅读</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#版本"><span class="nav-number">1.</span> <span class="nav-text">版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#入口"><span class="nav-number">2.</span> <span class="nav-text">入口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web-runtime-with-compiler-js"><span class="nav-number">3.</span> <span class="nav-text">web-runtime-with-compiler.js</span></a></li></ol></div>
             
 
           </div>
