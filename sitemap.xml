@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://brooch.me/2017/04/07/nodejs-hotreload/</loc>
+    
+    <lastmod>2017-04-07T15:54:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://brooch.me/2017/03/31/vue-source-notes-2/</loc>
     
     <lastmod>2017-03-31T07:29:55.000Z</lastmod>
