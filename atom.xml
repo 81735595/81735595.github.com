@@ -72,9 +72,10 @@
     <link href="http://brooch.me/2017/04/07/nodejs-hotreload/"/>
     <id>http://brooch.me/2017/04/07/nodejs-hotreload/</id>
     <published>2017-04-07T14:04:44.000Z</published>
-    <updated>2017-04-07T15:54:13.000Z</updated>
+    <updated>2017-04-14T08:47:25.000Z</updated>
     
     <content type="html"><![CDATA[<p>嗯，没错，我又来要放水了今天……这个周末停休了，没辙没辙的……</p>
+<a id="more"></a>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>话说上周看了朋友的一篇博客 <a href="https://yj1438.github.io/2017/03/31/respawn.html" target="_blank" rel="external">通过 respawn 加强需要即时生效的开发环境构建系统</a> ，里面说到了用子进程来更新应用的方法，个人感觉就是像Jetty那样的热部署机制吧。但是归根结底，还是要重新启动整个应用才能完成更新，这点上来说感觉并不完美。那么能不能做到真正的0重启热更新代码呢？本文提一个另类的思路给大家参考一下。</p>
 <h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>废话不多说了，认真读过nodejs文档的人都应该注意过这个api <a href="http://nodejs.cn/api/globals.html#globals_require_cache" target="_blank" rel="external">require.cache</a> 。文档里写的很清楚，如果这个对象中的引用被清除了，下次再调用就会重新加载，我们可以使用这个机制来热加载更新的模块。</p>
 <p>下面有个小栗子可以验证这个思路的可行性：</p>
@@ -90,7 +91,6 @@
     <summary type="html">
     
       &lt;p&gt;嗯，没错，我又来要放水了今天……这个周末停休了，没辙没辙的……&lt;/p&gt;
-&lt;h2 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h2&gt;&lt;p&gt;话说上周看了朋友的一篇博客 &lt;a href=&quot;https://
     
     </summary>
     
