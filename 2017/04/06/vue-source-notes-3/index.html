@@ -1,0 +1,989 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="vue," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Keep Walking" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="啊……写这篇博客的时候我刚上了一宿的线……现在多一个字都不想说了……直接开始吧……">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vue-source-notes-3">
+<meta property="og:url" content="http://brooch.me/2017/04/06/vue-source-notes-3/index.html">
+<meta property="og:site_name" content="Keep Walking">
+<meta property="og:description" content="啊……写这篇博客的时候我刚上了一宿的线……现在多一个字都不想说了……直接开始吧……">
+<meta property="og:updated_time" content="2017-04-14T08:32:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="vue-source-notes-3">
+<meta name="twitter:description" content="啊……写这篇博客的时候我刚上了一宿的线……现在多一个字都不想说了……直接开始吧……">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://brooch.me/2017/04/06/vue-source-notes-3/"/>
+
+
+
+
+
+  <title> vue-source-notes-3 | Keep Walking </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+	<div style='margin:0 auto;display:none;'>
+		<img src="/images/avatar.png" alt="投身烈火" />
+	</div>
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?caa2c063c399746b1f44cb226584ab5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Keep Walking</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/04/06/vue-source-notes-3/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="投身烈火">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Keep Walking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                vue-source-notes-3
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-06T09:01:35+08:00">
+                2017-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/04/06/vue-source-notes-3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/06/vue-source-notes-3/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>啊……写这篇博客的时候我刚上了一宿的线……现在多一个字都不想说了……直接开始吧……</p>
+<a id="more"></a>
+<h2 id="公共方法模块-shared"><a href="#公共方法模块-shared" class="headerlink" title="公共方法模块 shared"></a>公共方法模块 shared</h2><p>故名思议，shared模块是放所有公共方法的，里面只有 util.js 一个文件。</p>
+<h3 id="util-js"><a href="#util-js" class="headerlink" title="util.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/shared/util.js" target="_blank" rel="external">util.js</a></h3><p>util.js一共暴露了23个方法，每个函数都非常基础，第一眼看上去感觉没啥可看的，但是仔细看每个函数会发现，这些函数都很实用，而且正是因为基础，很可能会成为以后面试的考题……</p>
+<p>总之过一遍下这些方法吧，记录下我认为有用的知识点，当做事知识储备了：</p>
+<h2 id="toString-NaN"><a href="#toString-NaN" class="headerlink" title="_toString"></a>_toString</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 这个函数可以将任意类型的值转为字符串</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">_toString</span> (<span class="params">val: any</span>): <span class="title">string</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> val == <span class="literal">null</span></div><div class="line">    <span class="comment">// 如果是null就返回空字符串</span></div><div class="line">    ? <span class="string">''</span></div><div class="line">    : <span class="keyword">typeof</span> val === <span class="string">'object'</span></div><div class="line">      <span class="comment">// 如果是object就转成json</span></div><div class="line">      <span class="comment">// 这里比较特殊的是在调用stringify时除了要转换的值，还多传了两个参数，其中第二个参数用来过滤数据，第三个参数用来控制内容的缩进</span></div><div class="line">      ? <span class="built_in">JSON</span>.stringify(val, <span class="literal">null</span>, <span class="number">2</span>)</div><div class="line">      <span class="comment">// 其他的都是用String来转换为字符串，其实跟调用对象的toString是一样的吧？</span></div><div class="line">      : <span class="built_in">String</span>(val)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="toNumber"><a href="#toNumber" class="headerlink" title="toNumber"></a>toNumber</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 将传入的值转换为浮点数，如果转换失败就返回传入值</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">toNumber</span> (<span class="params">val: string</span>): <span class="title">number</span> | <span class="title">string</span> </span>&#123;</div><div class="line">  <span class="comment">// 浮点数没加 ",10" ，不知道是不是个隐藏的问题</span></div><div class="line">  <span class="keyword">const</span> n = <span class="built_in">parseFloat</span>(val)</div><div class="line">  <span class="keyword">return</span> <span class="built_in">isNaN</span>(n) ? val : n</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="makeMap"><a href="#makeMap" class="headerlink" title="makeMap"></a>makeMap</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 这个函数比较有意思，功能有点儿像集合（Set）对象，但是只能存储字符串，最后用来判断值是否已经存在</span></div><div class="line"><span class="comment">// 貌似是用来快速检索某个值是否存在用的</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">makeMap</span> (<span class="params"></span></span></div><div class="line">  str: string,</div><div class="line">  expectsLowerCase?: boolean</div><div class="line">): (<span class="params">key: string</span>) =&gt; <span class="title">true</span> | <span class="title">void</span> &#123;</div><div class="line">  <span class="keyword">const</span> map = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</div><div class="line">  <span class="keyword">const</span> list: <span class="built_in">Array</span>&lt;string&gt; = str.split(<span class="string">','</span>)</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; list.length; i++) &#123;</div><div class="line">    map[list[i]] = <span class="literal">true</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> expectsLowerCase</div><div class="line">    ? <span class="function"><span class="params">val</span> =&gt;</span> map[val.toLowerCase()]</div><div class="line">    : <span class="function"><span class="params">val</span> =&gt;</span> map[val]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="isBuiltInTag"><a href="#isBuiltInTag" class="headerlink" title="isBuiltInTag"></a>isBuiltInTag</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 生成一个用来检索是否是内置标签的函数，用到了之前的makeMap方法</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> isBuiltInTag = makeMap(<span class="string">'slot,component'</span>, <span class="literal">true</span>)</div></pre></td></tr></table></figure>
+<h2 id="remove"><a href="#remove" class="headerlink" title="remove"></a>remove</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 一个工具方法，用来删除数组中匹配到的对象</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">remove</span> (<span class="params">arr: Array&lt;any&gt;, item: any</span>): <span class="title">Array</span>&lt;<span class="title">any</span>&gt; | <span class="title">void</span> </span>&#123;</div><div class="line">  <span class="keyword">if</span> (arr.length) &#123;</div><div class="line">    <span class="keyword">const</span> index = arr.indexOf(item)</div><div class="line">    <span class="keyword">if</span> (index &gt; <span class="number">-1</span>) &#123;</div><div class="line">      <span class="keyword">return</span> arr.splice(index, <span class="number">1</span>)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="hasOwn"><a href="#hasOwn" class="headerlink" title="hasOwn"></a>hasOwn</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 对Object.prototype.hasOwnProperty的封装，用来判断对象的属性是否是继承自原型的</span></div><div class="line"><span class="comment">// 顺便复习下instanceof和typeof</span></div><div class="line"><span class="comment">// https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/instanceof</span></div><div class="line"><span class="comment">// https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/typeof</span></div><div class="line"><span class="comment">// 除了三者作用的区别以外，需要注意的是，hasOwnProperty是函数，instanceof和typeof是运算符</span></div><div class="line"><span class="comment">// 其实MDN上写的instanceof是运算符，typeof是操作符，特意查了一下，在英语中操作符和运算符都叫operator，应该可以认为是一个东西吧</span></div><div class="line"><span class="comment">// 与函数的区别在于，一个是符号，一个是有名称的，另外，函数有明确定义的参数表，符号没有</span></div><div class="line"><span class="comment">// 当然，从广义来上来看，任何一个运算符都可看做是一个函数，而它的运算数可看做参数</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> hasOwnProperty = <span class="built_in">Object</span>.prototype.hasOwnProperty</div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">hasOwn</span> (<span class="params">obj: Object, key: string</span>): <span class="title">boolean</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> hasOwnProperty.call(obj, key)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="isPrimitive"><a href="#isPrimitive" class="headerlink" title="isPrimitive"></a>isPrimitive</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 判断一个值是否是基础类型？字面上看primitive是原始的意思……</span></div><div class="line"><span class="comment">// 总之就是判断传入的参数是否是数字或者字符串</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">isPrimitive</span> (<span class="params">value: any</span>): <span class="title">boolean</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> value === <span class="string">'string'</span> || <span class="keyword">typeof</span> value === <span class="string">'number'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="cached"><a href="#cached" class="headerlink" title="cached"></a>cached</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 生成一个带缓存的纯函数</span></div><div class="line"><span class="comment">// 就是会把每次函数执行的结果缓存起来</span></div><div class="line"><span class="comment">// 根据纯函数的定义，传入同样的参数值，函数总是求出同样的结果，这样处理之后可以大幅提升函数的运算速度</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">cached</span>&lt;<span class="title">F</span>: <span class="title">Function</span>&gt; (<span class="params">fn: F</span>): <span class="title">F</span> </span>&#123;</div><div class="line">  <span class="comment">// 定义缓存对象</span></div><div class="line">  <span class="keyword">const</span> cache = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</div><div class="line">  <span class="keyword">return</span> (<span class="function"><span class="keyword">function</span> <span class="title">cachedFn</span> (<span class="params">str: string</span>) </span>&#123;</div><div class="line">    <span class="comment">// 根据传入的参数取缓存</span></div><div class="line">    <span class="keyword">const</span> hit = cache[str]</div><div class="line">    <span class="comment">// 检查缓存是否存在，如果存在就直接返回缓存，缓存不存在就运行函数缓存结果</span></div><div class="line">    <span class="keyword">return</span> hit || (cache[str] = fn(str))</div><div class="line">  &#125;: any)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="camelize"><a href="#camelize" class="headerlink" title="camelize"></a>camelize</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 将破折号分割的命名修改为驼峰命名</span></div><div class="line"><span class="comment">// 感觉是在解析模板时，将tag name转换为 class name用的</span></div><div class="line"><span class="keyword">const</span> camelizeRE = <span class="regexp">/-(\w)/g</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> camelize = cached((str: string): <span class="function"><span class="params">string</span> =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> str.replace(camelizeRE, (_, c) =&gt; c ? c.toUpperCase() : <span class="string">''</span>)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h2 id="capitalize"><a href="#capitalize" class="headerlink" title="capitalize"></a>capitalize</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 将字符串首字母转换为大写的函数</span></div><div class="line"><span class="comment">// 估计是跟camelize配合一起使用的吧</span></div><div class="line"><span class="comment">// 最后的效果就是：&lt;my-component&gt; ==&gt; MyComponent</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> capitalize = cached((str: string): <span class="function"><span class="params">string</span> =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> str.charAt(<span class="number">0</span>).toUpperCase() + str.slice(<span class="number">1</span>)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h2 id="hyphenate"><a href="#hyphenate" class="headerlink" title="hyphenate"></a>hyphenate</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 将驼峰命名再改回中划线命名……(￣.￣)</span></div><div class="line"><span class="comment">// 效果类似于：ABCD =&gt; a-b-c-d</span></div><div class="line"><span class="keyword">const</span> hyphenateRE = <span class="regexp">/([^-])([A-Z])/g</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> hyphenate = cached((str: string): <span class="function"><span class="params">string</span> =&gt;</span> &#123;</div><div class="line">  <span class="keyword">return</span> st</div><div class="line">    <span class="comment">// 这里要调用两次replace是因为，如果是 ABCD 这种包含三个连续大写字母的字符串，</span></div><div class="line">    <span class="comment">// 只replace一次会变成A-BC-D这样，需要再replace一次……</span></div><div class="line">    .replace(hyphenateRE, <span class="string">'$1-$2'</span>)</div><div class="line">    .replace(hyphenateRE, <span class="string">'$1-$2'</span>)</div><div class="line">    .toLowerCase()</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h2 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 简单实现的bind方法，源码的注释中说比原生的bind快</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">bind</span> (<span class="params">fn: Function, ctx: Object</span>): <span class="title">Function</span> </span>&#123;</div><div class="line">  <span class="function"><span class="keyword">function</span> <span class="title">boundFn</span> (<span class="params">a</span>) </span>&#123;</div><div class="line">    <span class="keyword">const</span> l: number = <span class="built_in">arguments</span>.length</div><div class="line">    <span class="keyword">return</span> l</div><div class="line">      ? l &gt; <span class="number">1</span></div><div class="line">        ? fn.apply(ctx, <span class="built_in">arguments</span>)</div><div class="line">        : fn.call(ctx, a)</div><div class="line">      : fn.call(ctx)</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 记录原始函数的参数个数</span></div><div class="line">  boundFn._length = fn.length</div><div class="line">  <span class="keyword">return</span> boundFn</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="toArray"><a href="#toArray" class="headerlink" title="toArray"></a>toArray</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 将类数组对象转化为一个数组，其实这个操作挺常见的，但是这样用循环处理貌似效率低呢</span></div><div class="line"><span class="comment">// 测试了一下使用Array.prototype上的方法来做转换会快100倍……</span></div><div class="line"><span class="comment">// 不知道为啥不用……</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">toArray</span> (<span class="params">list: any, start?: number</span>): <span class="title">Array</span>&lt;<span class="title">any</span>&gt; </span>&#123;</div><div class="line">  start = start || <span class="number">0</span></div><div class="line">  <span class="keyword">let</span> i = list.length - start</div><div class="line">  <span class="keyword">const</span> ret: <span class="built_in">Array</span>&lt;any&gt; = <span class="keyword">new</span> <span class="built_in">Array</span>(i)</div><div class="line">  <span class="keyword">while</span> (i--) &#123;</div><div class="line">    ret[i] = list[i + start]</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> ret</div><div class="line">&#125;</div><div class="line"><span class="comment">// 用14年的mac air测试，</span></div><div class="line"><span class="comment">// 使用concat和slice来做转换的版本，转换10000次耗时10ms，</span></div><div class="line"><span class="comment">// 用循环的版本耗时1000ms</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">toArray</span> (<span class="params">list: any, start?: number</span>): <span class="title">Array</span>&lt;<span class="title">any</span>&gt; </span>&#123;</div><div class="line">  start = start || <span class="number">0</span></div><div class="line">  <span class="keyword">const</span> ret: <span class="built_in">Array</span>&lt;any&gt; = [].concat(list)</div><div class="line">  <span class="keyword">return</span> ret.slice(start)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="extend"><a href="#extend" class="headerlink" title="extend"></a>extend</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 简单的浅拷贝，原来用的object.keys来取key，现在改成用循环了，估计用原生API效率低吧</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">extend</span> (<span class="params">to: Object, _from: ?Object</span>): <span class="title">Object</span> </span>&#123;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> _from) &#123;</div><div class="line">    to[key] = _from[key]</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> to</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="isObject"><a href="#isObject" class="headerlink" title="isObject"></a>isObject</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 超简单的对象检查……</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">isObject</span> (<span class="params">obj: mixed</span>): <span class="title">boolean</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> obj !== <span class="literal">null</span> &amp;&amp; <span class="keyword">typeof</span> obj === <span class="string">'object'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="isPlainObject"><a href="#isPlainObject" class="headerlink" title="isPlainObject"></a>isPlainObject</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 使用Object.prototype.toString做的严格对象检查</span></div><div class="line"><span class="keyword">const</span> toString = <span class="built_in">Object</span>.prototype.toString</div><div class="line"><span class="keyword">const</span> OBJECT_STRING = <span class="string">'[object Object]'</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">isPlainObject</span> (<span class="params">obj: any</span>): <span class="title">boolean</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> toString.call(obj) === OBJECT_STRING</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="toObject"><a href="#toObject" class="headerlink" title="toObject"></a>toObject</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 讲一个元素都是对象的数组合并成一个对象……</span></div><div class="line"><span class="comment">// 貌似是用来将标签的属性合并为一个配置对象用的</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">toObject</span> (<span class="params">arr: Array&lt;any&gt;</span>): <span class="title">Object</span> </span>&#123;</div><div class="line">  <span class="keyword">const</span> res = &#123;&#125;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</div><div class="line">    <span class="keyword">if</span> (arr[i]) &#123;</div><div class="line">      extend(res, arr[i])</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> res</div><div class="line">&#125;</div><div class="line"><span class="comment">// 话说之前看到的使用reduce来遍历对象的方法，其实也能够使在这里的</span></div><div class="line"><span class="comment">// 比如这样</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">toObject</span> (<span class="params">arr: Array&lt;any&gt;</span>): <span class="title">Object</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> arr.reduce(<span class="function">(<span class="params">res, cur</span>) =&gt;</span> extend(res,cur), &#123;&#125;)</div><div class="line">&#125;</div><div class="line"><span class="comment">// 是不是简洁多了呢？</span></div></pre></td></tr></table></figure>
+<h2 id="noop"><a href="#noop" class="headerlink" title="noop"></a>noop</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 不执行操作的空函数</span></div><div class="line"><span class="comment">// 抓要是为了兼容那些需要函数作为参数的函数，有没有可做的操作时用的</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">noop</span> (<span class="params"></span>) </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<h2 id="no"><a href="#no" class="headerlink" title="no"></a>no</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 永远返回false的函数，作用跟noop一样的</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> no = <span class="function"><span class="params">()</span> =&gt;</span> <span class="literal">false</span></div></pre></td></tr></table></figure>
+<h2 id="identity"><a href="#identity" class="headerlink" title="identity"></a>identity</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 返回传入的参数，同上，嗯……</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> identity = <span class="function">(<span class="params">_: any</span>) =&gt;</span> _</div></pre></td></tr></table></figure>
+<h2 id="genStaticKeys"><a href="#genStaticKeys" class="headerlink" title="genStaticKeys"></a>genStaticKeys</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 用来将模块数组转换出模块名的一个字符串……</span></div><div class="line"><span class="comment">// 这个方法也是用了reduce来做遍历赋值，使用这种方法还真是挺简洁的</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">genStaticKeys</span> (<span class="params">modules: Array&lt;ModuleOptions&gt;</span>): <span class="title">string</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> modules.reduce(<span class="function">(<span class="params">keys, m</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">return</span> keys.concat(m.staticKeys || [])</div><div class="line">  &#125;, []).join(<span class="string">','</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="looseEqual"><a href="#looseEqual" class="headerlink" title="looseEqual"></a>looseEqual</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 简单比较两个对象是否一致，就是转成字符串然后比较字符串是否一致</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">looseEqual</span> (<span class="params">a: mixed, b: mixed</span>): <span class="title">boolean</span> </span>&#123;</div><div class="line">  <span class="keyword">const</span> isObjectA = isObject(a)</div><div class="line">  <span class="keyword">const</span> isObjectB = isObject(b)</div><div class="line">  <span class="keyword">if</span> (isObjectA &amp;&amp; isObjectB) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">JSON</span>.stringify(a) === <span class="built_in">JSON</span>.stringify(b)</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!isObjectA &amp;&amp; !isObjectB) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">String</span>(a) === <span class="built_in">String</span>(b)</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="looseIndexOf"><a href="#looseIndexOf" class="headerlink" title="looseIndexOf"></a>looseIndexOf</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 使用了looseEqual的indexOf</span></div><div class="line"><span class="comment">// 话说这个判断方法的思想就是，只要有同样的结构，那么就是同样的对象</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">looseIndexOf</span> (<span class="params">arr: Array&lt;mixed&gt;, val: mixed</span>): <span class="title">number</span> </span>&#123;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</div><div class="line">    <span class="keyword">if</span> (looseEqual(arr[i], val)) <span class="keyword">return</span> i</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="number">-1</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="once"><a href="#once" class="headerlink" title="once"></a>once</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 确保只调用一次函数</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">once</span> (<span class="params">fn: Function</span>): <span class="title">Function</span> </span>&#123;</div><div class="line">  <span class="comment">// called应该算是一个锁吧</span></div><div class="line">  <span class="keyword">let</span> called = <span class="literal">false</span></div><div class="line">  <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (!called) &#123;</div><div class="line">      <span class="comment">// 上锁</span></div><div class="line">      called = <span class="literal">true</span></div><div class="line">      fn()</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>昏昏沉沉的总算是完了……不知道是缺觉还是怎么的，写着技术的文章，心里却想到了很多技术之外的东西。不过今天实在是没精力写了，留个TODO吧，后续整理好了再更新上来。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/vue/" rel="tag"># vue</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/31/vue-source-notes-2/" rel="next" title="vue源码阅读笔记(2)">
+                <i class="fa fa-chevron-left"></i> vue源码阅读笔记(2)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/07/nodejs-hotreload/" rel="prev" title="nodejs热更新的方法">
+                nodejs热更新的方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/04/06/vue-source-notes-3/"
+           data-title="vue-source-notes-3" data-url="http://brooch.me/2017/04/06/vue-source-notes-3/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="投身烈火" />
+          <p class="site-author-name" itemprop="name">投身烈火</p>
+          <p class="site-description motion-element" itemprop="description">白云苍狗，时光悠悠~ ￣ω￣=</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">25</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/81735595" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/p/1005051063629865" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              My Friends
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/users/b7dc4381aed3/" title="17" target="_blank">17</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://testudy.cc/" title="继伟" target="_blank">继伟</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kouyun.me/" title="寇云" target="_blank">寇云</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yj1438.github.io/" title="尹杰" target="_blank">尹杰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/cnsnake11/blog/" title="曹楠" target="_blank">曹楠</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ushtml.com/" title="明礼" target="_blank">明礼</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanyouwei.com/" title="友伟" target="_blank">友伟</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://lilywei739.github.io/" title="vl" target="_blank">vl</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://lq1228.github.io/" title="倩倩" target="_blank">倩倩</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://wangjiaoxia.github.io/" title="王小姣" target="_blank">王小姣</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xwenz.com/" title="文玲" target="_blank">文玲</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#公共方法模块-shared"><span class="nav-number">1.</span> <span class="nav-text">公共方法模块 shared</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#util-js"><span class="nav-number">1.1.</span> <span class="nav-text">util.js</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#toString-NaN"><span class="nav-number">2.</span> <span class="nav-text">_toString</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#toNumber"><span class="nav-number">3.</span> <span class="nav-text">toNumber</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#makeMap"><span class="nav-number">4.</span> <span class="nav-text">makeMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#isBuiltInTag"><span class="nav-number">5.</span> <span class="nav-text">isBuiltInTag</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#remove"><span class="nav-number">6.</span> <span class="nav-text">remove</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hasOwn"><span class="nav-number">7.</span> <span class="nav-text">hasOwn</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#isPrimitive"><span class="nav-number">8.</span> <span class="nav-text">isPrimitive</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cached"><span class="nav-number">9.</span> <span class="nav-text">cached</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#camelize"><span class="nav-number">10.</span> <span class="nav-text">camelize</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#capitalize"><span class="nav-number">11.</span> <span class="nav-text">capitalize</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hyphenate"><span class="nav-number">12.</span> <span class="nav-text">hyphenate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bind"><span class="nav-number">13.</span> <span class="nav-text">bind</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#toArray"><span class="nav-number">14.</span> <span class="nav-text">toArray</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#extend"><span class="nav-number">15.</span> <span class="nav-text">extend</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#isObject"><span class="nav-number">16.</span> <span class="nav-text">isObject</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#isPlainObject"><span class="nav-number">17.</span> <span class="nav-text">isPlainObject</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#toObject"><span class="nav-number">18.</span> <span class="nav-text">toObject</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#noop"><span class="nav-number">19.</span> <span class="nav-text">noop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#no"><span class="nav-number">20.</span> <span class="nav-text">no</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#identity"><span class="nav-number">21.</span> <span class="nav-text">identity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#genStaticKeys"><span class="nav-number">22.</span> <span class="nav-text">genStaticKeys</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#looseEqual"><span class="nav-number">23.</span> <span class="nav-text">looseEqual</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#looseIndexOf"><span class="nav-number">24.</span> <span class="nav-text">looseIndexOf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#once"><span class="nav-number">25.</span> <span class="nav-text">once</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">投身烈火</span>
+</div>
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"81735595"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
