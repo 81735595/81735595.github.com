@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-04-14T08:44:39.000Z</updated>
+  <updated>2017-04-14T08:46:11.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>vue-source-notes-3</title>
+    <title>vue源码阅读笔记(3)</title>
     <link href="http://brooch.me/2017/04/14/vue-source-notes-3/"/>
     <id>http://brooch.me/2017/04/14/vue-source-notes-3/</id>
     <published>2017-04-14T08:51:35.000Z</published>
-    <updated>2017-04-14T08:44:39.000Z</updated>
+    <updated>2017-04-14T08:46:11.000Z</updated>
     
     <content type="html"><![CDATA[<p>啊……写这篇博客的时候我刚上了一宿的线……现在多一个字都不想说了……直接开始吧……</p>
 <a id="more"></a>
