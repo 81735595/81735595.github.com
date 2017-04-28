@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://brooch.me/2017/04/21/vue-source-notes-4/</loc>
+    
+    <lastmod>2017-04-28T14:36:34.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://brooch.me/2017/03/17/vue-source-notes-1/</loc>
+    
+    <lastmod>2017-04-21T06:05:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://brooch.me/2017/04/07/nodejs-hotreload/</loc>
     
     <lastmod>2017-04-14T08:47:25.000Z</lastmod>
@@ -19,13 +33,6 @@
     <loc>http://brooch.me/2017/03/31/vue-source-notes-2/</loc>
     
     <lastmod>2017-03-31T07:29:55.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://brooch.me/2017/03/17/vue-source-notes-1/</loc>
-    
-    <lastmod>2017-03-31T00:22:28.000Z</lastmod>
     
   </url>
   

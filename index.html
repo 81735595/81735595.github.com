@@ -266,6 +266,158 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/04/21/vue-source-notes-4/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="投身烈火">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Keep Walking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/21/vue-source-notes-4/" itemprop="url">
+                  vue源码阅读笔记(4)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-21T13:37:29+08:00">
+                2017-04-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/04/21/vue-source-notes-4/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/21/vue-source-notes-4/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>嗯，又到了一周一度的deadline……之前几次把杂七杂八的部分读完了，这次终于要开始读vue核心部分的代码了。从之前读过的 src/entries 模块中可以看到，vue核心的代码的大概可以分为 runtime 和 compiler 两部分。runtime 对应 src/core 模块，compiler 对应 src/compiler 模块，这次就从 src/core 模块开始读。</p>
+<h2 id="Vue核心模块-core"><a href="#Vue核心模块-core" class="headerlink" title="Vue核心模块 core"></a>Vue核心模块 core</h2><p>这个模块最后输出的就是一个Vue的构造函数，里面包含了组件系统、全局API、vue实例、对象属性监测系统、公共方法、虚拟dom、配置，这些模块。因为各个模块之间都有联系，单拎出来一个个看感觉没法看到全貌呀。所以这次换个方式试试。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line">|- core</div><div class="line">  |- components</div><div class="line">  |- global-api</div><div class="line">  |- instance</div><div class="line">  |- observer</div><div class="line">  |- util</div><div class="line">  |- vdom</div><div class="line">  |- config.js</div><div class="line">  |- index.js</div><div class="line">*/</div></pre></td></tr></table></figure>
+<p>从 src/entries/web-runtime.js 文件中可以看出，Vue 这个构造函数是从 src/core/index.js 导出的，这个文件的代码如下：</p>
+<h3 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/index.js" target="_blank" rel="external">index.js</a></h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'./instance/index'</span></div><div class="line"><span class="keyword">import</span> &#123; initGlobalAPI &#125; <span class="keyword">from</span> <span class="string">'./global-api/index'</span></div><div class="line"><span class="keyword">import</span> &#123; isServerRendering &#125; <span class="keyword">from</span> <span class="string">'core/util/env'</span></div><div class="line"></div><div class="line"><span class="comment">// Vue构造函数来自src/core/instance/index.js</span></div><div class="line"><span class="comment">// 通过initGlobalAPI这个函数添加全局api</span></div><div class="line">initGlobalAPI(Vue)</div><div class="line"></div><div class="line"><span class="comment">// 是否运行在服务端的标记，对应文档中的 https://cn.vuejs.org/v2/api/?#vm-isServer</span></div><div class="line"><span class="built_in">Object</span>.defineProperty(Vue.prototype, <span class="string">'$isServer'</span>, &#123;</div><div class="line">  <span class="attr">get</span>: isServerRendering</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="comment">// __VERSION__ 是在 build/config.js 里面配置的，在构建的时候通过脚本替换为配置里的变量</span></div><div class="line">Vue.version = <span class="string">'__VERSION__'</span></div><div class="line"></div><div class="line"><span class="comment">// 导出Vue构造函数</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> Vue</div></pre></td></tr></table></figure>
+<p>Vue.prototype.$isServer 和 Vue.version 比较简单就不展开了，Vue构造函数后面再看，先看全局api吧。</p>
+<h3 id="index-js-1"><a href="#index-js-1" class="headerlink" title="index.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/gloindex.js" target="_blank" rel="external">index.js</a></h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">'../config'</span></div><div class="line"><span class="keyword">import</span> &#123; initUse &#125; <span class="keyword">from</span> <span class="string">'./use'</span></div><div class="line"><span class="keyword">import</span> &#123; initMixin &#125; <span class="keyword">from</span> <span class="string">'./mixin'</span></div><div class="line"><span class="keyword">import</span> &#123; initExtend &#125; <span class="keyword">from</span> <span class="string">'./extend'</span></div><div class="line"><span class="keyword">import</span> &#123; initAssetRegisters &#125; <span class="keyword">from</span> <span class="string">'./assets'</span></div><div class="line"><span class="keyword">import</span> &#123; set, del &#125; <span class="keyword">from</span> <span class="string">'../observer/index'</span></div><div class="line"><span class="keyword">import</span> builtInComponents <span class="keyword">from</span> <span class="string">'../components/index'</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> &#123;</div><div class="line">  warn,</div><div class="line">  extend,</div><div class="line">  nextTick,</div><div class="line">  mergeOptions,</div><div class="line">  defineReactive</div><div class="line">&#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initGlobalAPI</span> (<span class="params">Vue: GlobalAPI</span>) </span>&#123;</div><div class="line">  <span class="comment">// 首先配置 Vue.config ，在定义时使用了 Object.defineProperty</span></div><div class="line">  <span class="comment">// 所以在设置 Vue.config 的时候是不能直接 Vue.config = &#123;....&#125;这样的，不然会报错，得一项一项设</span></div><div class="line">  <span class="keyword">const</span> configDef = &#123;&#125;</div><div class="line">  configDef.get = <span class="function"><span class="params">()</span> =&gt;</span> config</div><div class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">    configDef.set = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">      warn(</div><div class="line">        <span class="string">'Do not replace the Vue.config object, set individual fields instead.'</span></div><div class="line">      )</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="built_in">Object</span>.defineProperty(Vue, <span class="string">'config'</span>, configDef)</div><div class="line"></div><div class="line">  <span class="comment">// Vue.util虽然暴露出来了，但是并不是公共api的一部分，所以用的时候要小心点儿</span></div><div class="line">  Vue.util = &#123;</div><div class="line">    <span class="comment">// 下面这些方法都来自 core/util/这个模块，这里先简单说下每个函数的用途，后续展开</span></div><div class="line">    <span class="comment">// 输出错误信息用的，同事还能输出错误组件的名字和对应的vue文件地址</span></div><div class="line">    warn,</div><div class="line">    <span class="comment">// 顾名思义，浅拷贝</span></div><div class="line">    extend,</div><div class="line">    <span class="comment">// 用来合并实例option的，组件实例化和继承的核心方法</span></div><div class="line">    mergeOptions,</div><div class="line">    <span class="comment">// 用来给对象定义响应属性</span></div><div class="line">    defineReactive</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 给实例添加属性，对应 https://cn.vuejs.org/v2/api/?#Vue-set</span></div><div class="line">  Vue.set = set</div><div class="line">  <span class="comment">// 删除实例属性，对应 https://cn.vuejs.org/v2/api/?#Vue-delete</span></div><div class="line">  Vue.delete = del</div><div class="line">  <span class="comment">// 对应 https://cn.vuejs.org/v2/api/?#Vue-nextTick，一个打包执行延迟任务的方法，采用Promise =&gt; MutationObserver =&gt; setTimeout(0)的退化设计</span></div><div class="line">  <span class="comment">// 在读nextTick源码的时候发现几个有意思的点，本来想憋到写 src/core/util 的时候再写的，但是我实在是憋不住了哈哈</span></div><div class="line">  <span class="comment">// 1. 在使用promise的时候，ios里（其实就是safari和uiwebview）如果直接用promise.resolve()触发一个then的话，</span></div><div class="line">  <span class="comment">// 他不会立即执行，运行一个空的setTimeout之后，在就没问题了……相当神奇……</span></div><div class="line">  <span class="comment">// 另外，我发现他的ios判断里没有判断safari，但是safari里也有这个问题，不知道是不是bug……</span></div><div class="line">  <span class="comment">// 2. MutationObserver是通过观测dom元素的变化来触发事件回调，具体替代promise的方法等看到了再详细说吧</span></div><div class="line">  <span class="comment">// 3. 还有一个细节，在执行一批回调的时候，用的是[].length=0来清空数组，而不是空数组赋值的方法，感觉是为了省内存，不用频繁gc</span></div><div class="line">  Vue.nextTick = nextTick</div><div class="line">  <span class="comment">// options用来存定义过的组件的，支持component, directive, filter，支持的组件列表保存在_assetTypes里面</span></div><div class="line">  <span class="comment">// 具体还没有细看，但是感觉是支持扩展的</span></div><div class="line">  Vue.options = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</div><div class="line">  config._assetTypes.forEach(<span class="function"><span class="params">type</span> =&gt;</span> &#123;</div><div class="line">    Vue.options[type + <span class="string">'s'</span>] = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</div><div class="line">  &#125;)</div><div class="line"></div><div class="line">  <span class="comment">// 用来给所有实例标记base构造函数用的属性</span></div><div class="line">  Vue.options._base = Vue</div><div class="line"></div><div class="line">  <span class="comment">// 挂载keep-alive组件，https://cn.vuejs.org/v2/api/?#keep-alive</span></div><div class="line">  extend(Vue.options.components, builtInComponents)</div><div class="line"></div><div class="line">  <span class="comment">// 挂载 Vue.use 方法</span></div><div class="line">  initUse(Vue)</div><div class="line">  <span class="comment">// 挂载 Vue.mixin 方法</span></div><div class="line">  initMixin(Vue)</div><div class="line">  <span class="comment">// 挂载 Vue.extend 方法</span></div><div class="line">  initExtend(Vue)</div><div class="line">  <span class="comment">// 挂载 Vue.component, Vue.directive, Vue.filter 方法</span></div><div class="line">  initAssetRegisters(Vue)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>全局api的挂载逻辑还算相对简单，Vue的方法挂载每部分都拆成了单独的函数，利用js中Function是对象、可以作为参数的特性、是引用类型等特性，用这种函数来加工Vue构造函数，不知道这算不算装饰模式呢……</p>
+<p>另外我发现一个细节，源码中在生成空对象的时候，会用Object.create(null)来生成，具体原因不明，因为这两种方式，除了原型不一样，其他的没区别，因为也见到有使用字面量来生成空对象的，所以会不会是因为是开源项目，开源项目中大量人员参与其中，每个人的编码习惯有差异造成的呢……</p>
+<p>好的那么由于时间不足，本期笔记就先写到这里，话说每次只看这么一点儿，我还真是感觉惭愧呢，希望未来可以挤出更多的时间来读吧……如果不出意外的话，maybe可能也许大概下周五会更新吧，下周准备更新config和全部全局api，能不能准时更新，就全看米娜桑点赞转发安利留言的力度了~、</p>
+<p>白了个白~！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/04/14/vue-source-notes-3/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1555,153 +1707,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/01/24/javascript-year-bonus-evade-tax/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="投身烈火">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Keep Walking">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/24/javascript-year-bonus-evade-tax/" itemprop="url">
-                  javascript实现年终奖避税程序
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-24T15:50:40+08:00">
-                2017-01-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/随手一记/" itemprop="url" rel="index">
-                    <span itemprop="name">随手一记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <a href="/2017/01/24/javascript-year-bonus-evade-tax/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/24/javascript-year-bonus-evade-tax/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>昨天公司发了年终奖，扣了我20%的税…我就操了，肉疼啊…T^T…话说年终奖避税不是没有办法啊，为毛不给整整呢，总觉得肯定有什么不可告人的秘密…</p>
-<p>于是我决定写个年终奖避税的程序去去火，不然这口气憋在心里非憋坏了不可…</p>
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/01/24/javascript-year-bonus-evade-tax/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1747,7 +1752,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">25</span>
+              <span class="site-state-item-count">26</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
