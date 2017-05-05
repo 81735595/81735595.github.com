@@ -52,11 +52,11 @@
   </entry>
   
   <entry>
-    <title>vue源码阅读笔记(4)</title>
+    <title>vue源码阅读笔记(5)</title>
     <link href="http://brooch.me/2017/04/21/vue-source-notes-4/"/>
     <id>http://brooch.me/2017/04/21/vue-source-notes-4/</id>
     <published>2017-04-21T05:37:29.000Z</published>
-    <updated>2017-05-04T14:09:40.000Z</updated>
+    <updated>2017-05-05T13:42:06.000Z</updated>
     
     <content type="html"><![CDATA[<p>嗯，又到了一周一度的deadline……之前几次把杂七杂八的部分读完了，这次终于要开始读vue核心部分的代码了。从之前读过的 src/entries 模块中可以看到，vue核心的代码的大概可以分为 runtime 和 compiler 两部分。runtime 对应 src/core 模块，compiler 对应 src/compiler 模块，这次就从 src/core 模块开始读。</p>
 <h2 id="Vue核心模块-core"><a href="#Vue核心模块-core" class="headerlink" title="Vue核心模块 core"></a>Vue核心模块 core</h2><p>这个模块最后输出的就是一个Vue的构造函数，里面包含了组件系统、全局API、vue实例、对象属性监测系统、公共方法、虚拟dom、配置，这些模块。因为各个模块之间都有联系，单拎出来一个个看感觉没法看到全貌呀。所以这次换个方式试试。</p>
