@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-05-05T13:43:50.000Z</updated>
+  <updated>2017-05-05T13:45:56.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>vue源码阅读笔记(5)</title>
-    <link href="http://brooch.me/2017/05/04/vue-source-notes-5/"/>
-    <id>http://brooch.me/2017/05/04/vue-source-notes-5/</id>
-    <published>2017-05-04T14:10:29.000Z</published>
-    <updated>2017-05-05T13:43:50.000Z</updated>
+    <link href="http://brooch.me/2017/05/05/vue-source-notes-5/"/>
+    <id>http://brooch.me/2017/05/05/vue-source-notes-5/</id>
+    <published>2017-05-05T12:00:29.000Z</published>
+    <updated>2017-05-05T13:45:56.000Z</updated>
     
     <content type="html"><![CDATA[<p>五一好好给自己放了个假，去成都玩儿了几天。话说成都的生活可真是悠闲，搞得我都向去成都买房定居了~而且成都的吃的可真是，（¯﹃¯）…… 一想到猪肉锅盔和冒节子肥肠粉我口水就开始往外涌……咳咳……言归正传，上次说这次要读core的全部全局api和config，下面咱们就开始。</p>
 <h2 id="use-js"><a href="#use-js" class="headerlink" title="use.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/global-api/use.js" target="_blank" rel="external">use.js</a></h2><p>这个文件是用来给构造函数Vue挂载use方法用的，逻辑很简单。use方法是用来安装插件用的，<a href="https://cn.vuejs.org/v2/api/?#Vue-use" target="_blank" rel="external">对应文档</a></p>
