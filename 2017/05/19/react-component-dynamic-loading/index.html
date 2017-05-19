@@ -86,19 +86,16 @@
 
 
 
-<meta name="description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……
-问题分析之前在群里聊的时候也没看到有人说起核心的痛点，所以究竟在实际应用中会有啥问题我也不知道 (;￢＿￢) ……所以关于问题的分析，其实都是我脑补出来的，所以大">
+<meta name="description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……">
 <meta property="og:type" content="article">
 <meta property="og:title" content="闲扯react组件动态加载机制">
 <meta property="og:url" content="http://brooch.me/2017/05/19/react-component-dynamic-loading/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……
-问题分析之前在群里聊的时候也没看到有人说起核心的痛点，所以究竟在实际应用中会有啥问题我也不知道 (;￢＿￢) ……所以关于问题的分析，其实都是我脑补出来的，所以大">
-<meta property="og:updated_time" content="2017-05-19T12:56:16.000Z">
+<meta property="og:description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……">
+<meta property="og:updated_time" content="2017-05-19T12:58:36.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="闲扯react组件动态加载机制">
-<meta name="twitter:description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……
-问题分析之前在群里聊的时候也没看到有人说起核心的痛点，所以究竟在实际应用中会有啥问题我也不知道 (;￢＿￢) ……所以关于问题的分析，其实都是我脑补出来的，所以大">
+<meta name="twitter:description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……">
 
 
 
@@ -354,6 +351,7 @@
 
       
         <p>话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……</p>
+<a id="more"></a>
 <h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>之前在群里聊的时候也没看到有人说起核心的痛点，所以究竟在实际应用中会有啥问题我也不知道 (;￢＿￢) ……所以关于问题的分析，其实都是我脑补出来的，所以大家不要当真，全当看热闹吧……</p>
 <p>分析之前，先确定下目标，我的目标是简单实现react组件动态加载的机制。既然是要先串通机制，细节和环境配置就一切从简，后续再考虑实际使用和易用性。</p>
 <p>接下来分析问题，说到react组件动态加载，从字面上看可以分为两部分“react组件”和“动态加载”。动态加载其实老早就有就解决方案了，之前打包工具还没流行起来的时候，就有各种五花八门的库来解这问题，requirejs、seajs、YUI Loader啥的，所以这个问题用第三方库应该就能搞定。</p>
