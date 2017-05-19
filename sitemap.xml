@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://brooch.me/2017/05/19/react-component-dynamic-loading/</loc>
+    
+    <lastmod>2017-05-19T12:56:16.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://brooch.me/2017/05/05/vue-source-notes-5/</loc>
     
     <lastmod>2017-05-05T13:45:56.000Z</lastmod>
