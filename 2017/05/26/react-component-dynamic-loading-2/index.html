@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="动态规划," />
+  <meta name="keywords" content="react,webpack,dynamic load,CommonsChunkPlugin," />
 
 
 
@@ -86,16 +86,18 @@
 
 
 
-<meta name="description" content="书接前文，上回咱们说到要如何鉴别动态规划可解问题。我预告说要从计算机工作原理开始讲起……呃……貌似跟原本要讲的东西差的有点儿远呢……那么为啥非要从这么底层的问题开始讲起呢？怎么说呢……就好比我要讲西游记，如果只说一句“唐僧师徒四人去西天取经然后都修成正果了”，对于没看过西游记的人来说，唐僧是谁、师徒四人又是谁、为啥非得跑西天去取经等等一系列问题，不去翻翻原著搜搜资料是肯定不知道怎么回事的。所以还是">
+<meta name="description" content="上次写的文章被朋友吐槽看不懂了……好吧，这次我们继续说说动态加载组件的打包方案，就算是狗尾续狗，他自己挖的坑填平吧。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="聊聊动态规划(2) -- 特征">
-<meta property="og:url" content="http://brooch.me/2017/02/24/dynamic-programming-2/index.html">
+<meta property="og:title" content="闲扯react组件动态加载机制 -- webpack打包方案">
+<meta property="og:url" content="http://brooch.me/2017/05/26/react-component-dynamic-loading-2/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="书接前文，上回咱们说到要如何鉴别动态规划可解问题。我预告说要从计算机工作原理开始讲起……呃……貌似跟原本要讲的东西差的有点儿远呢……那么为啥非要从这么底层的问题开始讲起呢？怎么说呢……就好比我要讲西游记，如果只说一句“唐僧师徒四人去西天取经然后都修成正果了”，对于没看过西游记的人来说，唐僧是谁、师徒四人又是谁、为啥非得跑西天去取经等等一系列问题，不去翻翻原著搜搜资料是肯定不知道怎么回事的。所以还是">
-<meta property="og:updated_time" content="2017-02-24T15:26:43.000Z">
+<meta property="og:description" content="上次写的文章被朋友吐槽看不懂了……好吧，这次我们继续说说动态加载组件的打包方案，就算是狗尾续狗，他自己挖的坑填平吧。">
+<meta property="og:image" content="http://brooch.me/01.jpg">
+<meta property="og:updated_time" content="2017-05-26T15:13:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="聊聊动态规划(2) -- 特征">
-<meta name="twitter:description" content="书接前文，上回咱们说到要如何鉴别动态规划可解问题。我预告说要从计算机工作原理开始讲起……呃……貌似跟原本要讲的东西差的有点儿远呢……那么为啥非要从这么底层的问题开始讲起呢？怎么说呢……就好比我要讲西游记，如果只说一句“唐僧师徒四人去西天取经然后都修成正果了”，对于没看过西游记的人来说，唐僧是谁、师徒四人又是谁、为啥非得跑西天去取经等等一系列问题，不去翻翻原著搜搜资料是肯定不知道怎么回事的。所以还是">
+<meta name="twitter:title" content="闲扯react组件动态加载机制 -- webpack打包方案">
+<meta name="twitter:description" content="上次写的文章被朋友吐槽看不懂了……好吧，这次我们继续说说动态加载组件的打包方案，就算是狗尾续狗，他自己挖的坑填平吧。">
+<meta name="twitter:image" content="http://brooch.me/01.jpg">
 
 
 
@@ -123,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://brooch.me/2017/02/24/dynamic-programming-2/"/>
+  <link rel="canonical" href="http://brooch.me/2017/05/26/react-component-dynamic-loading-2/"/>
 
 
 
 
 
-  <title> 聊聊动态规划(2) -- 特征 | Keep Walking </title>
+  <title> 闲扯react组件动态加载机制 -- webpack打包方案 | Keep Walking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -265,7 +267,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/02/24/dynamic-programming-2/">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/05/26/react-component-dynamic-loading-2/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="投身烈火">
@@ -289,7 +291,7 @@
             
             
               
-                聊聊动态规划(2) -- 特征
+                闲扯react组件动态加载机制 -- webpack打包方案
               
             
           </h1>
@@ -302,8 +304,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-24T14:29:00+08:00">
-                2017-02-24
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-26T14:42:00+08:00">
+                2017-05-26
               </time>
             
 
@@ -336,8 +338,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/02/24/dynamic-programming-2/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/24/dynamic-programming-2/" itemprop="commentCount"></span>
+                <a href="/2017/05/26/react-component-dynamic-loading-2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/05/26/react-component-dynamic-loading-2/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -368,46 +370,30 @@
       
 
       
-        <p>书接前文，上回咱们说到要如何鉴别动态规划可解问题。我预告说要从计算机工作原理开始讲起……呃……貌似跟原本要讲的东西差的有点儿远呢……那么为啥非要从这么底层的问题开始讲起呢？怎么说呢……就好比我要讲西游记，如果只说一句“唐僧师徒四人去西天取经然后都修成正果了”，对于没看过西游记的人来说，唐僧是谁、师徒四人又是谁、为啥非得跑西天去取经等等一系列问题，不去翻翻原著搜搜资料是肯定不知道怎么回事的。所以还是尽量揉碎了讲吧，不然看完了还得一通翻查资料，怪麻烦的……</p>
+        <p>上次写的文章被朋友吐槽看不懂了……好吧，这次我们继续说说动态加载组件的打包方案，就算是狗尾续狗，他自己挖的坑填平吧。</p>
 <a id="more"></a>
-<p>尽管计算机技术自20世纪40年代第一部电子通用计算机诞生以来一直飞速的发展，但是，现代计算机仍然采用冯诺依曼结构来实现。冯诺依曼结构将计算机描述为五部分：输入设备、控制器、运算器、存储器和输出设备。工作流程大概就是，输入设备传入数据，控制器发出指令，运算器根据指令做算数逻辑运算，最后存储或者输出结果。如果咱们只关注计算机的理论原理，在抽象一点的看计算机工作的整个过程，你会发现，刚才我们描述的工作过程可以用数学理论来概括。存储器可以看做一个列举了计算机存在的所有可能状态的<strong>集合</strong>，控制器指令可以看做一组<strong>状态转换函数</strong>，运算器使用状态转换函数，从输入的状态和集合的状态，推导出输出的状态。所以计算机的工作原理，可以简单的概括为，利用当前的状态计算出下一个状态（美错儿，我就是在说状态机……）。</p>
-<p>我们平时编写程序，是在使用计算机帮我们解决问题。从计算机的本质是状态机这个角度来看，你思考如何编写程序来解决问题，其实就是在思考如何将这个问题表达成状态（用哪些变量，存储哪些数据）以及如何在状态之间中转换（怎样根据一些变量计算出另一些变量）。我们在看算法分析文章时，经常能看到的平时能看到的所谓<strong>空间复杂度</strong>，就是为了支持你的转换状态所必需存储的状态最多有多少；所谓<strong>时间复杂度</strong>，就是从初始状态到达最终状态中间需要做多少次状态转换。</p>
-<p>还拿我们上一次说的斐波拉契数列做🌰 ：</p>
-<p>我要计算第100项，之前的每一项就是这个问题的一个状态。每求新一项（新的一个状态）只需要之前的两个项（之前的两个状态）。所以同一个时刻，最多只需要保存两个状态，空间复杂度就是常数；每求一个新状态，所需要的时间是常数，而之前的状态是线性递增的，所以时间复杂度就是线性的。</p>
-<p>上面这种状态计算很直接，只需要依照固定的模式从旧状态计算出新状态就行（a[i]=a[i-1]+a[i-2]），不需要考虑是不是需要更多的状态，也不需要选择哪些旧状态来计算新状态。对于这样的解法，我们叫递推。</p>
-<p>斐波拉契数列这个例子过于简单，以至于让人忽视了阶段的概念。所谓阶段是指随着问题的解决，在同一个时刻可能会得到的不同状态的集合。斐波拉契数列中，每一步会计算得到一个新数字，所以每个阶段只有一个状态。咱们来想象另外一个情景：假如把你放在一个围棋棋盘上的某一点，你每一步只能走一格，因为你可以东南西北随便走，所以你当你同样走四步可能会处于很多个不同的位置。从头开始走了几步就是第几个阶段，走了n步可能处于的位置称为一个状态，走了这n步所有可能到达的位置的集合就是这个阶段下所有可能的状态。</p>
-<p>现在问题来了，有了阶段之后，计算新状态可能会遇到各种奇葩的情况，针对不同的情况，就需要不同的算法，下面就分情况来说明一下：</p>
-<p>假如问题有n个阶段，每个阶段都有多个状态，不同阶段的状态数不必相同，一个阶段的一个状态可以得到下个阶段的所有状态中的几个。那我们要计算出最终阶段的状态数自然要经历之前每个阶段的某些状态。</p>
-<p>好消息是，有时候我们并不需要真的计算所有状态。</p>
-<p>比如拿这样一个的棋盘问题举例：</p>
-<p>从棋盘的左上角到达右下角最短需要几步。答案很显然，用这样一个简单的问题是为了帮助我们理解阶段和状态。某个阶段确实可以有多个状态，正如这个问题中走n步可以走到很多位置一样。但是同样n步中，有哪些位置可以让我们在第n+1步中走的最远呢？没错，正是第n步中走的最远的位置。换成一句熟悉话叫做“<strong>下一步最优是从当前最优得到的</strong>”。所以为了计算最终的最优值，只需要存储每一步的最优值即可，解决符合这种性质的问题的算法就叫贪心算法。如果只看最优状态之间的计算过程是不是和斐波拉契数列的计算很像？所以计算的方法也是递推。</p>
-<p>既然问题都是可以划分成阶段和状态的。这样一来我们一下子解决了一大类问题：一个阶段的最优可以由前一个阶段的最优得到。</p>
-<p>如果一个阶段的最优无法用前一个阶段的最优得到呢？（需要前两个阶段得到当前最优，跟只用前一个阶段并没有本质区别）</p>
-<p>最麻烦的情况在于你需要之前所有的情况才行。再举一个探索迷宫的🌰 ：</p>
-<p>现在有一个迷宫，我们要计算从起点到终点的最短路线。这时你就不能只保存当前阶段的状态了，因为要求你计算最短路径，所以你必须知道之前走过的所有位置。因为即便你当前在的位置不变，之前的路线不同也会影响你之后走的路线。这时你需要保存的是之前每个阶段所经历的状态，根据之前所有的状态你才能计算出下一个状态！每个阶段的状态或许不多，但是每个状态都可以转移到下一阶段的多个状态，这种记录所有状态计算下一个状态的算法就叫搜索。所以搜索的空间复杂度就是指数级的，时间复杂度也是指数的。</p>
-<p>刚才提到的那种令人不开心的情况，就叫做有后效性。</p>
-<p>刚刚的情况实在太普遍，我们刚刚说到的解决方法也实在太暴力。那么，有没有哪些情况可以避免如此的暴力呢？契机就在于后效性。</p>
-<p>有这么一类问题，看似需要之前所有的状态，其实不用。比如求<a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97" target="_blank" rel="external">最长上升子序列（LIS）</a>长度问题：</p>
-<p>在一个无序的数组里，找出一组尽可能长的由低到高排列的数，这组数就叫最长上升子序列。</p>
-<p>比如，给出[5,4,1,2,3]，LIS 就是 [1,2,3]，长度是3；给出[4,2,4,5,3,7]，LIS 是 [2,4,5,7]，长度是 4。</p>
-<p>看到这个问题，第一反应就是用遍历去解决。从头到尾依次枚举是否选择当前的数字，每选定一个数字就要去看看是不是满足“上升”的性质，这里第i个阶段就是去思考是否要选择第i个数，第i个阶段有两个状态，分别是选和不选。哈哈，依稀出现了刚刚搜索迷宫的影子！</p>
-<p>但是当我们仔细思考之后会发现，每次当我决定要选择当前数字的时候，只需要和之前选定的一个数字比较，就能做出判断了！这是和之前迷宫问题的本质不同。这样我们就不需要记录之前所有的状态了。因为最后要求的是序列长度，所以我们只需要记录以某个元素结尾的LIS长度就好。</p>
-<p>这种“每个阶段的最优状态可以从之前某个阶段的某个或某些状态直接得到”的性质就叫做最优子结构；而“不管状态之前是如何得到的”的性质就叫做无后效性。</p>
-<p>那么，终于可以说出动态规划问题的两个特点了，这两个特点就是<strong>最优子结构</strong>和<strong>无后效性</strong>！只要有这两个特点的问题，就可以用动态规划的方法来解决了。</p>
-<p>通过之前的一系列描述我们也能看到，一个问题是该用递推、贪心、搜索还是动态规划，完全是由这个问题本身阶段间的状态转移方式决定的！</p>
-<ul>
-<li>每个阶段只有一个状态 —— 用递推。</li>
-<li>每个阶段的最优状态都是由上一个阶段的最优状态得到 —— 用贪心。</li>
-<li>每个阶段的最优状态是由之前所有阶段的状态的组合得到 —— 用搜索。</li>
-<li>每个阶段的最优状态可以从之前某个阶段的某个或某些状态直接得到而不管之前这个状态是如何得到的 —— 用动态规划。</li>
-</ul>
-<p>另外需要注意的是，一个问题从不同的角度分析，各阶段状态的定义和状态转移方式可能都不相同，存在一个有后效性的定义，并不代表该问题不适用动态规划的方法来解。就像我最早说过的一样：寻找看问题的角度，才是动态规划的核心~</p>
-<p>好的那么由于时间不足本次的博客就到这里，如果不出意外的话，大概可能maybe也许下周五会更新吧~！能不能准时更新，就全看米娜桑点赞打赏转发安利发评论的热情啦~！</p>
+<h2 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h2><p>先总结下上次的文章，其实我上次写的那些，归结起来就是一点：</p>
+<p>在用react开发应用时，如果想要动态加载子组件，只需要在componentDidMount或者componentWillReceiveProps中加入异步获取组件的逻辑就可以实现了。再进一次，可以把这个功能单独抽成一个专门做加载的组件。</p>
+<h2 id="webpack打包"><a href="#webpack打包" class="headerlink" title="webpack打包"></a>webpack打包</h2><p>上篇文章的最后我也说了，之前实现的只是代码逻辑，要想真正用到生产环境，还得过构建打包那一关……说到打包，虽然市面上打包工具不少，不过基本上现在都是用webpack了吧。</p>
+<p>根据之前的预测，直接使用System.import()来替换里面的require就可以实现功能了。需要注意的是，根据webpack文档中的描述<a href="https://doc.webpack-china.org/guides/code-splitting-async/#-import-" target="_blank" rel="external">动态引入：import()</a>，import不能支持完全的动态语句，至少要给他一个范围。所以需要将原来使用变量的语句改为一个拼接的路径，类似下面这样:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span>(<span class="comment">/* webpackChunkName: "loader" */</span> <span class="string">`./<span class="subst">$&#123;componentName&#125;</span>`</span>)</div><div class="line">    .then(<span class="function"><span class="params">Component</span> =&gt;</span> &#123;</div><div class="line">        \\...</div><div class="line">    &#125;)</div><div class="line">    .catch(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</div><div class="line">        \\...</div><div class="line">    &#125;)</div></pre></td></tr></table></figure>
+<p>这样webpack在打包时，会将这个路径下所有的文件都作为可能被异步加载chunk来打包。所以最好在目录上做规范，将需要异步加载的组件放到一个特定的目录下，避免打包的时候生成冗余文件。</p>
+<h2 id="随之而来的问题"><a href="#随之而来的问题" class="headerlink" title="随之而来的问题"></a>随之而来的问题</h2><p>虽然打包的问题解决了，但是随之也暴露了问题。由于webpack打包是基于入口的，不同入口之间是独立的，而用import拆分出来的chunk是无入口的，所以webpack认为他们之间并没有联系，也就不会提取他们之间的公共内容。</p>
+<p>比如我写的demo，具体的引用关系如下图</p>
+<p><img src="01.jpg" alt="01"></p>
+<p>最后打包出来的动态加载的组件例会很多重复的文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">chunk &#123;0&#125; page2.bundle.js</div><div class="line">    css-loader/index.js?modules!./styles/Page.css</div><div class="line">    css-loader/lib/css-base.js</div><div class="line">    style-loader/lib/addStyles.js</div><div class="line">    style-loader/lib/urls.js</div><div class="line">    containers/LoadComponent.js</div><div class="line">    pages/PageB.js</div><div class="line">    styles/Page.css</div><div class="line"></div><div class="line">chunk &#123;1&#125; page0.bundle.js</div><div class="line">    css-loader/index.js?modules!./styles/Page.css</div><div class="line">    css-loader/lib/css-base.js</div><div class="line">    style-loader/lib/addStyles.js</div><div class="line">    style-loader/lib/urls.js</div><div class="line">    containers/LoadComponent.js</div><div class="line">    pages/PageA.js</div><div class="line">    styles/Page.css</div><div class="line">    </div><div class="line">chunk &#123;2&#125; component4.bundle.js</div><div class="line">    css-loader/index.js?modules!./styles/StyleB.css</div><div class="line">    components/ComponentC.js</div><div class="line">    lib/BaseComponent.js</div><div class="line">    styles/StyleB.css</div><div class="line"></div><div class="line">chunk &#123;3&#125; component2.bundle.js</div><div class="line">    css-loader/index.js?modules!./styles/StyleA.css</div><div class="line">    components/ComponentB.js</div><div class="line">    lib/BaseComponent.js</div><div class="line">    styles/StyleA.css</div><div class="line">    </div><div class="line">chunk &#123;4&#125; component0.bundle.js</div><div class="line">    css-loader/index.js?modules!./styles/StyleA.css</div><div class="line">    components/ComponentA.js</div><div class="line">    lib/BaseComponent.js</div><div class="line">    styles/StyleA.css</div><div class="line"></div><div class="line">chunk &#123;5&#125; index.entry.js</div><div class="line">    react-dom/index.js</div><div class="line">    react-hot-loader/patch.js</div><div class="line">    react/react.js</div><div class="line">    strip-ansi/index.js</div><div class="line">    url/url.js</div><div class="line">    containers/App.js</div><div class="line">    index.js</div><div class="line">    stores/dataStore.js</div></pre></td></tr></table></figure>
+<p>这个时候就得用CommonsChunkPlugin来优化打包结果了。需要注意的是，由于page和comonpent都是异步加载的，没有入口，所以配置CommonsChunkPlugin的时候需要指定引用了异步加载chunk的入口，并加上<code>children:true</code>。另外异步加载chunk里面如果还有有异步加载的chunk需要优化，则需要把父级的chunk也设为入口，再用CommonsChunkPlugin优化。配置类似这样如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="comment">//...</span></div><div class="line">    entry: &#123;</div><div class="line">        <span class="attr">index</span>: <span class="string">'./index'</span>,</div><div class="line">        <span class="attr">pageA</span>: <span class="string">'./pages/PageA'</span>,</div><div class="line">        <span class="attr">pageB</span>: <span class="string">'./pages/PageB'</span></div><div class="line">    &#125;,</div><div class="line">    <span class="comment">//...</span></div><div class="line">    plugins: [</div><div class="line">        <span class="keyword">new</span> webpack.optimize.CommonsChunkPlugin(&#123;</div><div class="line">            <span class="attr">name</span>: <span class="string">'index'</span>,</div><div class="line">            <span class="attr">children</span>: <span class="literal">true</span>,</div><div class="line">            <span class="attr">async</span>: <span class="literal">true</span></div><div class="line">        &#125;),</div><div class="line">        <span class="keyword">new</span> webpack.optimize.CommonsChunkPlugin(&#123;</div><div class="line">            <span class="attr">names</span>: [<span class="string">'pageA'</span>, <span class="string">'pageB'</span>],</div><div class="line">            <span class="attr">children</span>: <span class="literal">true</span>,</div><div class="line">            <span class="attr">async</span>: <span class="literal">true</span></div><div class="line">        &#125;),</div><div class="line">    ]</div><div class="line">    <span class="comment">//...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>加上<code>async: true</code>的配置之后，生成的公共chunk也会用异步的方式加载进来，这样就能完全的实现动态加载了~</p>
+<p>最后打包出来的文件如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">chunk &#123;0&#125; component4.bundle.js</div><div class="line">    css-loader/index.js?modules!./styles/StyleB.css</div><div class="line">    components/ComponentC.js</div><div class="line">    styles/StyleB.css</div><div class="line"></div><div class="line">chunk &#123;1&#125; component2.bundle.js</div><div class="line">    css-loader/index.js?modules!./styles/StyleA.css</div><div class="line">    components/ComponentB.js</div><div class="line">    styles/StyleA.css</div><div class="line"></div><div class="line">chunk &#123;2&#125; component0.bundle.js</div><div class="line">    css-loader/index.js?modules!./styles/StyleA.css</div><div class="line">    components/ComponentA.js</div><div class="line">    styles/StyleA.css</div><div class="line"></div><div class="line">chunk &#123;3&#125; 3.bundle .js</div><div class="line">    lib/BaseComponent.js</div><div class="line"></div><div class="line">chunk &#123;4&#125; 4.bundle .js</div><div class="line">    css-loader/index.js?modules!./styles/Page.css</div><div class="line">    css-loader/lib/css-base.js</div><div class="line">    style-loader/lib/addStyles.js</div><div class="line">    style-loader/lib/urls.js</div><div class="line">    components lazy recursive ^\.\/.*$</div><div class="line">    containers/LoadComponent.js</div><div class="line">    styles/Page.css</div><div class="line"></div><div class="line">chunk &#123;5&#125; page2.bundle.js</div><div class="line">    pages/PageB.js</div><div class="line"></div><div class="line">chunk &#123;6&#125; page0.bundle.js</div><div class="line">    pages/PageA.js</div><div class="line"></div><div class="line">chunk &#123;7&#125; index.entry.js</div><div class="line">    mobx-react/index.js</div><div class="line">    react-hot-loader/patch.js</div><div class="line">    react/react.js</div><div class="line">    strip-ansi/index.js</div><div class="line">    url/url.js</div><div class="line">    containers/App.js</div><div class="line">    index.js</div><div class="line">    stores/dataStore.js</div><div class="line"></div><div class="line">chunk &#123;8&#125; pageB.entry.js</div><div class="line">    mobx-react/index.js</div><div class="line">    react-dom/index.js</div><div class="line">    react/react.js</div><div class="line">    strip-ansi/index.js</div><div class="line">    url/url.js</div><div class="line">    containers/LoadComponent.js</div><div class="line">    pages/PageB.js</div><div class="line">    styles/Page.css</div><div class="line"></div><div class="line">chunk &#123;9&#125; pageA.entry.js</div><div class="line">    mobx-react/index.js</div><div class="line">    react-dom/index.js</div><div class="line">    react/react.js</div><div class="line">    strip-ansi/index.js</div><div class="line">    url/url.js</div><div class="line">    containers/LoadComponent.js</div><div class="line">    pages/PageA.js</div><div class="line">    styles/Page.css</div></pre></td></tr></table></figure>
+<p>可以看到3号chunk是component的公共模块，4号chunk是page的公共模块，8号chunk和9号chunk是设置了入口后生成的冗余文件。</p>
+<p>可能有人注意到component的里引用的css文件并没有提取出来，这是因为并不是所有的component chunk都引用了它造成的。如果想要把他也提出来，设置一下CommonsChunkPlugin的minChunks属性就行了。</p>
+<p>具体的在项目中使用的时候，需要根据业务手动去调整入口配置和CommonsChunkPlugin里的参数了，要想做到完全自动化，CommonsChunkPlugin是支持不了，需要开发新的webpack插件才行。至于怎么开发webpack插件，这个不在本次文章的范畴里，以后有时间了在专门开新坑说明吧。</p>
+<p>最后附上我自己做的<a href="https://github.com/81735595/react-component-dynamic-loading/tree/master/webpack" target="_blank" rel="external">demo</a>，clone下来之后 npm install &amp;&amp; npm start 就能跑起来了。这次算是有示例有真相了吧？就在这儿晒~(￣▽￣)~*</p>
+<p>好的那么由于时间不足，本期的博客就先写到这里，如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的热情了~!</p>
 <p>白了个白~！</p>
-<p><strong>相关资料</strong></p>
-<ul>
-<li><a href="https://www.zhihu.com/question/23995189" target="_blank" rel="external">什么是动态规划？动态规划的意义是什？</a></li>
-</ul>
 
       
     </div>
@@ -431,7 +417,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/动态规划/" rel="tag"># 动态规划</a>
+            <a href="/tags/react/" rel="tag"># react</a>
+          
+            <a href="/tags/webpack/" rel="tag"># webpack</a>
+          
+            <a href="/tags/dynamic-load/" rel="tag"># dynamic load</a>
+          
+            <a href="/tags/CommonsChunkPlugin/" rel="tag"># CommonsChunkPlugin</a>
           
         </div>
       
@@ -440,8 +432,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/17/dynamic-programming-1/" rel="next" title="聊聊动态规划(1) -- 概念">
-                <i class="fa fa-chevron-left"></i> 聊聊动态规划(1) -- 概念
+              <a href="/2017/05/19/react-component-dynamic-loading-1/" rel="next" title="闲扯react组件动态加载机制">
+                <i class="fa fa-chevron-left"></i> 闲扯react组件动态加载机制
               </a>
             
           </div>
@@ -449,10 +441,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/03/a-method-of-using-rem/" rel="prev" title="使用rem实现响应式布局的方法">
-                使用rem实现响应式布局的方法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -504,8 +492,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/24/dynamic-programming-2/"
-           data-title="聊聊动态规划(2) -- 特征" data-url="http://brooch.me/2017/02/24/dynamic-programming-2/">
+      <div class="ds-thread" data-thread-key="2017/05/26/react-component-dynamic-loading-2/"
+           data-title="闲扯react组件动态加载机制 -- webpack打包方案" data-url="http://brooch.me/2017/05/26/react-component-dynamic-loading-2/">
       </div>
     
   </div>
@@ -529,8 +517,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -664,6 +661,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前情提要"><span class="nav-number">1.</span> <span class="nav-text">前情提要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#webpack打包"><span class="nav-number">2.</span> <span class="nav-text">webpack打包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随之而来的问题"><span class="nav-number">3.</span> <span class="nav-text">随之而来的问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
