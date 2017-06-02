@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-05-26T15:22:52.000Z</updated>
+  <updated>2017-06-02T12:41:13.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -14,6 +14,58 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Create React App 里的新鲜玩意儿</title>
+    <link href="http://brooch.me/2017/06/02/whats-new-in-create-react-app/"/>
+    <id>http://brooch.me/2017/06/02/whats-new-in-create-react-app/</id>
+    <published>2017-06-02T09:19:43.000Z</published>
+    <updated>2017-06-02T12:41:13.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>话说玩儿react的同学可能都知道<a href="https://github.com/facebookincubator/create-react-app" target="_blank" rel="external">Create React App</a>这个项目吧（不知道的戳<a href="http://www.jianshu.com/p/dd4cee273bed" target="_blank" rel="external">这里</a>了解，这是来自Facebook官方的零配置命令行工具，能够帮你自动创建基于Webpack的最简易的React项目模板）。话说今天看期刊的时候发现了一篇react的官方blog更新了一篇叫<a href="https://facebook.github.io/react/blog/2017/05/18/whats-new-in-create-react-app.html" target="_blank" rel="external">What’s New in Create React App</a>的博客，随手翻了下发现 Create React App 这个项目居然也更新新版本了？！而且还添加进来很多有趣的功能。我半翻译半解读一下这篇文章，咱们看看有哪些有趣的新功能吧。</p>
+<a id="more"></a>
+<p>Create React App 这个项目推出大概有一年了，作为一个官方推荐的快速搭建react项目的脚手架，这个项目吸引了大量的开发者。而这个项目在沉寂了几个月之后，于5月18号发布了1.0.0版本（最近这十四天有release了七次，真是猛啊……），添加了好多新的特性。如果你当前正在开发的应用是使用 Create React App 创建的，想体验新版本的特性，并且你的项目并没有执行弹出操作（Create React App 有个 eject命令），可以参考官方的<a href="https://github.com/facebookincubator/create-react-app/releases/tag/v1.0.0" target="_blank" rel="external">升级说明</a>来升级 Create React App。</p>
+<h2 id="webpack-2"><a href="#webpack-2" class="headerlink" title="webpack 2"></a>webpack 2</h2><p>虽然 webpack 2 相比 webpack 的改动很大，有可能存在很多问题，但是 webpack 2 已经正式发布几个月了，Create React App 团队经过了一段时间的测试，认为目前 webpack 2 已经足够稳定了，所以将模板中的构建工具也修改为 webpack 2。而且 Create React App 的用户并不需要担心 webpack 2 配置上的改动，Create React App 内部对 webpack 的配置进行了兼容。</p>
+<p>如果你的项目已经执行过弹出操作了，则需要参考 webpack 提过的<a href="https://webpack.js.org/guides/migrating/" target="_blank" rel="external">升级指南</a>自己手动修改配置。</p>
+<p>webpack 2 最引人注目的新特性就是其对 <a href="http://2ality.com/2014/09/es6-modules-final.html" target="_blank" rel="external">ES6 模块</a> 的支持，可以将将 ES6 模块 直接转化为 CommonJS 模块。虽然这对开发来说可能没啥影响，但是它可以在编译阶段捕获更多的错误，比如exports 的变量undefined之类的：</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-01.gif" alt="whats-new-in-create-react-app-01"></p>
+<p>webpack 2 还提供了 <a href="http://www.css88.com/archives/6946" target="_blank" rel="external">tree shaking</a> 特性，可以通过去除冗余代码，优化打包后脚本的尺寸。</p>
+<h2 id="Runtime-Error-Overlay"><a href="#Runtime-Error-Overlay" class="headerlink" title="Runtime Error Overlay"></a>Runtime Error Overlay</h2><p>你有没有这种经历，代码中写错了一个地方，控制台里也报错了，但是死活找不到报错代码的位置……</p>
+<p>为了解决这个问题，我们引入了一个专门捕获错误的弹窗，当程序报错的时候他会展示报错信息和引发错误的位置！当然，他只会出现在开发阶段，产出代码的时候会被去掉。</p>
+<p>有图，有真相，就在这儿晒！</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-02.gif" alt="whats-new-in-create-react-app-02"></p>
+<p>更牛逼的是，他还能跟你的编辑器结合到一起，惊不惊喜？意不意外？</p>
+<p>未来 Creat React App 还准备支持更多错误捕获。比如在React 16 版本发布之后，Creat React App 计划支持 React 组件调用栈的展示。</p>
+<h1 id="默认支持渐进式web应用"><a href="#默认支持渐进式web应用" class="headerlink" title="默认支持渐进式web应用"></a>默认支持渐进式web应用</h1><p>使用新版本 Creat React App 创建的项目默认就会支持 [渐进式web应用(PWA)] (<a href="https://developers.google.com/web/progressive-web-apps/)，会使用" target="_blank" rel="external">https://developers.google.com/web/progressive-web-apps/)，会使用</a> <a href="https://developers.google.com/web/fundamentals/getting-started/primers/service-workers" target="_blank" rel="external">service workers</a> 实现 <a href="https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/#cache-falling-back-to-network" target="_blank" rel="external">缓存优先策略</a> 来优化用户再次访问应用的速度。当然，你也可以通过设置默认不开启这个特性，但是如果你在开发新的应用，我推荐你使用它，特别是在移动设备上运行的应用，会有惊喜哦~</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-03.png" alt="whats-new-in-create-react-app-03"></p>
+<p>关于 Creat React App 中 PWA 的配置，更详细的说明请戳<a href="https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#making-a-progressive-web-app" target="_blank" rel="external">这里</a>。</p>
+<p>题外话，貌似最近 PWA 很火呢，前段时间看到 vue 官方也退出了基于自己框架的<a href="https://github.com/vuejs-templates/pwa" target="_blank" rel="external">pwa脚手架</a>，另外我还发现一个在线的 PWA 脚手架工具，有兴趣的可以玩儿玩儿，<a href="http://www.pwabuilder.com/" target="_blank" rel="external">www.pwabuilder.com</a>，回头有时间我也打算写一篇关于 PWA 的文章~</p>
+<h2 id="Jest-20"><a href="#Jest-20" class="headerlink" title="Jest 20"></a>Jest 20</h2><p>先科普一下，<a href="http://facebook.github.io/jest/" target="_blank" rel="external">Jest</a> 是facebook出的一个自动化测试工具，用来跑单测的。</p>
+<p>新版的 Creat React App 使用的也是新版的 Jest，20版本的 Jest 包含了许多改进，具体有哪些修改自己看<a href="http://facebook.github.io/jest/blog/2017/05/06/jest-20-delightful-testing-multi-project-runner.html" target="_blank" rel="external">文档</a>吧。</p>
+<p>现在 Create React App 只需要做少量 Jest 的配置就可以生成覆盖率报告了。</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-04.gif" alt="whats-new-in-create-react-app-04"></p>
+<h2 id="动态import-代码分割"><a href="#动态import-代码分割" class="headerlink" title="动态import()代码分割"></a>动态import()代码分割</h2><p>保持应用初始化最小下载量和按需加载的重要性我就不说了哈，其实上个版本的 Create React App 也支持代码分割，不过是基于 webpack 的 require.ensure() 特性，这使得这部分代码没法通过 Jest 的测试。</p>
+<p>在这个版本的 Create React App 中，我们加入了对未来web标准中 <a href="http://2ality.com/2017/01/import-operator.html#loading-code-on-demand" target="_blank" rel="external">动态 import()</a> 提案的支持，我建议你使用 import() 来延迟加载非常用组件。巧的是，上期的文章里也涉及到了这个问题，咱们来看看 Create React App 中的解决方案吧：</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-05.gif" alt="whats-new-in-create-react-app-05"></p>
+<h2 id="更好的控制台输出"><a href="#更好的控制台输出" class="headerlink" title="更好的控制台输出"></a>更好的控制台输出</h2><p>新版的 Create React App 改善了控制台的输出。举个例子，当你启动测试服务时，新版的 Create React App 除了会显示本地地址之外，还会显示局域网ip地址，这样你就能更快的用你的手机测试应用了，总之就是更注重细节了吧……╮(￣▽￣)╭</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-06.gif" alt="whats-new-in-create-react-app-06"></p>
+<h2 id="更多的特性"><a href="#更多的特性" class="headerlink" title="更多的特性"></a>更多的特性</h2><p>上面描述的其实只是新特性中的一小部分，这个版本中还包含了更多的特性，有兴趣的可以看看这个版本的 <a href="https://github.com/facebookincubator/create-react-app/releases/tag/v1.0.0" target="_blank" rel="external">changelog</a></p>
+<p>好的那么由于时间不足，本期的博客就先写到这里，如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的热情了~!</p>
+<p>白了个白~！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;话说玩儿react的同学可能都知道&lt;a href=&quot;https://github.com/facebookincubator/create-react-app&quot;&gt;Create React App&lt;/a&gt;这个项目吧（不知道的戳&lt;a href=&quot;http://www.jianshu.com/p/dd4cee273bed&quot;&gt;这里&lt;/a&gt;了解，这是来自Facebook官方的零配置命令行工具，能够帮你自动创建基于Webpack的最简易的React项目模板）。话说今天看期刊的时候发现了一篇react的官方blog更新了一篇叫&lt;a href=&quot;https://facebook.github.io/react/blog/2017/05/18/whats-new-in-create-react-app.html&quot;&gt;What’s New in Create React App&lt;/a&gt;的博客，随手翻了下发现 Create React App 这个项目居然也更新新版本了？！而且还添加进来很多有趣的功能。我半翻译半解读一下这篇文章，咱们看看有哪些有趣的新功能吧。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="http://brooch.me/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="react" scheme="http://brooch.me/tags/react/"/>
+    
+  </entry>
   
   <entry>
     <title>闲扯react组件动态加载机制 -- webpack打包方案</title>
@@ -1319,109 +1371,6 @@
       &lt;p&gt;之前几篇大概介绍了mobx最常用的几个方法，这次准备把剩余的公共方法都介绍了。&lt;/p&gt;
 &lt;h2 id=&quot;autorunAsync&quot;&gt;&lt;a href=&quot;#autorunAsync&quot; class=&quot;headerlink&quot; title=&quot;autorunAsync&quot;&gt;&lt;/a&gt;autorunAsync&lt;/h2&gt;&lt;p&gt;&lt;code&gt;autorunAsync(debugName?: string, action: () =&amp;gt; void, minimumDelay?: number, scope?): disposer&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;autorunAsync&lt;/code&gt; 的功能与 &lt;code&gt;autorun&lt;/code&gt; 相似，功能都是在观测对象发生变化时自动运行回调函数 &lt;code&gt;action&lt;/code&gt;。不同点在于 &lt;code&gt;autorun&lt;/code&gt; 是在观测对象发生变化时立即执行的，而 &lt;code&gt;autorunAsync&lt;/code&gt;是异步的，可以通过 &lt;code&gt;minimumDelay&lt;/code&gt; 参数来指定延迟的时间。&lt;br&gt;
-    
-    </summary>
-    
-      <category term="学习笔记" scheme="http://brooch.me/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="javascript" scheme="http://brooch.me/tags/javascript/"/>
-    
-      <category term="mobx" scheme="http://brooch.me/tags/mobx/"/>
-    
-      <category term="react" scheme="http://brooch.me/tags/react/"/>
-    
-      <category term="中文渣翻" scheme="http://brooch.me/tags/%E4%B8%AD%E6%96%87%E6%B8%A3%E7%BF%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MobX入坑指南(3) -- Observable Types</title>
-    <link href="http://brooch.me/2016/12/09/MobX-simple-entry-3/"/>
-    <id>http://brooch.me/2016/12/09/MobX-simple-entry-3/</id>
-    <published>2016-12-09T05:29:04.000Z</published>
-    <updated>2016-12-09T13:13:06.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>这周阅读了一部分mobx的源码，和作者写的几篇介绍文章，发现这个库有些特性还挺有趣的。以下的内容大部分翻译自<a href="http://mobxjs.github.io/mobx/" target="_blank" rel="external">mobx文档</a>中 <code>Observable Types</code> 一节，奈何小生英文水平有限，没有划词软件帮忙就看不懂句子……所以翻的很渣，基本上都是掺杂了一些我的理解在里边，连蒙带猜拼出来的，有啥写的不对的，也请多指教了~(￣▽￣)~*</p>
-<p>在mobx中，如果你想监听某个变量的变化，需要先使用 <code>observable</code> 函数将其转化为生成Observable对象才行。这个章节主要讲的是 <code>observable</code> 函数生成的不同Observable对象</p>
-<a id="more"></a>
-<h2 id="Observable-Objects"><a href="#Observable-Objects" class="headerlink" title="Observable Objects"></a>Observable Objects</h2><p>当 <code>observable</code> 函数接受的参数是个普通的javascript object（普通javascript对象是指不是通过构造函数生成的对象，mobx的判断方式是，通过getPrototypeOf获取原型，检查是不是Object.prototype或者null）时，这个对象中的所有属性都将被传入 <code>observable</code> 函数进行转换，如果属性值是object或者array，则会递归的转化内部的元素。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;observable, autorun, action&#125; <span class="keyword">from</span> <span class="string">"mobx"</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> person = observable(&#123;</div><div class="line">    <span class="comment">// 常量会自动使用observable转化:</span></div><div class="line">    name: <span class="string">"John"</span>,</div><div class="line">    <span class="attr">age</span>: <span class="number">42</span>,</div><div class="line">    <span class="attr">showAge</span>: <span class="literal">false</span>,</div><div class="line">    <span class="comment">// 有get描述符的属性会自动使用computed转化:</span></div><div class="line">    get labelText() &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.showAge ? <span class="string">`<span class="subst">$&#123;<span class="keyword">this</span>.name&#125;</span> (age: <span class="subst">$&#123;<span class="keyword">this</span>.age&#125;</span>)`</span> : <span class="keyword">this</span>.name;</div><div class="line">    &#125;,</div><div class="line">	<span class="comment">// 如果直接写</span></div><div class="line">	<span class="comment">// labelText: function () &#123;</span></div><div class="line">    <span class="comment">//    return this.showAge ? `$&#123;this.name&#125; (age: $&#123;this.age&#125;)` : this.name;</span></div><div class="line">    <span class="comment">// &#125;</span></div><div class="line">	<span class="comment">// 在自动转化时会报一个warning，mobx认为渲染函数需要用computed显式调动一下</span></div><div class="line">	<span class="comment">// labelText: computed(function () &#123;</span></div><div class="line">	<span class="comment">//    return this.showAge ? `$&#123;this.name&#125; (age: $&#123;this.age&#125;)` : this.name;</span></div><div class="line">	<span class="comment">// &#125;)</span></div><div class="line">    <span class="comment">// 同理，action也需要显式调动一下:</span></div><div class="line">    setAge: action(<span class="function"><span class="keyword">function</span>(<span class="params">age</span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.age = age;</div><div class="line">    &#125;)</div><div class="line">&#125;);</div><div class="line"></div><div class="line">autorun(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(person.labelText));</div><div class="line"></div><div class="line">person.name = <span class="string">"Dave"</span>;</div><div class="line"><span class="comment">// 'Dave'</span></div><div class="line"></div><div class="line">person.setAge(<span class="number">21</span>);</div><div class="line"><span class="built_in">console</span>.log(person.age);</div><div class="line"><span class="comment">// 21</span></div></pre></td></tr></table></figure>
-<p>需要注意的点：</p>
-<ul>
-<li><p>当对象传入 <code>observable</code> 函数时，只有当时对象上已经存在的属性才能被监听，后添加的属性是不能的，如果想要往已经生成的Observable对象上添加属性，需要使用<a href="http://mobxjs.github.io/mobx/refguide/extend-observable.html" target="_blank" rel="external"><code>extendObservable</code></a>函数进行类似merge的操作。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//接上面的例子</span></div><div class="line">extendObservable(person, &#123;</div><div class="line">    <span class="attr">sex</span>: <span class="string">'male'</span></div><div class="line">&#125;);</div><div class="line"><span class="built_in">console</span>.log(person.sex);</div><div class="line"><span class="comment">// 'male'</span></div></pre></td></tr></table></figure>
-</li>
-<li><p>只有普通对象能够被转化为Observable对象。使用构造函数创建的对象，需要在构造函数初始化时使用<a href="http://mobxjs.github.io/mobx/refguide/extend-observable.html" target="_blank" rel="external"><code>extendObservable</code></a>函数合并属性。使用类创建的对象，需要使用 <a href="http://mobxjs.github.io/mobx/refguide/observable-decorator.html" target="_blank" rel="external"><code>@observable</code></a>装饰器包装类的属性。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Person = <span class="function"><span class="keyword">function</span>(<span class="params">firstName, lastName</span>) </span>&#123;</div><div class="line">	<span class="comment">// 在一个新的对象里写要监听的属性，然后merge和当前实例merge</span></div><div class="line">	extendObservable(<span class="keyword">this</span>, &#123;</div><div class="line">		<span class="attr">firstName</span>: firstName,</div><div class="line">		<span class="attr">lastName</span>: lastName</div><div class="line">	&#125;);</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> zxc = <span class="keyword">new</span> Person(<span class="string">"Zheng"</span>, <span class="string">"Xingcheng"</span>);</div><div class="line"></div><div class="line"><span class="comment">// 或者</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</div><div class="line">    @observable firstName:string = <span class="string">""</span>;</div><div class="line">    @observable lastName:string = <span class="string">""</span>;</div><div class="line"></div><div class="line">    <span class="keyword">constructor</span>(firstName, lastName) &#123;</div><div class="line">		<span class="keyword">this</span>.firstName = firstName;</div><div class="line">		<span class="keyword">this</span>.lastName = lastName;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> zxc = <span class="keyword">new</span> Person(<span class="string">"Zheng"</span>, <span class="string">"Xingcheng"</span>);</div></pre></td></tr></table></figure>
-</li>
-<li><p>带有get描述符的属性会自动被<a href="http://mobxjs.github.io/mobx/refguide/computed-decorator" target="_blank" rel="external"><code>@computed</code></a>转化，第一个例子中已经展示了。</p>
-</li>
-<li>如果对象的属性值是一个构造函数生成的对象（我真是不想把它叫成”非普通对象”……），那这个属性也不会被 <code>observable</code> 函数自动转化。</li>
-<li>基本上使用<code>observable</code> 函数自动转化已经能解决绝大部分的使用场景了（原文写的是”95% of the cases”……）。如果想要了解更详细的设定每个属性的方法，请看 <a href="http://mobxjs.github.io/mobx/refguide/modifiers.html" target="_blank" rel="external"><code>modifiers</code></a> 一章（本来这一章的内容也想发到这里的，但是实在是没时间写了只能拉倒……等下次吧）。</li>
-</ul>
-<h2 id="Observable-Arrays"><a href="#Observable-Arrays" class="headerlink" title="Observable Arrays"></a>Observable Arrays</h2><p>和 object 类似，array 也可以使用 <code>observable</code>函数转化为ObservableArray对象。当然，也是递归转化每个元素的，所以数组的所有元素也会被转化。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;observable, autorun&#125; <span class="keyword">from</span> <span class="string">"mobx"</span>;</div><div class="line"></div><div class="line"><span class="keyword">var</span> todos = observable([</div><div class="line">    &#123; <span class="attr">title</span>: <span class="string">"吃午饭"</span>, <span class="attr">completed</span>: <span class="literal">true</span> &#125;,</div><div class="line">    &#123; <span class="attr">title</span>: <span class="string">"喝咖啡"</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;</div><div class="line">]);</div><div class="line"></div><div class="line">autorun(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"代办:"</span>, todos</div><div class="line">        .filter(<span class="function"><span class="params">todo</span> =&gt;</span> !todo.completed)</div><div class="line">        .map(<span class="function"><span class="params">todo</span> =&gt;</span> todo.title)</div><div class="line">        .join(<span class="string">", "</span>)</div><div class="line">    );</div><div class="line">&#125;);</div><div class="line"><span class="comment">// '代办: 喝咖啡'</span></div><div class="line"></div><div class="line">todos[<span class="number">0</span>].completed = <span class="literal">false</span>;</div><div class="line"><span class="comment">// '代办: 吃午饭, 喝咖啡'</span></div><div class="line"></div><div class="line">todos[<span class="number">2</span>] = &#123; <span class="attr">title</span>: <span class="string">"睡午觉"</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;;</div><div class="line"><span class="comment">// '代办: 吃午饭, 喝咖啡, 睡午觉'</span></div><div class="line"></div><div class="line">todos.shift();</div><div class="line"><span class="comment">// '代办: 喝咖啡, 睡午觉'</span></div></pre></td></tr></table></figure>
-<p>由于ES5中原生数组的限制（<code>array.observe</code>到ES7中才有，而且数组不能扩展），<code>observable</code>函数基于原始数组克隆了一个新的数组，这个新数组支持所有原生数组的方法和功能，同时还有监听值变化的能力。</p>
-<p>不过，当使用Array.isArray检查包装后数组时返回的是false。所以在跟其他库联合使用时，如果想把ObservableArray对象当做数组传递给其他库，最好使用浅拷贝生成新数组，或者使用 <code>array.slice</code> 方法生成新数组，就是说 <code>Array.isArray(observable([]).slice())</code> 返回的是true。</p>
-<p>由于不喜欢原生的 <code>array.sort</code> 和 <code>array.reverse</code> 方法，ObservableArray对象的 <code>sort</code> 和 <code>reverse</code> 方法是并不会改变自身的，而是返回一个新的ObservableArray对象。</p>
-<p>除了原生数组支持的方法，ObservableArray对象还可以使用以下的方法：</p>
-<ul>
-<li><code>intercept(interceptor)</code><br>这个方法可以在所有数组的操作被应用之前，将操作拦截。具体的请看<a href="http://mobxjs.github.io/mobx/refguide/observe.html" target="_blank" rel="external">observe &amp; intercept</a></li>
-<li><code>observe(listener, fireImmediately? = false)</code><br>这个方法可以监听数组的变化，回调函数会接收数组新增或者修改的元素，符合<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/observe" target="_blank" rel="external">ES7的规范</a>。这个方法返回一个注销函数用来停止监听。</li>
-<li><code>clear()</code><br>清空数组。</li>
-<li><code>replace(newItems)</code><br>替换数组里的所有元素。</li>
-<li><code>find(predicate: (item, index, array) =&gt; boolean, thisArg?, fromIndex?)</code><br>使用方法与ES7的 <code>array.find</code> 一致，但是增加了formIndex参数。</li>
-<li><code>remove(value)</code><br>移除数组中第一个值等于value的元素，如果移除成功会返回true。</li>
-<li><code>peek()</code><br>与 <code>slice</code> 类似，会返回一个包含所有元素的数组。它与 <code>slice</code> 的区别在于 <code>peek</code> 不会进行保护性拷贝，所以性能更好。</li>
-</ul>
-<h2 id="Observable-Maps"><a href="#Observable-Maps" class="headerlink" title="Observable Maps"></a>Observable Maps</h2><p><code>observable(asMap(values?, modifier?))</code> 和 <code>map(values?, modifier?))</code> 方法可以创建一个ObservableMap对象。如果你不想响应特定属性的变化，还要添加删除属性，那么使用ObservableMap对象很合适。不同于ES6的Map对象，ObservableMap对象是能用字符串当做key。</p>
-<p>根据ES6 Map的规范，可以使用以下方法:</p>
-<ul>
-<li><code>has(key)</code><br>返回map中是否存在这个key，这个方法是可被监听的</li>
-<li><code>set(key, value)</code><br>设置key对应的value，如果key之前不错在，那么这个key会被添加上</li>
-<li><code>delete(key)</code><br>删除key和key对应的value</li>
-<li><code>get(key)</code><br>获取key对应的value，如果没找到会返回undefined</li>
-<li><code>keys()</code><br>获取map的所有key，顺序为key的插入顺序</li>
-<li><code>values()</code><br>获取map的所有key对应的value，顺序为key的插入顺序</li>
-<li><code>entries()</code><br>返回一个数组，数组中每个元素为一个数组，数组中的元素为map中的key/value对，形式如[key, value]，顺序为key的插入顺序</li>
-<li><code>forEach(callback:(value, key, map) =&gt; void, thisArg?)</code><br>对map中的每个key/value对调用回调</li>
-<li><code>clear()</code><br>清除map中的所有key/value对</li>
-<li><code>size()</code><br>返回map中所有key/value对的数量</li>
-</ul>
-<p>ObservableMap对象还提供了以下方法可以使用:</p>
-<ul>
-<li><code>toJS()</code><br>返回一个map的浅拷贝的对象，如果想获得深拷贝的对象，需要使用 <code>mobx.toJS(map)</code></li>
-<li><code>intercept(interceptor)</code><br>注册一个拦截器，拦截器会在map被修改之前被触发。具体的请看<a href="http://mobxjs.github.io/mobx/refguide/observe.html" target="_blank" rel="external">observe &amp; intercept</a></li>
-<li><code>observe(listener, fireImmediately?)</code><br>注册一个监听，map被修改时会被触发。与Object.observe类似。具体的请看<a href="http://mobxjs.github.io/mobx/refguide/observe.html" target="_blank" rel="external">observe &amp; intercept</a></li>
-<li><code>merge(object | map)</code><br>将对象上所有的属性拷贝到当前map中</li>
-</ul>
-<h2 id="Primitive-常量）"><a href="#Primitive-常量）" class="headerlink" title="Primitive (常量）"></a>Primitive (常量）</h2><p>在javascript中，常量是不可变的，所以也没办法观测。所以如果想要监听一个常量属性的变化，需要使用 <code>observable</code> 函数包装一下。</p>
-<p><code>observable</code> 函数包装后会返回一个ObservablePrimitive对象。这个对象使用get和set方法来获取和改变变量的值。可以使用 <code>.observe</code> 方法来监听值的变化。不过通常使用 <code>mobx.autorun</code> 是更好的选择。</p>
-<p>以下是ObservablePrimitive支持的方法：</p>
-<ul>
-<li><code>get()</code><br>返回当前值</li>
-<li><code>set(value)</code><br>替换当前存储的值，并通知所有的监听器</li>
-<li><code>intercept(interceptor)</code><br>注册拦截器，当值发生变化前触发。具体的请看<a href="http://mobxjs.github.io/mobx/refguide/observe.html" target="_blank" rel="external">observe &amp; intercept</a></li>
-<li><code>observe(callback: (newValue, previousValue) =&gt; void, fireImmediately = false)</code><br>注册监听器，当值发生变化时触发，返回一个注销函数。具体的请看<a href="http://mobxjs.github.io/mobx/refguide/observe.html" target="_blank" rel="external">observe &amp; intercept</a></li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123;observable&#125; <span class="keyword">from</span> <span class="string">"mobx"</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> cityName = observable(<span class="string">"Vienna"</span>);</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(cityName.get());</div><div class="line"><span class="comment">// 'Vienna'</span></div><div class="line"></div><div class="line">cityName.observe(<span class="function"><span class="keyword">function</span>(<span class="params">newCity, oldCity</span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(oldCity, <span class="string">"-&gt;"</span>, newCity);</div><div class="line">&#125;);</div><div class="line"></div><div class="line">cityName.set(<span class="string">"Amsterdam"</span>);</div><div class="line"><span class="comment">// 'Vienna -&gt; Amsterdam'</span></div></pre></td></tr></table></figure>
-<h2 id="References-引用类型）"><a href="#References-引用类型）" class="headerlink" title="References (引用类型）"></a>References (引用类型）</h2><p>之前在ObservableObject中提到，observable在转换时会自动用computed包装函数，这个自动转换其实是由限制条件的。mobx只会转换渲染用的函数，既函数不能接受参数，如果接受参数，则认为这个是一个复合函数，就不会自动转化。同样的，如果对象中有属性是通过构造函数或者类创建的对象，也不会自动转化。他们都继续保持着转化之前的引用。</p>
-<p>有时我们也会有这一类的需求，要求对象中某个属性不被自动转化。可以使用 <code>asReference</code> 来达到这一目的。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> test = observable(&#123;</div><div class="line">    <span class="attr">x</span> : <span class="number">3</span>,</div><div class="line">    <span class="attr">doubler</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.x*<span class="number">2</span>;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">someFunc</span>: asReference(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.x;</div><div class="line">    &#125;)</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log(test.doubler);</div><div class="line"><span class="comment">// 6</span></div><div class="line"><span class="built_in">console</span>.log(test.someFunc);</div><div class="line"><span class="comment">// function() &#123;</span></div><div class="line"><span class="comment">//     return this.x;</span></div><div class="line"><span class="comment">// &#125;</span></div></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>总体感觉上，mobx的api和knockout的api很像，但是在实现原理上，更像rx。mobx实现监听变化调用回调的过程是同步的，通过这种方式就能会自动的分析各个变量间的调用关系，从而减少重复订阅的情况。同时计算最新的值时还是用了memoizing技术，这样就算调用频繁，性能上也能得到保证。</p>
-<h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><ul>
-<li><a href="http://mobxjs.github.io/mobx/refguide/object.html" target="_blank" rel="external">Observable Objects</a></li>
-<li><a href="http://mobxjs.github.io/mobx/refguide/array.html" target="_blank" rel="external">Observable Arrays</a></li>
-<li><a href="http://mobxjs.github.io/mobx/refguide/map.html" target="_blank" rel="external">Observable Maps</a></li>
-<li><a href="http://mobxjs.github.io/mobx/refguide/boxed.html" target="_blank" rel="external">Primitive values and references</a></li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这周阅读了一部分mobx的源码，和作者写的几篇介绍文章，发现这个库有些特性还挺有趣的。以下的内容大部分翻译自&lt;a href=&quot;http://mobxjs.github.io/mobx/&quot;&gt;mobx文档&lt;/a&gt;中 &lt;code&gt;Observable Types&lt;/code&gt; 一节，奈何小生英文水平有限，没有划词软件帮忙就看不懂句子……所以翻的很渣，基本上都是掺杂了一些我的理解在里边，连蒙带猜拼出来的，有啥写的不对的，也请多指教了~(￣▽￣)~*&lt;/p&gt;
-&lt;p&gt;在mobx中，如果你想监听某个变量的变化，需要先使用 &lt;code&gt;observable&lt;/code&gt; 函数将其转化为生成Observable对象才行。这个章节主要讲的是 &lt;code&gt;observable&lt;/code&gt; 函数生成的不同Observable对象&lt;/p&gt;
     
     </summary>
     

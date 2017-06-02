@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="css,rem," />
+  <meta name="keywords" content="react," />
 
 
 
@@ -86,19 +86,23 @@
 
 
 
-<meta name="description" content="起因前两天小徒弟问我，老看到有人说用rem实现响应式布局，具体要怎么做呢？这可问住我了，之前我只知道rem的概念却不知道要怎么用rem来实现响应式布局……赶紧忽悠她一顿，让她先去各大网站上学习下别人是怎么做的，看不懂了再来问我。自己则私底下恶补了rem实现响应式布局的知识来应付她的问题，这才算糊弄过去……
-话说，临阵磨不能白磨了不是，总结下当时搜索到的资料供大家参考，以后真被问起来嘡嘡嘡一说，就准">
+<meta name="description" content="话说玩儿react的同学可能都知道Create React App这个项目吧（不知道的戳这里了解，这是来自Facebook官方的零配置命令行工具，能够帮你自动创建基于Webpack的最简易的React项目模板）。话说今天看期刊的时候发现了一篇react的官方blog更新了一篇叫What’s New in Create React App的博客，随手翻了下发现 Create React App 这个">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用rem实现响应式布局的方法">
-<meta property="og:url" content="http://brooch.me/2017/03/03/a-method-of-using-rem/index.html">
+<meta property="og:title" content="Create React App 里的新鲜玩意儿">
+<meta property="og:url" content="http://brooch.me/2017/06/02/whats-new-in-create-react-app/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="起因前两天小徒弟问我，老看到有人说用rem实现响应式布局，具体要怎么做呢？这可问住我了，之前我只知道rem的概念却不知道要怎么用rem来实现响应式布局……赶紧忽悠她一顿，让她先去各大网站上学习下别人是怎么做的，看不懂了再来问我。自己则私底下恶补了rem实现响应式布局的知识来应付她的问题，这才算糊弄过去……
-话说，临阵磨不能白磨了不是，总结下当时搜索到的资料供大家参考，以后真被问起来嘡嘡嘡一说，就准">
-<meta property="og:updated_time" content="2017-03-03T15:52:58.000Z">
+<meta property="og:description" content="话说玩儿react的同学可能都知道Create React App这个项目吧（不知道的戳这里了解，这是来自Facebook官方的零配置命令行工具，能够帮你自动创建基于Webpack的最简易的React项目模板）。话说今天看期刊的时候发现了一篇react的官方blog更新了一篇叫What’s New in Create React App的博客，随手翻了下发现 Create React App 这个">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-01.gif">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-02.gif">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-03.png">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-04.gif">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-05.gif">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-06.gif">
+<meta property="og:updated_time" content="2017-06-02T12:41:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="使用rem实现响应式布局的方法">
-<meta name="twitter:description" content="起因前两天小徒弟问我，老看到有人说用rem实现响应式布局，具体要怎么做呢？这可问住我了，之前我只知道rem的概念却不知道要怎么用rem来实现响应式布局……赶紧忽悠她一顿，让她先去各大网站上学习下别人是怎么做的，看不懂了再来问我。自己则私底下恶补了rem实现响应式布局的知识来应付她的问题，这才算糊弄过去……
-话说，临阵磨不能白磨了不是，总结下当时搜索到的资料供大家参考，以后真被问起来嘡嘡嘡一说，就准">
+<meta name="twitter:title" content="Create React App 里的新鲜玩意儿">
+<meta name="twitter:description" content="话说玩儿react的同学可能都知道Create React App这个项目吧（不知道的戳这里了解，这是来自Facebook官方的零配置命令行工具，能够帮你自动创建基于Webpack的最简易的React项目模板）。话说今天看期刊的时候发现了一篇react的官方blog更新了一篇叫What’s New in Create React App的博客，随手翻了下发现 Create React App 这个">
+<meta name="twitter:image" content="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-01.gif">
 
 
 
@@ -126,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://brooch.me/2017/03/03/a-method-of-using-rem/"/>
+  <link rel="canonical" href="http://brooch.me/2017/06/02/whats-new-in-create-react-app/"/>
 
 
 
 
 
-  <title> 使用rem实现响应式布局的方法 | Keep Walking </title>
+  <title> Create React App 里的新鲜玩意儿 | Keep Walking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -268,7 +272,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/03/03/a-method-of-using-rem/">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/06/02/whats-new-in-create-react-app/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="投身烈火">
@@ -292,7 +296,7 @@
             
             
               
-                使用rem实现响应式布局的方法
+                Create React App 里的新鲜玩意儿
               
             
           </h1>
@@ -305,8 +309,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-03T21:16:05+08:00">
-                2017-03-03
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-02T17:19:43+08:00">
+                2017-06-02
               </time>
             
 
@@ -364,21 +368,36 @@
       
 
       
-        <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>前两天小徒弟问我，老看到有人说用rem实现响应式布局，具体要怎么做呢？这可问住我了，之前我只知道rem的概念却不知道要怎么用rem来实现响应式布局……赶紧忽悠她一顿，让她先去各大网站上学习下别人是怎么做的，看不懂了再来问我。自己则私底下恶补了rem实现响应式布局的知识来应付她的问题，这才算糊弄过去……</p>
-<p>话说，临阵磨不能白磨了不是，总结下当时搜索到的资料供大家参考，以后真被问起来嘡嘡嘡一说，就准备接受萌新崇拜的目光吧，哈哈(￣▽￣)</p>
+        <p>话说玩儿react的同学可能都知道<a href="https://github.com/facebookincubator/create-react-app" target="_blank" rel="external">Create React App</a>这个项目吧（不知道的戳<a href="http://www.jianshu.com/p/dd4cee273bed" target="_blank" rel="external">这里</a>了解，这是来自Facebook官方的零配置命令行工具，能够帮你自动创建基于Webpack的最简易的React项目模板）。话说今天看期刊的时候发现了一篇react的官方blog更新了一篇叫<a href="https://facebook.github.io/react/blog/2017/05/18/whats-new-in-create-react-app.html" target="_blank" rel="external">What’s New in Create React App</a>的博客，随手翻了下发现 Create React App 这个项目居然也更新新版本了？！而且还添加进来很多有趣的功能。我半翻译半解读一下这篇文章，咱们看看有哪些有趣的新功能吧。</p>
 <a id="more"></a>
-<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>在说rem之前不得不先介绍下em，em这种单位最早源自印刷界，一个em表示一种特殊字体的大写字母M的高度。后来到了网页上，em作为一种相对长度单位，相对于当前对象内文本的字体大小。没有被css设置过的网页，一般页面字体的默认大小是16px，所以1em就等于16px。当然em除了可以作为font-size属性值得单位，还能作为width和height属性值的单位。于是前端工程师们就脑洞大开了，如果所有的宽高单位都用em，那么在做响应式布局的时候，只要改变页面上的字体大小不就能直接调整页面各个部分的大小了吗？</p>
-<p>但是事与愿违，em是针对当前对象内文本的，就是说针对的是被设置过字体大小的元素的字体大小。有点绕是不是？举个例子好了，比如现在又这样一个结构，body&gt;div.A&gt;div.B，body的font-size是20px，div.B的width和height都是1em，所以当前页面上div.B的宽高就是20px，这时候如果div.A被设置了font-size为10px，div.B的宽高就是10px了，这个特性让em非常不好被应用，要用em就整个页面所有的font-size都要用em，这在没有node做自动化工具的年代简直是异常噩梦……你想写个页面，还得不停的换算px和em，想想就头疼……</p>
-<p>后来rem出现了，其实rem就是root em，故名思意，rem单位就是相对于根节点（html元素）字体大小的单位。这个单位跟em不一样的区别也在这里，他是不受继承影响的，这样就可以各种单位混用，回避了不停换算的问题。当然要想使用换算的过程还是不能少，不过只是根据根节点的字体大小换算，列个换算表需要的时候查表就好了，当然这个问题在有了前端打包工具之后就彻底解决了，咱们后面再具体说。</p>
-<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>理解了rem的概念，揭下来说说利用rem实现响应式布局的方案。一般响应式布局分两种：</p>
-<h3 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h3><p>使用rem定义想要响应式的部分的宽高，使用媒体查询来修改html元素的font-size属性</p>
-<p>简单举个例子：<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">html</span> &#123;</div><div class="line">    <span class="attribute">font-size</span>:<span class="number">16px</span>;</div><div class="line">&#125;</div><div class="line">@<span class="keyword">media</span> screen and (max-width: <span class="number">480px</span>) &#123;</div><div class="line">    <span class="selector-tag">html</span> &#123;</div><div class="line">        <span class="attribute">font-size</span>:<span class="number">14px</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">@<span class="keyword">media</span> screen and (max-width: <span class="number">960px</span>) &#123;</div><div class="line">    <span class="selector-tag">html</span> &#123;</div><div class="line">        <span class="attribute">font-size</span>:<span class="number">15px</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="selector-class">.some-class</span> &#123;</div><div class="line">    <span class="attribute">width</span>: <span class="number">10rem</span>;</div><div class="line">    <span class="attribute">height</span>: <span class="number">10rem</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><p>使用rem定义想要响应式的部分的宽高，在页面resize时动态的改变html的font-size属性。</p>
-<p>这个方案也是我觉得比较有趣的一个方案，他可以保证窗口大小在变化时，真个页面也等比例缩放。目前淘宝和饿了么使用的就是这个方案。</p>
-<p>本来还想抄一段淘宝计算html元素font-size大小的代码，后来一搜发下阿里无线团队已经把脚本开源了，附上地址好了：<a href="https://github.com/amfe/lib-flexible/" target="_blank" rel="external">lib-flexible</a></p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>除了以上两种方案，其他把root的font-size设死，又使用rem做单位的方案我就真不能理解了……貌似没什么意义吧？希望能白话的同学给我套靠谱的解释，这样以后别人喷我的时候我也好一嘟噜一串儿的喷回去……(￣▽￣)”</p>
-<h2 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h2><p>刚才提到了，在使用rem的时候不得不对rem和px做转换。我个人是信奉“一切重复工作都应该交给电脑去做”这一理念的，所以我觉得转换的工作也应该交给电脑去做才对。其实前人早的轮子也已经很多了，这件事less、sass、postcss、stylus等预处理器都支持，也可以用<a href="https://www.npmjs.com/package/px2rem" target="_blank" rel="external">px2rem</a>这个npm模块，使用webpack的也有对应的loader可用<a href="https://www.npmjs.com/package/px2rem-loader" target="_blank" rel="external">px2rem-loader </a>。所以根本不用操心重复劳动的事，某种意义上来说，只要你够勤快，就根本累不着~</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在查资料的过程中，也发现有人在说，字体大小自适应是一种错误的想法，因为就算是响应式布局，其实也没必要做到这一步……使用媒体查询、calc、vw单位、flex一样能够完成一个体验优秀的页面。在这件事上，我觉得还是仁者见仁吧，虽然rem实现响应式布局的感觉都有些hack，但是肯定还是有他存在的意义的，屠龙之技学会了，砍谁不是砍不是？何况有的时候，咱们程序员说了真不算，到底要不要做到完全等比例缩放这一步，还是得听产品经理的……毕竟产品小白分分钟就能让技术大牛加班啊~哈哈哈ｂ（￣▽￣）ｄ</p>
+<p>Create React App 这个项目推出大概有一年了，作为一个官方推荐的快速搭建react项目的脚手架，这个项目吸引了大量的开发者。而这个项目在沉寂了几个月之后，于5月18号发布了1.0.0版本（最近这十四天有release了七次，真是猛啊……），添加了好多新的特性。如果你当前正在开发的应用是使用 Create React App 创建的，想体验新版本的特性，并且你的项目并没有执行弹出操作（Create React App 有个 eject命令），可以参考官方的<a href="https://github.com/facebookincubator/create-react-app/releases/tag/v1.0.0" target="_blank" rel="external">升级说明</a>来升级 Create React App。</p>
+<h2 id="webpack-2"><a href="#webpack-2" class="headerlink" title="webpack 2"></a>webpack 2</h2><p>虽然 webpack 2 相比 webpack 的改动很大，有可能存在很多问题，但是 webpack 2 已经正式发布几个月了，Create React App 团队经过了一段时间的测试，认为目前 webpack 2 已经足够稳定了，所以将模板中的构建工具也修改为 webpack 2。而且 Create React App 的用户并不需要担心 webpack 2 配置上的改动，Create React App 内部对 webpack 的配置进行了兼容。</p>
+<p>如果你的项目已经执行过弹出操作了，则需要参考 webpack 提过的<a href="https://webpack.js.org/guides/migrating/" target="_blank" rel="external">升级指南</a>自己手动修改配置。</p>
+<p>webpack 2 最引人注目的新特性就是其对 <a href="http://2ality.com/2014/09/es6-modules-final.html" target="_blank" rel="external">ES6 模块</a> 的支持，可以将将 ES6 模块 直接转化为 CommonJS 模块。虽然这对开发来说可能没啥影响，但是它可以在编译阶段捕获更多的错误，比如exports 的变量undefined之类的：</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-01.gif" alt="whats-new-in-create-react-app-01"></p>
+<p>webpack 2 还提供了 <a href="http://www.css88.com/archives/6946" target="_blank" rel="external">tree shaking</a> 特性，可以通过去除冗余代码，优化打包后脚本的尺寸。</p>
+<h2 id="Runtime-Error-Overlay"><a href="#Runtime-Error-Overlay" class="headerlink" title="Runtime Error Overlay"></a>Runtime Error Overlay</h2><p>你有没有这种经历，代码中写错了一个地方，控制台里也报错了，但是死活找不到报错代码的位置……</p>
+<p>为了解决这个问题，我们引入了一个专门捕获错误的弹窗，当程序报错的时候他会展示报错信息和引发错误的位置！当然，他只会出现在开发阶段，产出代码的时候会被去掉。</p>
+<p>有图，有真相，就在这儿晒！</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-02.gif" alt="whats-new-in-create-react-app-02"></p>
+<p>更牛逼的是，他还能跟你的编辑器结合到一起，惊不惊喜？意不意外？</p>
+<p>未来 Creat React App 还准备支持更多错误捕获。比如在React 16 版本发布之后，Creat React App 计划支持 React 组件调用栈的展示。</p>
+<h1 id="默认支持渐进式web应用"><a href="#默认支持渐进式web应用" class="headerlink" title="默认支持渐进式web应用"></a>默认支持渐进式web应用</h1><p>使用新版本 Creat React App 创建的项目默认就会支持 [渐进式web应用(PWA)] (<a href="https://developers.google.com/web/progressive-web-apps/)，会使用" target="_blank" rel="external">https://developers.google.com/web/progressive-web-apps/)，会使用</a> <a href="https://developers.google.com/web/fundamentals/getting-started/primers/service-workers" target="_blank" rel="external">service workers</a> 实现 <a href="https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/#cache-falling-back-to-network" target="_blank" rel="external">缓存优先策略</a> 来优化用户再次访问应用的速度。当然，你也可以通过设置默认不开启这个特性，但是如果你在开发新的应用，我推荐你使用它，特别是在移动设备上运行的应用，会有惊喜哦~</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-03.png" alt="whats-new-in-create-react-app-03"></p>
+<p>关于 Creat React App 中 PWA 的配置，更详细的说明请戳<a href="https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#making-a-progressive-web-app" target="_blank" rel="external">这里</a>。</p>
+<p>题外话，貌似最近 PWA 很火呢，前段时间看到 vue 官方也退出了基于自己框架的<a href="https://github.com/vuejs-templates/pwa" target="_blank" rel="external">pwa脚手架</a>，另外我还发现一个在线的 PWA 脚手架工具，有兴趣的可以玩儿玩儿，<a href="http://www.pwabuilder.com/" target="_blank" rel="external">www.pwabuilder.com</a>，回头有时间我也打算写一篇关于 PWA 的文章~</p>
+<h2 id="Jest-20"><a href="#Jest-20" class="headerlink" title="Jest 20"></a>Jest 20</h2><p>先科普一下，<a href="http://facebook.github.io/jest/" target="_blank" rel="external">Jest</a> 是facebook出的一个自动化测试工具，用来跑单测的。</p>
+<p>新版的 Creat React App 使用的也是新版的 Jest，20版本的 Jest 包含了许多改进，具体有哪些修改自己看<a href="http://facebook.github.io/jest/blog/2017/05/06/jest-20-delightful-testing-multi-project-runner.html" target="_blank" rel="external">文档</a>吧。</p>
+<p>现在 Create React App 只需要做少量 Jest 的配置就可以生成覆盖率报告了。</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-04.gif" alt="whats-new-in-create-react-app-04"></p>
+<h2 id="动态import-代码分割"><a href="#动态import-代码分割" class="headerlink" title="动态import()代码分割"></a>动态import()代码分割</h2><p>保持应用初始化最小下载量和按需加载的重要性我就不说了哈，其实上个版本的 Create React App 也支持代码分割，不过是基于 webpack 的 require.ensure() 特性，这使得这部分代码没法通过 Jest 的测试。</p>
+<p>在这个版本的 Create React App 中，我们加入了对未来web标准中 <a href="http://2ality.com/2017/01/import-operator.html#loading-code-on-demand" target="_blank" rel="external">动态 import()</a> 提案的支持，我建议你使用 import() 来延迟加载非常用组件。巧的是，上期的文章里也涉及到了这个问题，咱们来看看 Create React App 中的解决方案吧：</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-05.gif" alt="whats-new-in-create-react-app-05"></p>
+<h2 id="更好的控制台输出"><a href="#更好的控制台输出" class="headerlink" title="更好的控制台输出"></a>更好的控制台输出</h2><p>新版的 Create React App 改善了控制台的输出。举个例子，当你启动测试服务时，新版的 Create React App 除了会显示本地地址之外，还会显示局域网ip地址，这样你就能更快的用你的手机测试应用了，总之就是更注重细节了吧……╮(￣▽￣)╭</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/whats-new-in-create-react-app-06.gif" alt="whats-new-in-create-react-app-06"></p>
+<h2 id="更多的特性"><a href="#更多的特性" class="headerlink" title="更多的特性"></a>更多的特性</h2><p>上面描述的其实只是新特性中的一小部分，这个版本中还包含了更多的特性，有兴趣的可以看看这个版本的 <a href="https://github.com/facebookincubator/create-react-app/releases/tag/v1.0.0" target="_blank" rel="external">changelog</a></p>
+<p>好的那么由于时间不足，本期的博客就先写到这里，如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的热情了~!</p>
+<p>白了个白~！</p>
 
       
     </div>
@@ -402,9 +421,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/css/" rel="tag"># css</a>
-          
-            <a href="/tags/rem/" rel="tag"># rem</a>
+            <a href="/tags/react/" rel="tag"># react</a>
           
         </div>
       
@@ -413,8 +430,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/24/dynamic-programming-2/" rel="next" title="聊聊动态规划(2) -- 特征">
-                <i class="fa fa-chevron-left"></i> 聊聊动态规划(2) -- 特征
+              <a href="/2017/05/26/react-component-dynamic-loading-2/" rel="next" title="闲扯react组件动态加载机制 -- webpack打包方案">
+                <i class="fa fa-chevron-left"></i> 闲扯react组件动态加载机制 -- webpack打包方案
               </a>
             
           </div>
@@ -422,10 +439,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/10/difference-between-fetch-and-XHR/" rel="prev" title="fetch 能做哪些 XHR(XMLHttpRequest) 不能做的事">
-                fetch 能做哪些 XHR(XMLHttpRequest) 不能做的事 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -649,7 +662,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#起因"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">2.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案"><span class="nav-number">3.</span> <span class="nav-text">方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方案一"><span class="nav-number">3.1.</span> <span class="nav-text">方案一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方案二"><span class="nav-number">3.2.</span> <span class="nav-text">方案二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">4.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动化"><span class="nav-number">5.</span> <span class="nav-text">自动化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#webpack-2"><span class="nav-number">1.</span> <span class="nav-text">webpack 2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Runtime-Error-Overlay"><span class="nav-number">2.</span> <span class="nav-text">Runtime Error Overlay</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#默认支持渐进式web应用"><span class="nav-number"></span> <span class="nav-text">默认支持渐进式web应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Jest-20"><span class="nav-number">1.</span> <span class="nav-text">Jest 20</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态import-代码分割"><span class="nav-number">2.</span> <span class="nav-text">动态import()代码分割</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更好的控制台输出"><span class="nav-number">3.</span> <span class="nav-text">更好的控制台输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多的特性"><span class="nav-number">4.</span> <span class="nav-text">更多的特性</span></a></li></ol></div>
             
 
           </div>
