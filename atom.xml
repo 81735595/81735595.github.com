@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-06-02T12:43:54.000Z</updated>
+  <updated>2017-06-02T12:45:02.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Create React App 里的新鲜玩意儿</title>
+    <title>新版 Create React App 里的新鲜玩意儿</title>
     <link href="http://brooch.me/2017/06/02/whats-new-in-create-react-app/"/>
     <id>http://brooch.me/2017/06/02/whats-new-in-create-react-app/</id>
     <published>2017-06-02T09:19:43.000Z</published>
-    <updated>2017-06-02T12:43:54.000Z</updated>
+    <updated>2017-06-02T12:45:02.000Z</updated>
     
     <content type="html"><![CDATA[<p>话说玩儿react的同学可能都知道<a href="https://github.com/facebookincubator/create-react-app" target="_blank" rel="external">Create React App</a>这个项目吧（不知道的戳<a href="http://www.jianshu.com/p/dd4cee273bed" target="_blank" rel="external">这里</a>了解，这是来自Facebook官方的零配置命令行工具，能够帮你自动创建基于Webpack的最简易的React项目模板）。话说今天看期刊的时候发现了一篇react的官方blog更新了一篇叫<a href="https://facebook.github.io/react/blog/2017/05/18/whats-new-in-create-react-app.html" target="_blank" rel="external">What’s New in Create React App</a>的博客，随手翻了下发现 Create React App 这个项目居然也更新新版本了？！而且还添加进来很多有趣的功能。我半翻译半解读一下这篇文章，咱们看看有哪些有趣的新功能吧。</p>
 <a id="more"></a>
