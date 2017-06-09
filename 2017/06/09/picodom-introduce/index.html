@@ -1,0 +1,919 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="virtual dom,picodom," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Keep Walking" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="话说，对于Virtual DOM解析的文章不少。但是，要不就是浅尝辄止，说到把dom解析成树型数据结构就结束了，不讲补丁算法，要不就是补丁算法说的太深奥完全理解不了。今天发现个好货，Picodom，这个库用了200多行代码就把 virtual dom 和 patch 算法实现了，这下好了，有了实际代码理论也好理解，废话少说，快来一起读代码吧~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Picodom -- 1kb的Virtual DOM库">
+<meta property="og:url" content="http://brooch.me/2017/06/09/picodom-introduce/index.html">
+<meta property="og:site_name" content="Keep Walking">
+<meta property="og:description" content="话说，对于Virtual DOM解析的文章不少。但是，要不就是浅尝辄止，说到把dom解析成树型数据结构就结束了，不讲补丁算法，要不就是补丁算法说的太深奥完全理解不了。今天发现个好货，Picodom，这个库用了200多行代码就把 virtual dom 和 patch 算法实现了，这下好了，有了实际代码理论也好理解，废话少说，快来一起读代码吧~">
+<meta property="og:updated_time" content="2017-06-09T15:01:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Picodom -- 1kb的Virtual DOM库">
+<meta name="twitter:description" content="话说，对于Virtual DOM解析的文章不少。但是，要不就是浅尝辄止，说到把dom解析成树型数据结构就结束了，不讲补丁算法，要不就是补丁算法说的太深奥完全理解不了。今天发现个好货，Picodom，这个库用了200多行代码就把 virtual dom 和 patch 算法实现了，这下好了，有了实际代码理论也好理解，废话少说，快来一起读代码吧~">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 'undefined',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://brooch.me/2017/06/09/picodom-introduce/"/>
+
+
+
+
+
+  <title> Picodom -- 1kb的Virtual DOM库 | Keep Walking </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+	<div style='margin:0 auto;display:none;'>
+		<img src="/images/avatar.png" alt="投身烈火" />
+	</div>
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?caa2c063c399746b1f44cb226584ab5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Keep Walking</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/06/09/picodom-introduce/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="投身烈火">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Keep Walking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Picodom -- 1kb的Virtual DOM库
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-09T20:10:23+08:00">
+                2017-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>话说，对于Virtual DOM解析的文章不少。但是，要不就是浅尝辄止，说到把dom解析成树型数据结构就结束了，不讲补丁算法，要不就是补丁算法说的太深奥完全理解不了。今天发现个好货，<a href="https://github.com/picodom/" target="_blank" rel="external">Picodom</a>，这个库用了200多行代码就把 virtual dom 和 patch 算法实现了，这下好了，有了实际代码理论也好理解，废话少说，快来一起读代码吧~</p>
+<a id="more"></a>
+<p>咱们先看看咋使，官方给出了一个<a href="https://codepen.io/picodom/pen/BRbJpG" target="_blank" rel="external">小栗子</a>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; h, patch &#125; <span class="keyword">from</span> <span class="string">"picodom"</span></div><div class="line"></div><div class="line"><span class="comment">/** @jsx h */</span></div><div class="line"><span class="comment">// 加了这个之后babel就会用h作为jsx中的vnode构造函数</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> element, oldNode</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 重新刷新界面用的</div><div class="line"> * @param newNode 新的vnode</div><div class="line"> * @return 更新后的dom对象</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params">newNode</span>) </span>&#123;</div><div class="line">    <span class="comment">// 为了方便理解我稍微修改了下这个函数</span></div><div class="line">    element = patch(</div><div class="line">        <span class="built_in">document</span>.body, <span class="comment">// 要更新的节点的父级</span></div><div class="line">        element, <span class="comment">// 要更新的节点对应的dom对象</span></div><div class="line">        oldNode, <span class="comment">// 根据旧状态构造的vnode</span></div><div class="line">        newNode <span class="comment">// 根据新状态构造的vnode</span></div><div class="line">    )</div><div class="line">    <span class="comment">// patch函数会更新界面，返回更新后的dom节点</span></div><div class="line">    oldNode = newNode</div><div class="line">    <span class="comment">// 更新后将传入的vnode标记为旧的</span></div><div class="line">    <span class="keyword">return</span> element</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 根据不同的state生成不同的vnode对象</div><div class="line"> * @param state 新的状态</div><div class="line"> * @return 构造好的vnode对象</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">view</span>(<span class="params">state</span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> (</div><div class="line">        &lt;div&gt;</div><div class="line">        &lt;h1&gt;&#123;state&#125;&lt;/h1&gt;</div><div class="line">        &lt;input</div><div class="line">            oninput=&#123;e =&gt; render(view(e.target.value))&#125;</div><div class="line">            // 每次input框的值变化时都重新运行render，来刷新界面</div><div class="line">            value=&#123;state&#125;</div><div class="line">            type="text"</div><div class="line">        /&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">    )</div><div class="line">&#125;</div><div class="line"></div><div class="line">render(view("Hello Picodom!"))</div><div class="line">// 启动~！</div></pre></td></tr></table></figure>
+<p>picodom 的 核心的一共就俩文件，h.js 用来实现 virtual dom ，patch.js 用来实现补丁算法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">|</div><div class="line">|-- index.js <span class="comment">// 导出h和patch方法</span></div><div class="line">|-- h.js <span class="comment">// 实现 virtual dom </span></div><div class="line">|-- patch.js <span class="comment">// 实现 patch</span></div></pre></td></tr></table></figure>
+<p>先看看 virtual dom 是怎么实现的吧。</p>
+<p>平时写jsx没感觉，但是看babel转换后的代码就可以看到，比如这样的结构：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;div&gt;</div><div class="line">    &lt;h1&gt;&#123;state&#125;&lt;/h1&gt;</div><div class="line">    &lt;input</div><div class="line">        oninput=&#123;e =&gt; <span class="built_in">console</span>.log(e.target.value)&#125;</div><div class="line">        value=&#123;state&#125;</div><div class="line">        type=<span class="string">"text"</span></div><div class="line">    /&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p>转换后应该是类似这样的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 假设fn是vnode构造函数</span></div><div class="line">fn(<span class="string">'div'</span>, <span class="literal">null</span>, </div><div class="line">    fn(<span class="string">'h1'</span>, <span class="literal">null</span>, state), </div><div class="line">    fn(<span class="string">'input'</span>, &#123;</div><div class="line">        <span class="attr">oninput</span>: <span class="function"><span class="params">e</span> =&gt;</span> <span class="built_in">console</span>.log(e.target.value),</div><div class="line">        <span class="attr">value</span>: state,</div><div class="line">        <span class="attr">type</span>: <span class="string">"text"</span></div><div class="line">    &#125;)</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>从上面的伪码可已看出，一般 virtual dom 的构造函数接收的参数中，第一个参数是标签名，第二个参数是属性，后面的参数是子节点。ok，那我们来看下 h.js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * virtual dom 节点构造函数</div><div class="line"> * @param tag 标签名</div><div class="line"> * @param data 标签属性</div><div class="line"> * @return 构造好的vnode</div><div class="line"> */</div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">h</span>(<span class="params">tag, data</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> node</div><div class="line">    <span class="keyword">var</span> stack = []</div><div class="line">    <span class="keyword">var</span> children = []</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="built_in">arguments</span>.length; i-- &gt; <span class="number">2</span>;) &#123;</div><div class="line">        stack[stack.length] = <span class="built_in">arguments</span>[i]</div><div class="line">        <span class="comment">// 除了前两个参数，其他的参数作为子节点的数据，都推入stack备用</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (stack.length) &#123;</div><div class="line">        <span class="comment">// 循环stack</span></div><div class="line">        node = stack.pop()</div><div class="line">        <span class="comment">// 逐个取出子节点的数据</span></div><div class="line">        <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(node)) &#123;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> i = node.length; i--;) &#123;</div><div class="line">                stack[stack.length] = node[i]</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 如果子节点数据是个数组，就把他展开</span></div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (node != <span class="literal">null</span> &amp;&amp; node !== <span class="literal">true</span> &amp;&amp; node !== <span class="literal">false</span>) &#123;</div><div class="line">            <span class="comment">// 子节点数据是null、true、false时不做处理</span></div><div class="line">            <span class="keyword">if</span> (<span class="keyword">typeof</span> node === <span class="string">"number"</span>) &#123;</div><div class="line">                node = node + <span class="string">""</span></div><div class="line">                <span class="comment">// 如果子节点数据是数字，则转换成字符串</span></div><div class="line">            &#125;</div><div class="line">            children[children.length] = node</div><div class="line">            <span class="comment">//把子节点数据存到children里</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 上面的循环结束后，所有的子节点数据都已经展开，并存到children中</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">typeof</span> tag === <span class="string">"string"</span> ?</div><div class="line">        &#123;</div><div class="line">            <span class="attr">tag</span>: tag,</div><div class="line">            <span class="attr">data</span>: data || &#123;&#125;,</div><div class="line">            <span class="attr">children</span>: children</div><div class="line">        &#125; :</div><div class="line">        tag(data, children)</div><div class="line">    <span class="comment">// 如果tag是字符串就返回一个节点的描述对象</span></div><div class="line">    <span class="comment">// 如果tag不是字符串就认为tag是组件构造函数，将节点的属性信息和子节点信息都传进去，让其创建节点描述对象</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看过上面的代码我们不难想象，最终构造出的 virtual dom，就是一个描述dom片段的树状结构的对象，每个节点有tag、data、children三个属性，tag、data描述当前节点，children描述子节点，最终描述出整个dom片段。</p>
+<p>看过 virtual dom 的构造函数之后，是不是觉得比想象中简单？只要理清逻辑，其实你也能写出来对不对？</p>
+<p>好的，那我们再来看看patch.js，代码中不重要的函数我先标注作用，想看具体实现就往后拉吧</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * 非重点函数的功能</div><div class="line"> * createElementFrom 根据vnode创建节点，里面会递归children创建子节点</div><div class="line"> * updateElementData 根据新的vnode更新当前dom对象的属性值</div><div class="line"> * getKeyFrom 获取vnode的key属性，key属性使用来标记元素唯一性的</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * 补丁算法实现函数</div><div class="line"> * @param parent    要更新节点的父节点dom对象</div><div class="line"> * @param element   要更新节点的dom对象</div><div class="line"> * @param oldNode   要更新节点旧的vnode对象</div><div class="line"> * @param node      要更新节点新的vnode对象</div><div class="line"> * @return 刷新后的dom节点</div><div class="line"> */</div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">patch</span>(<span class="params">parent, element, oldNode, node</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (oldNode == <span class="literal">null</span>) &#123;</div><div class="line">        element = parent.insertBefore(createElementFrom(node), element)</div><div class="line">        <span class="comment">// 如果没有旧的vnode对象则直接创建插入节点</span></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (node.tag &amp;&amp; node.tag === oldNode.tag) &#123;</div><div class="line">        updateElementData(element, oldNode.data, node.data)</div><div class="line">        <span class="comment">// 如果当前节点的标签名没有变化，则直接当前节点的属性</span></div><div class="line">        <span class="keyword">var</span> len = node.children.length</div><div class="line">        <span class="keyword">var</span> oldLen = oldNode.children.length</div><div class="line">        <span class="keyword">var</span> reusableChildren = &#123;&#125;</div><div class="line">        <span class="keyword">var</span> oldElements = []</div><div class="line">        <span class="keyword">var</span> newKeys = &#123;&#125;</div><div class="line"></div><div class="line">        <span class="comment">// 下面主要做的就是对比子节点</span></div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; oldLen; i++) &#123;</div><div class="line">            <span class="keyword">var</span> oldElement = element.childNodes[i]</div><div class="line">            oldElements[i] = oldElement</div><div class="line"></div><div class="line">            <span class="keyword">var</span> oldChild = oldNode.children[i]</div><div class="line">            <span class="keyword">var</span> oldKey = getKeyFrom(oldChild)</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (<span class="literal">null</span> != oldKey) &#123;</div><div class="line">                reusableChildren[oldKey] = [oldElement, oldChil]</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 用旧vnode的子节点构造一个可复用的列表</span></div><div class="line"></div><div class="line">        <span class="keyword">var</span> i = <span class="number">0</span></div><div class="line">        <span class="keyword">var</span> j = <span class="number">0</span></div><div class="line"></div><div class="line">        <span class="keyword">while</span> (j &lt; len) &#123;</div><div class="line">            <span class="keyword">var</span> oldElement = oldElements[i]</div><div class="line">            <span class="keyword">var</span> oldChild = oldNode.children[i]</div><div class="line">            <span class="keyword">var</span> newChild = node.children[j]</div><div class="line"></div><div class="line">            <span class="keyword">var</span> oldKey = getKeyFrom(oldChild)</div><div class="line">            <span class="keyword">if</span> (newKeys[oldKey]) &#123;</div><div class="line">                i++</div><div class="line">                <span class="keyword">continue</span></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">var</span> newKey = getKeyFrom(newChild)</div><div class="line"></div><div class="line">            <span class="keyword">var</span> reusableChild = reusableChildren[newKey] || []</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (<span class="literal">null</span> == newKey) &#123;</div><div class="line">                <span class="keyword">if</span> (<span class="literal">null</span> == oldKey) &#123;</div><div class="line">                    patch(element, oldElement, oldChild, newChild)</div><div class="line">                    j++</div><div class="line">                &#125;</div><div class="line">                i++</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">if</span> (oldKey === newKey) &#123;</div><div class="line">                    patch(element, reusableChild[<span class="number">0</span>], reusableChild[<span class="number">1</span>], newChild)</div><div class="line">                    i++</div><div class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (reusableChild[<span class="number">0</span>]) &#123;</div><div class="line">                    element.insertBefore(reusableChild[<span class="number">0</span>], oldElement)</div><div class="line">                    patch(element, reusableChild[<span class="number">0</span>], reusableChild[<span class="number">1</span>], newChild)</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    patch(element, oldElement, <span class="literal">null</span>, newChild)</div><div class="line">                &#125;</div><div class="line"></div><div class="line">                j++</div><div class="line">                newKeys[newKey] = newChild</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 根据key复用旧节点</span></div><div class="line"></div><div class="line">        <span class="keyword">while</span> (i &lt; oldLen) &#123;</div><div class="line">            <span class="keyword">var</span> oldChild = oldNode.children[i]</div><div class="line">            <span class="keyword">var</span> oldKey = getKeyFrom(oldChild)</div><div class="line">            <span class="keyword">if</span> (<span class="literal">null</span> == oldKey) &#123;</div><div class="line">                removeElement(element, oldElements[i], oldChild)</div><div class="line">            &#125;</div><div class="line">            i++</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 移除没有key的旧节点</span></div><div class="line"></div><div class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> reusableChildren) &#123;</div><div class="line">            <span class="keyword">var</span> reusableChild = reusableChildren[i]</div><div class="line">            <span class="keyword">var</span> reusableNode = reusableChild[<span class="number">1</span>]</div><div class="line">            <span class="keyword">if</span> (!newKeys[reusableNode.data.key]) &#123;</div><div class="line">                removeElement(element, reusableChild[<span class="number">0</span>], reusableNode)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// 根据新的key过滤掉无用的节点</span></div><div class="line"></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (node !== oldNode) &#123;</div><div class="line">        <span class="keyword">var</span> i = element</div><div class="line">        parent.replaceChild((element = createElementFrom(node)), i)</div><div class="line">        <span class="comment">// 如果标签名变了就创建新节点替换当前节点，replaceChild是dom的api</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> element</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>嗯，根据key更换节点的逻辑我也看得比较模糊，坑先挖下，后续再填吧。总的来说 picodom 非常适合用来做研究，从中可以大概了解到virtual dom 和 patch 的基本原理，至于实用性的话……拿来做jsx解析的模板语言没准儿能行吧……</p>
+<p>好的那么由于时间不足，本期的博客就先写到这里，如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的热情了~!</p>
+<p>白了个白~！</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/virtual-dom/" rel="tag"># virtual dom</a>
+          
+            <a href="/tags/picodom/" rel="tag"># picodom</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/02/whats-new-in-create-react-app/" rel="next" title="新版Create React App里的新鲜玩意儿">
+                <i class="fa fa-chevron-left"></i> 新版Create React App里的新鲜玩意儿
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="投身烈火" />
+          <p class="site-author-name" itemprop="name">投身烈火</p>
+          <p class="site-description motion-element" itemprop="description">白云苍狗，时光悠悠~ ￣ω￣=</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">31</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/81735595" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/p/1005051063629865" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              My Friends
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/users/b7dc4381aed3/" title="17" target="_blank">17</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://testudy.cc/" title="继伟" target="_blank">继伟</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://kouyun.me/" title="寇云" target="_blank">寇云</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://yj1438.github.io/" title="尹杰" target="_blank">尹杰</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/cnsnake11/blog/" title="曹楠" target="_blank">曹楠</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ushtml.com/" title="明礼" target="_blank">明礼</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://zhanyouwei.com/" title="友伟" target="_blank">友伟</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://lilywei739.github.io/" title="vl" target="_blank">vl</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://lq1228.github.io/" title="倩倩" target="_blank">倩倩</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://wangjiaoxia.github.io/" title="王小姣" target="_blank">王小姣</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xwenz.com/" title="文玲" target="_blank">文玲</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">投身烈火</span>
+</div>
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
