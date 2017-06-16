@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-06-09T15:01:08.000Z</updated>
+  <updated>2017-06-16T14:51:34.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -14,6 +14,58 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Picodom中的diff算法补完</title>
+    <link href="http://brooch.me/2017/06/16/picodom-introduce-additional/"/>
+    <id>http://brooch.me/2017/06/16/picodom-introduce-additional/</id>
+    <published>2017-06-16T05:13:27.000Z</published>
+    <updated>2017-06-16T14:51:34.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="/2017/06/09/picodom-introduce/">上次</a>看 Picodom 代码的时候，patch 函数中有段代码没怎么看懂，所以就没分析，算是挖下了坑。经过这几天的思考，我终于把逻辑想明白了，今儿咱就来把这个坑给填上~（美错儿，我今天又要划水了，来打我呀打我呀打我呀~）</p>
+<a id="more"></a>
+<h2 id="逻辑梳理"><a href="#逻辑梳理" class="headerlink" title="逻辑梳理"></a>逻辑梳理</h2><p>上次看到 Picodom 中 的 patch 函数中，逻辑分为三个分支，分别是新增节点（没有oldNode），修改节点（newNode和oldNode标签名一样），替换节点（newNode和oldNode标签名不一样）。其中，新增节点和替换节点的操作比较简单。单修改节点的操作，除了要修改节点本身的属性外，还要对比更新节点的子节点，逻辑比较复杂，直接讲代码的话不太容易看出其中的逻辑，咱们先来梳理一下。</p>
+<p>说到子节点变化，一般会分为以下这几种情况：</p>
+<ol>
+<li>增加新节点：有可能在旧列表的最开始，中间或者之后添加</li>
+<li>复用旧节点：还记得之前看的代码中，Picodom 会把节点的 key 属性特殊对待吗？这里就是把 key 作为节点的唯一标识的，只要 key 对上了就认为是能复用，dom节点不用新建，不过位置有可能发生变化</li>
+<li>删除旧节点：删除单个或者多个节点</li>
+<li>把以上这些情况综合起来~</li>
+</ol>
+<p>如图，比如像下面这种情况：</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-01.jpg" alt="01"></p>
+<p>其实这逻辑说起来感觉还挺简单，但是如何用代码实现呢？我们先说下 Picodom 的处理方法，以上图为例。</p>
+<p>遍历新节点列表，新节点列表和旧节点列表里各取一个，作为当前新节点和当前旧节点，对比他们，这俩节点 key 不一样，而且在旧节点列表里也没有找到这个节点，于是在当前旧节点前添加新节点，当前新节点切换到下一节点。</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-02.jpg" alt="02"></p>
+<p>当前新节点和当前旧节点 key 不一样，但是在旧节点列表里能找到，就把找到的旧节点插入到当前旧节点前面，当前新节点切换到下一节点。</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-03.jpg" alt="03"></p>
+<p>对新节点列表中的 4 和 7 的处理和前面一样，就不再多说了。处理过他们之后，取到的当前新节点和当前旧节点的 key 是一样的。这时把新旧节点都传入 patch 函数，递归处理这两个节点。处理过之后，当前新节点和当前旧节点都切换到下一节点。</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-04.jpg" alt="04"></p>
+<p>根据之前的步骤，把 2 也处理了，最后当前新节点是 8 ，当前旧节点是 3 ，8 是新增的，所以插入到 3 前面。</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-05.jpg" alt="05"></p>
+<p>最后将未用到的旧节点删除掉，既把 3 删掉，得到最终结果。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>ok，让我们来看下 Picodom 是如何用代码来实现上述逻辑的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ...</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> len = node.children.length</div><div class="line"><span class="comment">// 新子节点vnode列表的长度</span></div><div class="line"><span class="keyword">var</span> oldLen = oldNode.children.length</div><div class="line"><span class="comment">// 旧子节点vnode列表的长度</span></div><div class="line"><span class="keyword">var</span> reusableChildren = &#123;&#125;</div><div class="line"><span class="comment">// 可复用节点列表</span></div><div class="line"><span class="keyword">var</span> oldElements = []</div><div class="line"><span class="comment">// 旧子节点dom列表</span></div><div class="line"><span class="keyword">var</span> newKeys = &#123;&#125;</div><div class="line"><span class="comment">// 这边变量用来标记新子节点列表中复用的节点</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; oldLen; i++) &#123;</div><div class="line">    <span class="keyword">var</span> oldElement = element.childNodes[i]</div><div class="line">    oldElements[i] = oldElement</div><div class="line"></div><div class="line">    <span class="keyword">var</span> oldChild = oldNode.children[i]</div><div class="line">    <span class="keyword">var</span> oldKey = getKeyFrom(oldChild)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != oldKey) &#123;</div><div class="line">        reusableChildren[oldKey] = [oldElement, oldChil]</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 上面这个循环是在遍历旧子节点vnode列表，把有key的挑出来，放到可复用节点列表里</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> i = <span class="number">0</span></div><div class="line"><span class="keyword">var</span> j = <span class="number">0</span></div><div class="line"><span class="comment">// i是旧子节点vnode列表的索引，j是新子节点vnode列表的索引</span></div><div class="line"></div><div class="line"><span class="keyword">while</span> (j &lt; len) &#123;</div><div class="line"><span class="comment">// 遍历新子节点vnode列表</span></div><div class="line">    <span class="keyword">var</span> oldElement = oldElements[i]</div><div class="line">    <span class="comment">// 取当前旧节点dom</span></div><div class="line">    <span class="keyword">var</span> oldChild = oldNode.children[i]</div><div class="line">    <span class="comment">// 取当前旧节点vnode</span></div><div class="line">    <span class="keyword">var</span> newChild = node.children[j]</div><div class="line">    <span class="comment">// 取当前新节点vnode</span></div><div class="line"></div><div class="line">    <span class="keyword">var</span> oldKey = getKeyFrom(oldChild)</div><div class="line">    <span class="comment">// 取当前旧节点的key</span></div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (newKeys[oldKey]) &#123;</div><div class="line">        i++</div><div class="line">        <span class="keyword">continue</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 上面这个判断是为了跳过已经被使用过的旧子节点</span></div><div class="line"></div><div class="line">    <span class="keyword">var</span> newKey = getKeyFrom(newChild)</div><div class="line">    <span class="comment">// 取当前新节点的key</span></div><div class="line"></div><div class="line">    <span class="keyword">var</span> reusableChild = reusableChildren[newKey] || []</div><div class="line">    <span class="comment">// 取当前新节点key对应的可复用节点</span></div><div class="line">    <span class="keyword">if</span> (<span class="literal">null</span> == newKey) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == oldKey) &#123;</div><div class="line">            patch(element, oldElement, oldChild, newChild)</div><div class="line">            j++</div><div class="line">            <span class="comment">// 如果新节点和旧节点都没有key则在当前旧节点对应的dom节点前插入新节点</span></div><div class="line">            <span class="comment">// 然后切换当前新节点</span></div><div class="line">        &#125;</div><div class="line">        i++</div><div class="line">        <span class="comment">// 这里的处理方式让人很难理解，为啥是新节点和旧节点都没有key的时候才插入？</span></div><div class="line">        <span class="comment">// 我感觉这样处理主要是为了处理文本节点……因为文本节点是肯定没有key的</span></div><div class="line">        <span class="comment">// 另外如果新节点里出现了一个没有key的节点，</span></div><div class="line">        <span class="comment">// 那么上面这段逻辑就会一直切换的当前旧节点，</span></div><div class="line">        <span class="comment">// 直到找到一个同样没有key的旧节点，再用patch对比两个节点，</span></div><div class="line">        <span class="comment">// 如果一直没有找到没有key的旧节点，最后oldElement和oldChild都是null，</span></div><div class="line">        <span class="comment">// 相当于在旧节点列表最后添加一个新的节点，</span></div><div class="line">        <span class="comment">// 此时当前旧节点已经切到旧节点列表最后了，</span></div><div class="line">        <span class="comment">// 所以后续的所有操作都是往旧节点列表最后添加新的节点</span></div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">if</span> (oldKey === newKey) &#123;</div><div class="line">            patch(element, reusableChild[<span class="number">0</span>], reusableChild[<span class="number">1</span>], newChild)</div><div class="line">            i++</div><div class="line">            <span class="comment">// 如果新节点和旧节点的key相同，则用patch再去对比这两个节点</span></div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (reusableChild[<span class="number">0</span>]) &#123;</div><div class="line">            element.insertBefore(reusableChild[<span class="number">0</span>], oldElement)</div><div class="line">            patch(element, reusableChild[<span class="number">0</span>], reusableChild[<span class="number">1</span>], newChild)</div><div class="line">            <span class="comment">// 如果key不相同但是存在可复用节点，则把可复用节点插入到当前旧节点前面</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            patch(element, oldElement, <span class="literal">null</span>, newChild)</div><div class="line">            <span class="comment">// 如果key不同而且不存在可复用节点，则在当前旧节点前面插入个新节点</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        j++</div><div class="line">        <span class="comment">// 切换当前新节点</span></div><div class="line">        newKeys[newKey] = newChild</div><div class="line">        <span class="comment">// 记录已经使用的节点的key，后续可以用来过滤出已经使用的可复用节点</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 根据key复用旧节点</span></div><div class="line"></div><div class="line"><span class="keyword">while</span> (i &lt; oldLen) &#123;</div><div class="line">    <span class="keyword">var</span> oldChild = oldNode.children[i]</div><div class="line">    <span class="keyword">var</span> oldKey = getKeyFrom(oldChild)</div><div class="line">    <span class="keyword">if</span> (<span class="literal">null</span> == oldKey) &#123;</div><div class="line">        removeElement(element, oldElements[i], oldChild)</div><div class="line">    &#125;</div><div class="line">    i++</div><div class="line">&#125;</div><div class="line"><span class="comment">// 移除没有key的旧节点</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> reusableChildren) &#123;</div><div class="line">    <span class="keyword">var</span> reusableChild = reusableChildren[i]</div><div class="line">    <span class="keyword">var</span> reusableNode = reusableChild[<span class="number">1</span>]</div><div class="line">    <span class="keyword">if</span> (!newKeys[reusableNode.data.key]) &#123;</div><div class="line">        removeElement(element, reusableChild[<span class="number">0</span>], reusableNode)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 根据新节点的key过滤并移除掉已经使用的可复用节点</span></div><div class="line"></div><div class="line"><span class="comment">// ...</span></div></pre></td></tr></table></figure>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>看过代码之后我们会发现，如果出现没有key的节点那么之前那套算法的效率就会变差，因为有可能需要遍历整个旧节点列表之后才能对比，这也就是不难理解为啥之前版本的react会自动生成一个datareact-id了……从这个角度来看，感觉给节点加上唯一key做表示可以提升界面更新的效率，不知道react或者vue里这么搞是不是有效……</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-06.jpg" alt="06"></p>
+<p>好的那么由于时间不足，本期的博客就先写到这里，如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的热情了~!</p>
+<p>白了个白~！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;/2017/06/09/picodom-introduce/&quot;&gt;上次&lt;/a&gt;看 Picodom 代码的时候，patch 函数中有段代码没怎么看懂，所以就没分析，算是挖下了坑。经过这几天的思考，我终于把逻辑想明白了，今儿咱就来把这个坑给填上~（美错儿，我今天又要划水了，来打我呀打我呀打我呀~）&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="http://brooch.me/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="virtual dom" scheme="http://brooch.me/tags/virtual-dom/"/>
+    
+      <category term="picodom" scheme="http://brooch.me/tags/picodom/"/>
+    
+  </entry>
   
   <entry>
     <title>Picodom -- 1kb的Virtual DOM库</title>
@@ -1135,92 +1187,6 @@
       <category term="async" scheme="http://brooch.me/tags/async/"/>
     
       <category term="await" scheme="http://brooch.me/tags/await/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>响应式react：构建高效易用的react应用</title>
-    <link href="http://brooch.me/2016/12/23/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps/"/>
-    <id>http://brooch.me/2016/12/23/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps/</id>
-    <published>2016-12-23T07:53:53.000Z</published>
-    <updated>2016-12-23T13:59:43.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>这篇文章翻译自mobx作者 Michel Weststrate 的一篇博客，虽然我也想做到信达雅，奈何英语水平有限……所以我写的内容自动屏蔽了一些前因后果没营养的话，只翻译我觉得重点的内容。我的原则是，捞干的说，不BB~<br>想了解细节的话可移步<a href="https://www.mendix.com/tech-blog/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps/" target="_blank" rel="external">原文</a></p>
-</blockquote>
-<p>使用react开发应用有啥好处，我想是个前端都能数出个十条八条来。但是如果你的项目需要在浏览器中绘制成千上万的对象，而且这些对象之前还有大量的耦合关系，那维护这些对象也够喝一壶的……mobx作者在发明mobx的时候就面临了这样一个项目，一个对象的值可能被其他对象引用，任何变化都可能引起大量的ui更新和重绘。在一些特殊场景，比如拖拽操作，这些动作还必须在40毫秒响应……</p>
-<p>于是，mobx被开发出来了。简单来说，他使用了函数响应式编程的概念 Observables 来解决上述的问题，其实 mobx 并不是第一个使用这一概念的前端库，ember、knockout还有vue其实都使用了这一概念，我个人感觉，mobx就好像把vue和knockout的数据绑定那部分抽出来然后揉到一起一样……真的能发现很多有相似的地方……使用 Observables 的好处就在于，你可以很容易实现自动更新关联数据和sideways data loading，从而解放生产力，提升应用的性能。后面测试数据一章可以看到具体的对比结果。</p>
-<a id="more"></a>
-<p>下面我们以一个简单的购物应用为例：</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-1.png?1" alt="shoping"></p>
-<p>里面包含商品列表，购物车，结算等部分。完整的例子可以再<a href="https://jsfiddle.net/mweststrate/46vL0phw/embedded/result/" target="_blank" rel="external">jsfiddle</a>上看到（需要翻墙）。</p>
-<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><p>首先，我们先看下数据模型。商品列表（Articles）里的每个商品，有名称（name）和价格（price）属性，购物车（Cart）有已加入购物车列表（Entries）和总价（Total）属性。已加入购物车列表中的每个商品除了名字和价格属性以外，还有数量属性（amount）、根据数量和单价计算出的总价。数据之间的关系如下图所示。</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-2.png?1" alt="data model"></p>
-<p>从上图中我们可以看出，如果对一个数据进行修改，那么就会带动其他的数据修改，同时还得修改ui。<br>大概列一下数据联动的逻辑：</p>
-<ul>
-<li>如果商品列表里的商品价格发生改变，购物车里的商品价格也需要更新。</li>
-<li>……购物车的总价也得更新。</li>
-<li>如果购物车中商品数量变化，总价也得跟着更新。</li>
-<li>如果商品列表里的商品被重命名了，商品列表的界面得更新。</li>
-<li>……购物车里对应的商品也得更新。</li>
-<li>如果添加新文章合计购物车……</li>
-</ul>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-3.jpg?1" alt="(╯‵□′)╯︵┻━┻"></p>
-<p>作为一个程序员，就是这么闹心……你不得不写大量的代码来处理各种可能的状态，处理速度还得快，让用户老爷等着急了你担待得起吗……</p>
-<p>那么，让我们来看看怎么用mobx来日翻这些问题：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Article</span>(<span class="params">name, price</span>) </span>&#123;</div><div class="line">    mobx.extendObservable(<span class="keyword">this</span>, &#123;</div><div class="line">        <span class="attr">name</span>: name,</div><div class="line">        <span class="attr">price</span>: price</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">ShoppingCartEntry</span>(<span class="params">article</span>) </span>&#123;</div><div class="line">    mobx.extendObservable(<span class="keyword">this</span>, &#123;</div><div class="line">        <span class="attr">article</span>: article,</div><div class="line">        <span class="attr">amount</span>: <span class="number">1</span>,</div><div class="line">        <span class="attr">price</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.article ? <span class="keyword">this</span>.article.price * <span class="keyword">this</span>.amount : <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">ShoppingCart</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    mobx.extendObservable(<span class="keyword">this</span>, &#123;</div><div class="line">        <span class="attr">entries</span>: [],</div><div class="line">        <span class="attr">total</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">this</span>.entries.reduce(<span class="function"><span class="keyword">function</span>(<span class="params">sum, entry</span>) </span>&#123;</div><div class="line">                <span class="keyword">return</span> sum + entry.price;</div><div class="line">            &#125;, <span class="number">0</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用工具函数包装之后，通过构造函数创建的对象都是可观测的，就是说当对象的某一个属性改变，跟他跟他相关联的属性都会自动更新。这样状态变化就不用我们手动维护了，比如添加商品到购物车时总价的变化、物品的价格发生变化时其他关联项的变化等等。</p>
-<h2 id="界面"><a href="#界面" class="headerlink" title="界面"></a>界面</h2><p>模型建好了，该搭界面了。下面的列了一段购物车组件的代码，包含了显示购物车里的商品列表和总价。其他组件请自行脑补，都差不离的。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> CartView = React.createClass(&#123;</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="function"><span class="keyword">function</span> <span class="title">renderEntry</span>(<span class="params">entry</span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> (&lt;CartEntryView entry=&#123;entry&#125; cart=&#123;this.props.cart&#125; key=&#123;entry.id&#125; /&gt;);</div><div class="line">        &#125;</div><div class="line">        return (&lt;div&gt;</div><div class="line">            &lt;ul id="cart"&gt;&#123;this.props.cart.entries.map(renderEntry)&#125;&lt;/ul&gt;</div><div class="line">            &lt;div&gt;&lt;b&gt;Total: &lt;span id="total"&gt;&#123;this.props.cart.total&#125;&lt;/span&gt;&lt;/b&gt;&lt;/div&gt;</div><div class="line">        &lt;/div&gt;)</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">var CartEntryView = React.createClass(&#123;</div><div class="line">    render: function() &#123;</div><div class="line">        return (&lt;li&gt;</div><div class="line">            &lt;button onClick=&#123;this.removeArticle&#125;&gt;&amp;laquo;&lt;/button&gt;</div><div class="line">            &lt;span&gt;&#123;this.props.entry.article.name&#125;&lt;/span&gt;</div><div class="line">            &lt;span&gt;&#123;this.props.entry.amount&#125;&lt;/span&gt;</div><div class="line">        &lt;/li&gt;);</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    removeArticle: function() &#123;</div><div class="line">        if (--this.props.entry.amount &lt; 1)</div><div class="line">            this.props.cart.entries.splice(this.props.cart.entries.indexOf(this.props.entry), 1);      </div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>组件写完了，但是没跟模型关联还跑不起来，需要用mobx-react库里的 <code>mobxReact.observer</code> 方法把组件都包装装一下，这就算关联上了：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> CartEntryView = mobxReact.observer(React.createClass(&#123;</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> (&lt;li&gt;</div><div class="line">            // etc...</div></pre></td></tr></table></figure>
-<p>然后，就没有然后……是的，这就算齐活了。让我们看下<a href="https://jsfiddle.net/mweststrate/46vL0phw/" target="_blank" rel="external">jsfiddle</a>上的演示。</p>
-<p>这里 <code>observer</code> 函数为我们做了两件事。首先，它将组件的 <code>render</code> 函数变成一个可观察到的函数。然后，把组件注册到观察者函数，所以每次 <code>render</code> 需要更新了他都会自动更新。<code>mobxReact.observer</code>（如果你使用ES6的话是 <code>@observer</code>）确保每当数据改变，只更新UI的相关部分，就是刚才上面提到的sideways data loading。你可以自己点点试试，注意看下方的日志面板，看看UI更新的数据，你会发现，每次操作，组件的重绘数量都是最低的。</p>
-<p>另外，由于每个组件都只跟踪自己的依赖，通常不需要重新渲染子组件。比如，如果购物车的总价重新渲染了，在不必要的情况下就不会重新渲染购物车里的商品列表。</p>
-<h2 id="测试数据"><a href="#测试数据" class="headerlink" title="测试数据"></a>测试数据</h2><p>东西好不好,主要看疗效。<a href="https://jsfiddle.net/mweststrate/wr2hcdwL/" target="_blank" rel="external">这里</a>你可以找到一个一毛一样的应用，但没有使用mobx，而是简单的使用每次替换数据的方法构建的。只有几个商品，不会感觉到有任何区别，但一旦商品数量上升，就会提现出真正意义上的性能差异。</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-4.png?1" alt="create"><br><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-5.png?1" alt="update"></p>
-<p>创建大量的数据和组件的时候，基本没啥差别。但是在修改数据时，强弱立分高下力判。如果在有10000个元素的列表中更新其中10个元素的数据，速度大约快了十倍。2.5秒下降到250毫秒……那么这种差别是从哪里来的呢？让我们来瞅瞅不适用mobx时React的渲染报告：</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-6.png?1" alt="without mobx render reports"></p>
-<p>可以看到，ArticleViews 和 CartEntryViews一共渲染了20000次。2433毫秒的渲染时间中，2145毫秒的渲染时间是被浪费的（Wasted time）。Wasted time的意思是：花费在执行渲染函数上的时间，实际上并没有更新任何一个DOM元素。这有力地说明了，无脑更新是一件很浪费cup资源的，组件越多浪费的时间就越多。</p>
-<p>相较之下，这是使用mobx的报告：</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps-7.png?1" alt="with mobx render reports"></p>
-<p>重绘的只有31个组件，完全没有一点浪费。就是说每个重新渲染的组件都是确实需要修改的。这正是我们想要实现的效果！</p>
-<p>然而，这样你就满足了吗？我们还可以再进一步优化！</p>
-<p>从报告中我们还可以看出，267毫秒的总体渲染时间里，大部分剩余的渲染时间消耗在CartView的渲染上（243毫秒）。那是在更新购物车的总价属性。值得注意的是，要重新渲染CartView，也就意味着要检查购物车中一万个商品是否有修改，是否要更新CartEntryView。而这就浪费了大部分时间。我们可以把总价再单独做一个控件，CartTotalView。通过这个简单的处理，如果只是总价的变化，就可以跳过CartView的重新渲染。这使得渲染时间进一步下降到约60毫秒（见上图中的灰色那一条），这比没有使用Mobx的React应用大约快了40倍!</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>好的，通过上面的例子我们看到了使用mobx和不使用mobx在性能上的区别。这里还需要强调的一点是，使用了mobx还有一个优势，就是不会影响代码的可维护性，对于程序员来说，这点很重要，就算有万般好处，如果代码写出来像屎一样难看，也不会有人想用对吧？在jsfiddle里面可以看到两个例子的完整程序。两段代码基本没啥太大的区别……┑(￣Д ￣)┍</p>
-<p>那么，我们可以用其他技术达到相同的效果吗？也许吧。例如，使用ImmutableJS也能做到sideways data loading。然而，就像我刚才说的，有可能你会收获一坨是一样的代码……毕竟，恕我直言，相对于不可变对象，可变类使用起来会更方便一些。此外，不可变的数据结构不能帮助你保持计算属性。如果使用不可变数据，改变商品的名字ArticleView会重新渲染的很快，但是CartEntryView中引用的相同商品实例就会失效。</p>
-<p>另一种优化React应用的方案是为每一个可能发生的操作创建事件，然后在管理这些事件，在恰当的时机恰当的地点（组件）触发（注销）它们。但这将导致编写大量的样板式代码，维护起来相当困难。我不知道人啊，反正我是懒得弄这些……（哥你是不是不会断句……这段看的好纠结啊……）</p>
-<p>顺便说一下，我强烈建议使用action来抽象对模型的更新，这样能有效的做到表现和行为分离。</p>
-<p>最后，在大型项目中使用mbox配合React是非常好用的。有时我看到数据变化时，界面上某个角落也跟着更新了，我自己都惊呆了……而且还没有任何性能问题，你说气人不……(￣▽￣)”……心动不如行动，让我们把繁重的维护工作都丢给React和Mobx，敬请享受更轻松有趣的coding吧~！</p>
-<h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><ul>
-<li><a href="https://github.com/mobxjs/mobx" target="_blank" rel="external">MobX library</a></li>
-<li><a href="https://facebook.github.io/react/docs/advanced-performance.html" target="_blank" rel="external">React performance guide</a></li>
-<li><a href="https://jsfiddle.net/mweststrate/46vL0phw/" target="_blank" rel="external">Shopping cart demo, React with Observables</a></li>
-<li><a href="https://jsfiddle.net/mweststrate/wr2hcdwL" target="_blank" rel="external">Shopping cart demo, React without Observables</a></li>
-<li><a href="https://jsfiddle.net/mweststrate/vxn7qgdw/" target="_blank" rel="external">Shopping cart demo, JQuery with Observables</a></li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;这篇文章翻译自mobx作者 Michel Weststrate 的一篇博客，虽然我也想做到信达雅，奈何英语水平有限……所以我写的内容自动屏蔽了一些前因后果没营养的话，只翻译我觉得重点的内容。我的原则是，捞干的说，不BB~&lt;br&gt;想了解细节的话可移步&lt;a href=&quot;https://www.mendix.com/tech-blog/making-react-reactive-pursuit-high-performing-easily-maintainable-react-apps/&quot;&gt;原文&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;使用react开发应用有啥好处，我想是个前端都能数出个十条八条来。但是如果你的项目需要在浏览器中绘制成千上万的对象，而且这些对象之前还有大量的耦合关系，那维护这些对象也够喝一壶的……mobx作者在发明mobx的时候就面临了这样一个项目，一个对象的值可能被其他对象引用，任何变化都可能引起大量的ui更新和重绘。在一些特殊场景，比如拖拽操作，这些动作还必须在40毫秒响应……&lt;/p&gt;
-&lt;p&gt;于是，mobx被开发出来了。简单来说，他使用了函数响应式编程的概念 Observables 来解决上述的问题，其实 mobx 并不是第一个使用这一概念的前端库，ember、knockout还有vue其实都使用了这一概念，我个人感觉，mobx就好像把vue和knockout的数据绑定那部分抽出来然后揉到一起一样……真的能发现很多有相似的地方……使用 Observables 的好处就在于，你可以很容易实现自动更新关联数据和sideways data loading，从而解放生产力，提升应用的性能。后面测试数据一章可以看到具体的对比结果。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="学习笔记" scheme="http://brooch.me/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="javascript" scheme="http://brooch.me/tags/javascript/"/>
-    
-      <category term="mobx" scheme="http://brooch.me/tags/mobx/"/>
-    
-      <category term="react" scheme="http://brooch.me/tags/react/"/>
-    
-      <category term="中文渣翻" scheme="http://brooch.me/tags/%E4%B8%AD%E6%96%87%E6%B8%A3%E7%BF%BB/"/>
     
   </entry>
   

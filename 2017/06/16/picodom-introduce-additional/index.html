@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="react," />
+  <meta name="keywords" content="virtual dom,picodom," />
 
 
 
@@ -86,16 +86,23 @@
 
 
 
-<meta name="description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……">
+<meta name="description" content="上次看 Picodom 代码的时候，patch 函数中有段代码没怎么看懂，所以就没分析，算是挖下了坑。经过这几天的思考，我终于把逻辑想明白了，今儿咱就来把这个坑给填上~（美错儿，我今天又要划水了，来打我呀打我呀打我呀~）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="闲扯react组件动态加载机制">
-<meta property="og:url" content="http://brooch.me/2017/05/19/react-component-dynamic-loading-1/index.html">
+<meta property="og:title" content="Picodom中的diff算法补完">
+<meta property="og:url" content="http://brooch.me/2017/06/16/picodom-introduce-additional/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……">
-<meta property="og:updated_time" content="2017-05-26T06:01:52.000Z">
+<meta property="og:description" content="上次看 Picodom 代码的时候，patch 函数中有段代码没怎么看懂，所以就没分析，算是挖下了坑。经过这几天的思考，我终于把逻辑想明白了，今儿咱就来把这个坑给填上~（美错儿，我今天又要划水了，来打我呀打我呀打我呀~）">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-01.jpg">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-02.jpg">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-03.jpg">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-04.jpg">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-05.jpg">
+<meta property="og:image" content="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-06.jpg">
+<meta property="og:updated_time" content="2017-06-16T14:51:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="闲扯react组件动态加载机制">
-<meta name="twitter:description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……">
+<meta name="twitter:title" content="Picodom中的diff算法补完">
+<meta name="twitter:description" content="上次看 Picodom 代码的时候，patch 函数中有段代码没怎么看懂，所以就没分析，算是挖下了坑。经过这几天的思考，我终于把逻辑想明白了，今儿咱就来把这个坑给填上~（美错儿，我今天又要划水了，来打我呀打我呀打我呀~）">
+<meta name="twitter:image" content="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-01.jpg">
 
 
 
@@ -123,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://brooch.me/2017/05/19/react-component-dynamic-loading-1/"/>
+  <link rel="canonical" href="http://brooch.me/2017/06/16/picodom-introduce-additional/"/>
 
 
 
 
 
-  <title> 闲扯react组件动态加载机制 | Keep Walking </title>
+  <title> Picodom中的diff算法补完 | Keep Walking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -265,7 +272,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/05/19/react-component-dynamic-loading-1/">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/06/16/picodom-introduce-additional/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="投身烈火">
@@ -289,7 +296,7 @@
             
             
               
-                闲扯react组件动态加载机制
+                Picodom中的diff算法补完
               
             
           </h1>
@@ -302,8 +309,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-19T16:33:12+08:00">
-                2017-05-19
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-16T13:13:27+08:00">
+                2017-06-16
               </time>
             
 
@@ -361,35 +368,33 @@
       
 
       
-        <p>话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……</p>
+        <p><a href="/2017/06/09/picodom-introduce/">上次</a>看 Picodom 代码的时候，patch 函数中有段代码没怎么看懂，所以就没分析，算是挖下了坑。经过这几天的思考，我终于把逻辑想明白了，今儿咱就来把这个坑给填上~（美错儿，我今天又要划水了，来打我呀打我呀打我呀~）</p>
 <a id="more"></a>
-<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>之前在群里聊的时候也没看到有人说起核心的痛点，所以究竟在实际应用中会有啥问题我也不知道 (;￢＿￢) ……所以关于问题的分析，其实都是我脑补出来的，所以大家不要当真，全当看热闹吧……</p>
-<p>分析之前，先确定下目标，我的目标是简单实现react组件动态加载的机制。既然是要先串通机制，细节和环境配置就一切从简，后续再考虑实际使用和易用性。</p>
-<p>接下来分析问题，说到react组件动态加载，从字面上看可以分为两部分“react组件”和“动态加载”。动态加载其实老早就有就解决方案了，之前打包工具还没流行起来的时候，就有各种五花八门的库来解这问题，requirejs、seajs、YUI Loader啥的，所以这个问题用第三方库应该就能搞定。</p>
-<p>然后，跟react组件联系到一起，如何在加载完成后替换组件是个问题。其实这个问题也好解，因为react的组件可以返回新组件，所以做个透传参数的加载器应该就可以了。</p>
-<p>另外，现在想开发react的程序，webpack+es6+jsx也算是标配了吧。如何用webpack配合打包也是个问题，要把需要异步加载的都生成chunk。还得搭建一套构建环境……毕竟我的目标是实现机制，所以打包这部分就先不考虑，环境配置也省略，直接写浏览器可执行的脚本。</p>
-<p>好的，拉个list：</p>
-<ul>
-<li>动态加载问题 – 使用requirejs</li>
-<li>react组件替换 – 做个加载器组件</li>
-<li>webpack打包 – 后续考虑</li>
-<li>环境问题 – 先不使用jsx，不写浏览器不能直接运行的代码，公共库用unpkg加载，使用creat-react-class模块创建react组件构造函数</li>
-</ul>
-<p>ok，可以开始了。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>之前列出的四个问题，真正需要解决的只有第二个，所以设计一个加载器组件，其实就能实现react组件动态加载的机制了吧……</p>
-<p>调用形式应该像下面这样，在标签上指定要加载的组件名，另外，被调用的组件也会需要设置属性，所以加载器也得接收。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">React.createElement(Loader, &#123;</div><div class="line">    <span class="attr">component</span>: <span class="string">'A'</span>,</div><div class="line">    <span class="attr">propA</span>: <span class="number">1</span>,</div><div class="line">    <span class="attr">propB</span>: <span class="literal">true</span></div><div class="line">&#125;)</div><div class="line"><span class="comment">// 用jsx写应该是下面这样的</span></div><div class="line">&lt;Loader component=<span class="string">'A'</span> propA=&#123;<span class="number">1</span>&#125; propB=&#123;<span class="literal">true</span>&#125;/&gt;</div></pre></td></tr></table></figure>
-<p>Loader内部，首先要有个地方记录已经加载了的组件，如果组件已经加载，就直接调用，如果没加载，就先显示loading并开始加载组件，加载完成后调用。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 把记录已加载组件的变量设为公共变量，为了能在多个实例之间共享</span></div><div class="line"><span class="keyword">var</span> componentList = &#123;&#125;</div><div class="line">createReactClass(&#123;</div><div class="line">    <span class="attr">displayName</span>:<span class="string">'Loader'</span>,</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> component = <span class="keyword">this</span>.props.component</div><div class="line">        <span class="keyword">if</span> (componentList[component]) &#123;</div><div class="line">            <span class="keyword">return</span> React.createElement(componentList[component], <span class="keyword">this</span>.props);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            getComponent(component)</div><div class="line">            <span class="keyword">return</span> React.createElement(div, <span class="literal">null</span>, <span class="string">'loading……'</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"><span class="comment">// 用es6写应该是这样的，没错，我就是想证明我会写但是我懒…… (￣.￣)</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Loader</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>(props) &#123;</div><div class="line">        <span class="keyword">super</span>(props);</div><div class="line">    &#125;</div><div class="line">    render () &#123;</div><div class="line">        <span class="keyword">let</span> component = &#123;<span class="keyword">this</span>.props&#125;</div><div class="line">        <span class="keyword">if</span> (componentList[component]) &#123;</div><div class="line">            <span class="keyword">return</span> &lt;componentList[component] &#123;...this.props&#125;/&gt;;</div><div class="line">        &#125; else &#123;</div><div class="line">            // 这个函数里面加载组件</div><div class="line">            getComponent(component)</div><div class="line">            return &lt;div&gt;loading……&lt;/div&gt;;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>大框架有了，继续细化。虽然上面写了加载组件的函数，但是在加载组件之后需要重新触发加载器的渲染，这就需要设置组件的state，所以必须要给加载器添加state属性，用来标记当前显示的组件，并且在getComponent对state进行设置，创建组件的地方也应该改成用state的属性创建。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">createReactClass(&#123;</div><div class="line">    <span class="attr">displayName</span>:<span class="string">'Loader'</span>,</div><div class="line">    <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">            <span class="attr">cur</span>: <span class="string">''</span></div><div class="line">        &#125;;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">getComponent</span>: <span class="function"><span class="keyword">function</span> (<span class="params">component</span>) </span>&#123;</div><div class="line">        <span class="built_in">require</span>([component], (Component) =&gt; &#123;</div><div class="line">            componentList[component] = Component</div><div class="line">            <span class="keyword">this</span>.setState(&#123;</div><div class="line">                <span class="attr">cur</span>: Component</div><div class="line">            &#125;)</div><div class="line">        &#125;)</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> component = <span class="keyword">this</span>.props.component</div><div class="line">        <span class="keyword">if</span> (componentList[component]) &#123;</div><div class="line">            <span class="keyword">return</span> React.createElement(<span class="keyword">this</span>.state.cur, <span class="keyword">this</span>.props);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">this</span>.getComponent(component)</div><div class="line">            <span class="keyword">return</span> React.createElement(div, <span class="literal">null</span>, <span class="string">'loading……'</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>接着问题就来了，react里setState会触发render，而上面render里getComponent又会触发setState，会造成死循环，所以要给他换个地方，react的组件运行时一共四个，constructor、componentWillMount、render、componentDidMount，render不能写，文档上说componentWillMount对于web runtime没屌用，所以只能在constructor和componentDidMount里面选了，其实放到哪个里都行，但是constructor是用来初始化组件的，从含以上看，我觉得放componentDidMount里比较合适，官方文档上也说componentDidMount是用来加载异步数据的。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">createReactClass(&#123;</div><div class="line">    <span class="attr">displayName</span>:<span class="string">'Loader'</span>,</div><div class="line">    <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">            <span class="attr">cur</span>: <span class="string">''</span></div><div class="line">        &#125;;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">getComponent</span>: <span class="function"><span class="keyword">function</span> (<span class="params">component</span>) </span>&#123;</div><div class="line">        <span class="built_in">require</span>([component], (Component) =&gt; &#123;</div><div class="line">            componentList[component] = Component</div><div class="line">            <span class="keyword">this</span>.setState(&#123;</div><div class="line">                <span class="attr">cur</span>: Component</div><div class="line">            &#125;)</div><div class="line">        &#125;)</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.getComponent(<span class="keyword">this</span>.props.component)</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (componentList[<span class="keyword">this</span>.props.component]) &#123;</div><div class="line">            <span class="keyword">return</span> React.createElement(<span class="keyword">this</span>.state.cur, <span class="keyword">this</span>.props);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> React.createElement(div, <span class="literal">null</span>, <span class="string">'loading……'</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>呃……貌似这样就行了呢……至少大体的机制应该就是这样的吧，还有些细节需要完善，比如props变化的时候也切加载控间，现在这个加载器只能加载一次控件，其实只要在属性变化的运行时里加上getComponent函数就行了。再比如减少控件渲染次数，控价加载失败的异常处理之类的，详细的就不说了，自己体会吧，我把我练习的代码传到github上了，可以看看吐吐槽</p>
-<p><a href="https://github.com/81735595/react-component-dynamic-loading" target="_blank" rel="external">https://github.com/81735595/react-component-dynamic-loading</a></p>
-<p>用npm start就能启动了。</p>
-<h2 id="关于打包"><a href="#关于打包" class="headerlink" title="关于打包"></a>关于打包</h2><p>感觉在代码上直接用import替换require就能用webpack2打包了，但是我总觉得打包是个大头儿，有好多坑等着……所以等以后有时间了再补一次打包脚本联系好了。</p>
-<p>好的那么由于时间不足，本期的流水账就先写到这里，如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的热情了~!</p>
+<h2 id="逻辑梳理"><a href="#逻辑梳理" class="headerlink" title="逻辑梳理"></a>逻辑梳理</h2><p>上次看到 Picodom 中 的 patch 函数中，逻辑分为三个分支，分别是新增节点（没有oldNode），修改节点（newNode和oldNode标签名一样），替换节点（newNode和oldNode标签名不一样）。其中，新增节点和替换节点的操作比较简单。单修改节点的操作，除了要修改节点本身的属性外，还要对比更新节点的子节点，逻辑比较复杂，直接讲代码的话不太容易看出其中的逻辑，咱们先来梳理一下。</p>
+<p>说到子节点变化，一般会分为以下这几种情况：</p>
+<ol>
+<li>增加新节点：有可能在旧列表的最开始，中间或者之后添加</li>
+<li>复用旧节点：还记得之前看的代码中，Picodom 会把节点的 key 属性特殊对待吗？这里就是把 key 作为节点的唯一标识的，只要 key 对上了就认为是能复用，dom节点不用新建，不过位置有可能发生变化</li>
+<li>删除旧节点：删除单个或者多个节点</li>
+<li>把以上这些情况综合起来~</li>
+</ol>
+<p>如图，比如像下面这种情况：</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-01.jpg" alt="01"></p>
+<p>其实这逻辑说起来感觉还挺简单，但是如何用代码实现呢？我们先说下 Picodom 的处理方法，以上图为例。</p>
+<p>遍历新节点列表，新节点列表和旧节点列表里各取一个，作为当前新节点和当前旧节点，对比他们，这俩节点 key 不一样，而且在旧节点列表里也没有找到这个节点，于是在当前旧节点前添加新节点，当前新节点切换到下一节点。</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-02.jpg" alt="02"></p>
+<p>当前新节点和当前旧节点 key 不一样，但是在旧节点列表里能找到，就把找到的旧节点插入到当前旧节点前面，当前新节点切换到下一节点。</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-03.jpg" alt="03"></p>
+<p>对新节点列表中的 4 和 7 的处理和前面一样，就不再多说了。处理过他们之后，取到的当前新节点和当前旧节点的 key 是一样的。这时把新旧节点都传入 patch 函数，递归处理这两个节点。处理过之后，当前新节点和当前旧节点都切换到下一节点。</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-04.jpg" alt="04"></p>
+<p>根据之前的步骤，把 2 也处理了，最后当前新节点是 8 ，当前旧节点是 3 ，8 是新增的，所以插入到 3 前面。</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-05.jpg" alt="05"></p>
+<p>最后将未用到的旧节点删除掉，既把 3 删掉，得到最终结果。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>ok，让我们来看下 Picodom 是如何用代码来实现上述逻辑的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// ...</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> len = node.children.length</div><div class="line"><span class="comment">// 新子节点vnode列表的长度</span></div><div class="line"><span class="keyword">var</span> oldLen = oldNode.children.length</div><div class="line"><span class="comment">// 旧子节点vnode列表的长度</span></div><div class="line"><span class="keyword">var</span> reusableChildren = &#123;&#125;</div><div class="line"><span class="comment">// 可复用节点列表</span></div><div class="line"><span class="keyword">var</span> oldElements = []</div><div class="line"><span class="comment">// 旧子节点dom列表</span></div><div class="line"><span class="keyword">var</span> newKeys = &#123;&#125;</div><div class="line"><span class="comment">// 这边变量用来标记新子节点列表中复用的节点</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; oldLen; i++) &#123;</div><div class="line">    <span class="keyword">var</span> oldElement = element.childNodes[i]</div><div class="line">    oldElements[i] = oldElement</div><div class="line"></div><div class="line">    <span class="keyword">var</span> oldChild = oldNode.children[i]</div><div class="line">    <span class="keyword">var</span> oldKey = getKeyFrom(oldChild)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != oldKey) &#123;</div><div class="line">        reusableChildren[oldKey] = [oldElement, oldChil]</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 上面这个循环是在遍历旧子节点vnode列表，把有key的挑出来，放到可复用节点列表里</span></div><div class="line"></div><div class="line"><span class="keyword">var</span> i = <span class="number">0</span></div><div class="line"><span class="keyword">var</span> j = <span class="number">0</span></div><div class="line"><span class="comment">// i是旧子节点vnode列表的索引，j是新子节点vnode列表的索引</span></div><div class="line"></div><div class="line"><span class="keyword">while</span> (j &lt; len) &#123;</div><div class="line"><span class="comment">// 遍历新子节点vnode列表</span></div><div class="line">    <span class="keyword">var</span> oldElement = oldElements[i]</div><div class="line">    <span class="comment">// 取当前旧节点dom</span></div><div class="line">    <span class="keyword">var</span> oldChild = oldNode.children[i]</div><div class="line">    <span class="comment">// 取当前旧节点vnode</span></div><div class="line">    <span class="keyword">var</span> newChild = node.children[j]</div><div class="line">    <span class="comment">// 取当前新节点vnode</span></div><div class="line"></div><div class="line">    <span class="keyword">var</span> oldKey = getKeyFrom(oldChild)</div><div class="line">    <span class="comment">// 取当前旧节点的key</span></div><div class="line">    </div><div class="line">    <span class="keyword">if</span> (newKeys[oldKey]) &#123;</div><div class="line">        i++</div><div class="line">        <span class="keyword">continue</span></div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 上面这个判断是为了跳过已经被使用过的旧子节点</span></div><div class="line"></div><div class="line">    <span class="keyword">var</span> newKey = getKeyFrom(newChild)</div><div class="line">    <span class="comment">// 取当前新节点的key</span></div><div class="line"></div><div class="line">    <span class="keyword">var</span> reusableChild = reusableChildren[newKey] || []</div><div class="line">    <span class="comment">// 取当前新节点key对应的可复用节点</span></div><div class="line">    <span class="keyword">if</span> (<span class="literal">null</span> == newKey) &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == oldKey) &#123;</div><div class="line">            patch(element, oldElement, oldChild, newChild)</div><div class="line">            j++</div><div class="line">            <span class="comment">// 如果新节点和旧节点都没有key则在当前旧节点对应的dom节点前插入新节点</span></div><div class="line">            <span class="comment">// 然后切换当前新节点</span></div><div class="line">        &#125;</div><div class="line">        i++</div><div class="line">        <span class="comment">// 这里的处理方式让人很难理解，为啥是新节点和旧节点都没有key的时候才插入？</span></div><div class="line">        <span class="comment">// 我感觉这样处理主要是为了处理文本节点……因为文本节点是肯定没有key的</span></div><div class="line">        <span class="comment">// 另外如果新节点里出现了一个没有key的节点，</span></div><div class="line">        <span class="comment">// 那么上面这段逻辑就会一直切换的当前旧节点，</span></div><div class="line">        <span class="comment">// 直到找到一个同样没有key的旧节点，再用patch对比两个节点，</span></div><div class="line">        <span class="comment">// 如果一直没有找到没有key的旧节点，最后oldElement和oldChild都是null，</span></div><div class="line">        <span class="comment">// 相当于在旧节点列表最后添加一个新的节点，</span></div><div class="line">        <span class="comment">// 此时当前旧节点已经切到旧节点列表最后了，</span></div><div class="line">        <span class="comment">// 所以后续的所有操作都是往旧节点列表最后添加新的节点</span></div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">if</span> (oldKey === newKey) &#123;</div><div class="line">            patch(element, reusableChild[<span class="number">0</span>], reusableChild[<span class="number">1</span>], newChild)</div><div class="line">            i++</div><div class="line">            <span class="comment">// 如果新节点和旧节点的key相同，则用patch再去对比这两个节点</span></div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (reusableChild[<span class="number">0</span>]) &#123;</div><div class="line">            element.insertBefore(reusableChild[<span class="number">0</span>], oldElement)</div><div class="line">            patch(element, reusableChild[<span class="number">0</span>], reusableChild[<span class="number">1</span>], newChild)</div><div class="line">            <span class="comment">// 如果key不相同但是存在可复用节点，则把可复用节点插入到当前旧节点前面</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            patch(element, oldElement, <span class="literal">null</span>, newChild)</div><div class="line">            <span class="comment">// 如果key不同而且不存在可复用节点，则在当前旧节点前面插入个新节点</span></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        j++</div><div class="line">        <span class="comment">// 切换当前新节点</span></div><div class="line">        newKeys[newKey] = newChild</div><div class="line">        <span class="comment">// 记录已经使用的节点的key，后续可以用来过滤出已经使用的可复用节点</span></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 根据key复用旧节点</span></div><div class="line"></div><div class="line"><span class="keyword">while</span> (i &lt; oldLen) &#123;</div><div class="line">    <span class="keyword">var</span> oldChild = oldNode.children[i]</div><div class="line">    <span class="keyword">var</span> oldKey = getKeyFrom(oldChild)</div><div class="line">    <span class="keyword">if</span> (<span class="literal">null</span> == oldKey) &#123;</div><div class="line">        removeElement(element, oldElements[i], oldChild)</div><div class="line">    &#125;</div><div class="line">    i++</div><div class="line">&#125;</div><div class="line"><span class="comment">// 移除没有key的旧节点</span></div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> reusableChildren) &#123;</div><div class="line">    <span class="keyword">var</span> reusableChild = reusableChildren[i]</div><div class="line">    <span class="keyword">var</span> reusableNode = reusableChild[<span class="number">1</span>]</div><div class="line">    <span class="keyword">if</span> (!newKeys[reusableNode.data.key]) &#123;</div><div class="line">        removeElement(element, reusableChild[<span class="number">0</span>], reusableNode)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 根据新节点的key过滤并移除掉已经使用的可复用节点</span></div><div class="line"></div><div class="line"><span class="comment">// ...</span></div></pre></td></tr></table></figure>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>看过代码之后我们会发现，如果出现没有key的节点那么之前那套算法的效率就会变差，因为有可能需要遍历整个旧节点列表之后才能对比，这也就是不难理解为啥之前版本的react会自动生成一个datareact-id了……从这个角度来看，感觉给节点加上唯一key做表示可以提升界面更新的效率，不知道react或者vue里这么搞是不是有效……</p>
+<p><img src="http://oin1wqn2f.bkt.clouddn.com/picodom-introduce-additional-06.jpg" alt="06"></p>
+<p>好的那么由于时间不足，本期的博客就先写到这里，如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的热情了~!</p>
 <p>白了个白~！</p>
 
       
@@ -414,7 +419,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/react/" rel="tag"># react</a>
+            <a href="/tags/virtual-dom/" rel="tag"># virtual dom</a>
+          
+            <a href="/tags/picodom/" rel="tag"># picodom</a>
           
         </div>
       
@@ -423,8 +430,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/05/vue-source-notes-5/" rel="next" title="vue源码阅读笔记(5)">
-                <i class="fa fa-chevron-left"></i> vue源码阅读笔记(5)
+              <a href="/2017/06/09/picodom-introduce/" rel="next" title="Picodom -- 1kb的Virtual DOM库">
+                <i class="fa fa-chevron-left"></i> Picodom -- 1kb的Virtual DOM库
               </a>
             
           </div>
@@ -432,10 +439,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/26/react-component-dynamic-loading-2/" rel="prev" title="闲扯react组件动态加载机制 -- webpack打包方案">
-                闲扯react组件动态加载机制 -- webpack打包方案 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -659,7 +662,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题分析"><span class="nav-number">1.</span> <span class="nav-text">问题分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于打包"><span class="nav-number">3.</span> <span class="nav-text">关于打包</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑梳理"><span class="nav-number">1.</span> <span class="nav-text">逻辑梳理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思考"><span class="nav-number">3.</span> <span class="nav-text">思考</span></a></li></ol></div>
             
 
           </div>
