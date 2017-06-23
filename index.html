@@ -266,6 +266,295 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/06/20/vim-vue-syntax-highlight/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="投身烈火">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Keep Walking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/06/20/vim-vue-syntax-highlight/" itemprop="url">
+                  简单解决vim打开.vue文件没语法高亮的问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T17:23:50+08:00">
+                2017-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/随手一记/" itemprop="url" rel="index">
+                    <span itemprop="name">随手一记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>看vue源码的时候随手写了些测试的代码，发现.vue文件在vim里没高亮，查了下发现vue作者说如果想简单处理直接使用html的高亮就行。so，直接在.vimrc文件里面加一句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">au BufRead,BufNewFile *.vue set filetype=html</div></pre></td></tr></table></figure>
+<p>就ok了。</p>
+<p>如果觉得html高亮还不够完美，也可以自定义高亮设置。</p>
+<p>首先把之前.vimrc文件里的设置改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">au BufRead,BufNewFile *.vue set filetype=vue</div></pre></td></tr></table></figure>
+<p>然后在 ~/.vim/syntax（没有自己新建一个）目录下新建文件vue.vim。让vue.vim继承html的高亮，在加上自定义的高亮就行了。</p>
+<p>具体写法类似这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&quot; version那里要换成自己的vim版本</div><div class="line">runtime! /usr/share/vim/vim&lt;version&gt;/syntax/syntax/html.vim</div><div class="line"></div><div class="line">let b:current_syntax = &quot;vue&quot;</div><div class="line"></div><div class="line">&quot; custom...</div></pre></td></tr></table></figure>
+<p>剩下的我就不嫌丑了，毕竟我vim还没玩儿到那么高阶……有兴趣的可以对比<a href="https://github.com/vuejs/vue-syntax-highlight/blob/master/vue.tmLanguage" target="_blank" rel="external">vue.tmLanguage</a>和sublime自带的html.tmLanguage，看看哪儿不一样，再补充到刚才的vue.vim文件里。就这样了~ ╮(￣▽￣)╭</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/06/20/vue-source-notes-6/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="投身烈火">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Keep Walking">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/06/20/vue-source-notes-6/" itemprop="url">
+                  vue源码阅读笔记(6)
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T13:54:29+08:00">
+                2017-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>嗯，距离上次读vue的源码已经过了一个月了，再次捡起来已经完全不认得了……啊……俗话说，一天不练手脚慢,两天不练丢一半,三天不练门外汉,四天不练瞪眼看，俗话诚不欺我……总之写到哪儿算哪儿吧，希望能跟之前写的接上……╮(￣▽￣)╭</p>
+<h1 id="Vue构造函数和vue实例-instance"><a href="#Vue构造函数和vue实例-instance" class="headerlink" title="Vue构造函数和vue实例 instance"></a>Vue构造函数和vue实例 instance</h1><p>上次把global api和config都看了一遍，这次准备开始看instance这部分，这部分主要定义的是Vue构造函数和vue实例的各种方法。之前在global api中加工的Vue构造函数就出自这个模块。</p>
+<h2 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/instance/index.js" target="_blank" rel="external">index.js</a></h2><p>这个文件是整个模块的入口，主要负责将各个子模块的功能挂载到Vue构造函数上。挂载的方法与global api一样，通过Mixin函数将方法和属性附到Vue.prototype上。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; initMixin &#125; <span class="keyword">from</span> <span class="string">'./init'</span></div><div class="line"><span class="keyword">import</span> &#123; stateMixin &#125; <span class="keyword">from</span> <span class="string">'./state'</span></div><div class="line"><span class="keyword">import</span> &#123; renderMixin &#125; <span class="keyword">from</span> <span class="string">'./render'</span></div><div class="line"><span class="keyword">import</span> &#123; eventsMixin &#125; <span class="keyword">from</span> <span class="string">'./events'</span></div><div class="line"><span class="keyword">import</span> &#123; lifecycleMixin &#125; <span class="keyword">from</span> <span class="string">'./lifecycle'</span></div><div class="line"><span class="keyword">import</span> &#123; warn &#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Vue</span> (<span class="params">options</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp;</div><div class="line">    !(<span class="keyword">this</span> <span class="keyword">instanceof</span> Vue)) &#123;</div><div class="line">    warn(<span class="string">'Vue is a constructor and should be called with the `new` keyword'</span>)</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// _init就是Vue的起点</span></div><div class="line">  <span class="keyword">this</span>._init(options)</div><div class="line">&#125;</div><div class="line"><span class="comment">// 挂载_init方法</span></div><div class="line">initMixin(Vue)</div><div class="line"><span class="comment">// 挂载$set、$delete方法和$data、$prop属性</span></div><div class="line">stateMixin(Vue)</div><div class="line"><span class="comment">// 挂载$on、$once、$off、$emit方法</span></div><div class="line">eventsMixin(Vue)</div><div class="line"><span class="comment">// 挂载_update、$forceUpdate、$destroy方法</span></div><div class="line">lifecycleMixin(Vue)</div><div class="line"><span class="comment">// 挂载$nextTick、_render方法</span></div><div class="line">renderMixin(Vue)</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> Vue</div></pre></td></tr></table></figure>
+<p>可以看到_init是构造vue对象的起点，下面我们顺着mixin的挂载顺序，逐个分析文件。</p>
+<h2 id="init-js"><a href="#init-js" class="headerlink" title="init.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/instance/init.js" target="_blank" rel="external">init.js</a></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* @flow */</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">'../config'</span></div><div class="line"><span class="keyword">import</span> &#123; perf &#125; <span class="keyword">from</span> <span class="string">'../util/perf'</span></div><div class="line"><span class="keyword">import</span> &#123; initProxy &#125; <span class="keyword">from</span> <span class="string">'./proxy'</span></div><div class="line"><span class="keyword">import</span> &#123; initState &#125; <span class="keyword">from</span> <span class="string">'./state'</span></div><div class="line"><span class="keyword">import</span> &#123; initRender &#125; <span class="keyword">from</span> <span class="string">'./render'</span></div><div class="line"><span class="keyword">import</span> &#123; initEvents &#125; <span class="keyword">from</span> <span class="string">'./events'</span></div><div class="line"><span class="keyword">import</span> &#123; initInjections &#125; <span class="keyword">from</span> <span class="string">'./inject'</span></div><div class="line"><span class="keyword">import</span> &#123; initLifecycle, callHook &#125; <span class="keyword">from</span> <span class="string">'./lifecycle'</span></div><div class="line"><span class="keyword">import</span> &#123; extend, mergeOptions, formatComponentName &#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> uid = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initMixin</span> (<span class="params">Vue: Class&lt;Component&gt;</span>) </span>&#123;</div><div class="line">  <span class="comment">// vue对象的初始化方法</span></div><div class="line">  Vue.prototype._init = <span class="function"><span class="keyword">function</span> (<span class="params">options?: Object</span>) </span>&#123;</div><div class="line">    <span class="comment">/* istanbul ignore if 覆盖率工具istanbul的注释语法，下面的if语句不会计入覆盖率*/</span></div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; config.performance &amp;&amp; perf) &#123;</div><div class="line">      perf.mark(<span class="string">'init'</span>)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">    <span class="comment">// uid是用来作为vue对象的唯一标示用的</span></div><div class="line">    vm._uid = uid++</div><div class="line">    <span class="comment">// 避免vue对象被观测的标记</span></div><div class="line">    vm._isVue = <span class="literal">true</span></div><div class="line">    <span class="comment">// 合并options</span></div><div class="line">    <span class="keyword">if</span> (options &amp;&amp; options._isComponent) &#123;</div><div class="line">      <span class="comment">// 如果是组件就走这个逻辑，initInternalComponent函数合并options的速度要比mergeOptions更快</span></div><div class="line">      initInternalComponent(vm, options)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="comment">// 实例化vue类的时候会调到这里，就是直接 new Vue 或者用 Vue.extend 扩展的子类</span></div><div class="line">      <span class="comment">// 用之前也说过mergeOptions主要用于扩展和继承</span></div><div class="line">      <span class="comment">// 这里用来整理当前的options</span></div><div class="line">      vm.$options = mergeOptions(</div><div class="line">        <span class="comment">// 这里获取类的options</span></div><div class="line">        resolveConstructorOptions(vm.constructor),</div><div class="line">        options || &#123;&#125;,</div><div class="line">        vm</div><div class="line">      )</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/* istanbul ignore else */</span></div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">      initProxy(vm)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      vm._renderProxy = vm</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 把vm暴露出来</span></div><div class="line">    vm._self = vm</div><div class="line">    <span class="comment">// 启动在index里面挂载的各个模块</span></div><div class="line">    initLifecycle(vm)</div><div class="line">    initEvents(vm)</div><div class="line">    initRender(vm)</div><div class="line">    callHook(vm, <span class="string">'beforeCreate'</span>)</div><div class="line">    initState(vm)</div><div class="line">    initInjections(vm)</div><div class="line">    callHook(vm, <span class="string">'created'</span>)</div><div class="line"></div><div class="line">    <span class="comment">/* istanbul ignore if */</span></div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; config.performance &amp;&amp; perf) &#123;</div><div class="line">      vm._name = formatComponentName(vm, <span class="literal">false</span>)</div><div class="line">      perf.mark(<span class="string">'init end'</span>)</div><div class="line">      perf.measure(<span class="string">`<span class="subst">$&#123;vm._name&#125;</span> init`</span>, <span class="string">'init'</span>, <span class="string">'init end'</span>)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (vm.$options.el) &#123;</div><div class="line">      <span class="comment">// options有el参数的时候会自动执行绑定函数</span></div><div class="line">      vm.$mount(vm.$options.el)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 组件的初始化使用的函数，效率比使用mergeOptions效率高</span></div><div class="line"><span class="comment">// 因为函数内只赋值了特定的属性</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">initInternalComponent</span> (<span class="params">vm: Component, options: InternalComponentOptions</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> opts = vm.$options = <span class="built_in">Object</span>.create(vm.constructor.options)</div><div class="line">  opts.parent = options.parent</div><div class="line">  opts.propsData = options.propsData</div><div class="line">  opts._parentVnode = options._parentVnode</div><div class="line">  opts._parentListeners = options._parentListeners</div><div class="line">  opts._renderChildren = options._renderChildren</div><div class="line">  opts._componentTag = options._componentTag</div><div class="line">  opts._parentElm = options._parentElm</div><div class="line">  opts._refElm = options._refElm</div><div class="line">  <span class="keyword">if</span> (options.render) &#123;</div><div class="line">    opts.render = options.render</div><div class="line">    opts.staticRenderFns = options.staticRenderFns</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 整理获取类的options</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">resolveConstructorOptions</span> (<span class="params">Ctor: Class&lt;Component&gt;</span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> options = Ctor.options</div><div class="line">  <span class="keyword">if</span> (Ctor.super) &#123;</div><div class="line">    <span class="comment">// 如果有父类，就整理父类的options</span></div><div class="line">    <span class="keyword">const</span> superOptions = resolveConstructorOptions(Ctor.super)</div><div class="line">    <span class="keyword">const</span> cachedSuperOptions = Ctor.superOptions</div><div class="line">    <span class="keyword">if</span> (superOptions !== cachedSuperOptions) &#123;</div><div class="line">      <span class="comment">// 如果父类的options有变化，需要重新获取父类的options</span></div><div class="line">      Ctor.superOptions = superOptions</div><div class="line">      <span class="comment">// resolveModifiedOptions可以检查options的更新</span></div><div class="line">      <span class="keyword">const</span> modifiedOptions = resolveModifiedOptions(Ctor)</div><div class="line">      <span class="comment">// 同步修改过的属性</span></div><div class="line">      <span class="keyword">if</span> (modifiedOptions) &#123;</div><div class="line">        extend(Ctor.extendOptions, modifiedOptions)</div><div class="line">      &#125;</div><div class="line">      options = Ctor.options = mergeOptions(superOptions, Ctor.extendOptions)</div><div class="line">      <span class="keyword">if</span> (options.name) &#123;</div><div class="line">        options.components[options.name] = Ctor</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> options</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 检查options的更新</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">resolveModifiedOptions</span> (<span class="params">Ctor: Class&lt;Component&gt;</span>): ?<span class="title">Object</span> </span>&#123;</div><div class="line">  <span class="keyword">let</span> modified</div><div class="line">  <span class="keyword">const</span> latest = Ctor.options</div><div class="line">  <span class="keyword">const</span> sealed = Ctor.sealedOptions</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> latest) &#123;</div><div class="line">    <span class="keyword">if</span> (latest[key] !== sealed[key]) &#123;</div><div class="line">      <span class="keyword">if</span> (!modified) modified = &#123;&#125;</div><div class="line">      modified[key] = dedupe(latest[key], sealed[key])</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> modified</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 删除重复数据的函数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">dedupe</span> (<span class="params">latest, sealed</span>) </span>&#123;</div><div class="line">  <span class="comment">// 主要是处理生命周期回调，让回调不会直接被替换赋值，而是被逐个添加</span></div><div class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(latest)) &#123;</div><div class="line">    <span class="keyword">const</span> res = []</div><div class="line">    sealed = <span class="built_in">Array</span>.isArray(sealed) ? sealed : [sealed]</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; latest.length; i++) &#123;</div><div class="line">      <span class="keyword">if</span> (sealed.indexOf(latest[i]) &lt; <span class="number">0</span>) &#123;</div><div class="line">        res.push(latest[i])</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> res</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> latest</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个模块对于 vue 实例的处理有很多都可以在官方文档的说明中找到，文档中没有描述的是 options 对象的继承。可以看到 options 对象的继承和并不是基于原型链的，而是基于合并赋值，我猜这么做的目的是为了让程序运行起来更快，毕竟省了一个遍历原型链的过程……</p>
+<h2 id="proxy-js"><a href="#proxy-js" class="headerlink" title="proxy.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/instance/proxy.js" target="_blank" rel="external">proxy.js</a></h2><p>proxy 这部分的启动逻辑只有在非生产环境才能起作用，感觉不是很重要啊……主要的作用是用来检查vm添加的属性是不是系统变量，如果是系统变量就报警告，貌似是这样吧……Proxy方法是用来定义对象属性的基本操作的，感觉跟defineProperty有点像</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//flow无法检查原生对象Proxy，所有这个文件就没用flow</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">'core/config'</span></div><div class="line"><span class="keyword">import</span> &#123; warn, makeMap &#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> initProxy</div><div class="line"></div><div class="line"><span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">  <span class="keyword">const</span> allowedGlobals = makeMap(</div><div class="line">    <span class="string">'Infinity,undefined,NaN,isFinite,isNaN,'</span> +</div><div class="line">    <span class="string">'parseFloat,parseInt,decodeURI,decodeURIComponent,encodeURI,encodeURIComponent,'</span> +</div><div class="line">    <span class="string">'Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,'</span> +</div><div class="line">    <span class="string">'require'</span> <span class="comment">// for Webpack/Browserify</span></div><div class="line">  )</div><div class="line"></div><div class="line">  <span class="keyword">const</span> warnNonPresent = <span class="function">(<span class="params">target, key</span>) =&gt;</span> &#123;</div><div class="line">    warn(</div><div class="line">      <span class="string">`Property or method "<span class="subst">$&#123;key&#125;</span>" is not defined on the instance but `</span> +</div><div class="line">      <span class="string">`referenced during render. Make sure to declare reactive data `</span> +</div><div class="line">      <span class="string">`properties in the data option.`</span>,</div><div class="line">      target</div><div class="line">    )</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> hasProxy =</div><div class="line">    <span class="keyword">typeof</span> <span class="built_in">Proxy</span> !== <span class="string">'undefined'</span> &amp;&amp;</div><div class="line">    <span class="built_in">Proxy</span>.toString().match(<span class="regexp">/native code/</span>)</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (hasProxy) &#123;</div><div class="line">    <span class="keyword">const</span> isBuiltInModifier = makeMap(<span class="string">'stop,prevent,self,ctrl,shift,alt,meta'</span>)</div><div class="line">    config.keyCodes = <span class="keyword">new</span> <span class="built_in">Proxy</span>(config.keyCodes, &#123;</div><div class="line">      set (target, key, value) &#123;</div><div class="line">        <span class="keyword">if</span> (isBuiltInModifier(key)) &#123;</div><div class="line">          warn(<span class="string">`Avoid overwriting built-in modifier in config.keyCodes: .<span class="subst">$&#123;key&#125;</span>`</span>)</div><div class="line">          <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          target[key] = value</div><div class="line">          <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> hasHandler = &#123;</div><div class="line">    has (target, key) &#123;</div><div class="line">      <span class="keyword">const</span> has = key <span class="keyword">in</span> target</div><div class="line">      <span class="keyword">const</span> isAllowed = allowedGlobals(key) || key.charAt(<span class="number">0</span>) === <span class="string">'_'</span></div><div class="line">      <span class="keyword">if</span> (!has &amp;&amp; !isAllowed) &#123;</div><div class="line">        warnNonPresent(target, key)</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> has || !isAllowed</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> getHandler = &#123;</div><div class="line">    get (target, key) &#123;</div><div class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> key === <span class="string">'string'</span> &amp;&amp; !(key <span class="keyword">in</span> target)) &#123;</div><div class="line">        warnNonPresent(target, key)</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> target[key]</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  initProxy = <span class="function"><span class="keyword">function</span> <span class="title">initProxy</span> (<span class="params">vm</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (hasProxy) &#123;</div><div class="line">      <span class="comment">// determine which proxy handler to use</span></div><div class="line">      <span class="keyword">const</span> options = vm.$options</div><div class="line">      <span class="comment">// _withStripped这个属性如果被设为true，则不能给vm添加系统变量作为属性，貌似吧……具体的用法是在测试代码里找到的……</span></div><div class="line">      <span class="keyword">const</span> handlers = options.render &amp;&amp; options.render._withStripped</div><div class="line">        ? getHandler</div><div class="line">        : hasHandler</div><div class="line">      vm._renderProxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(vm, handlers)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      vm._renderProxy = vm</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> &#123; initProxy &#125;</div></pre></td></tr></table></figure>
+<p>今天就到这儿吧，累了，话说下周开始我们也要007了……真是嘴贱某次跟领导吃饭的时候把007当笑话告诉了他，结果给他打开了新世界的大门……如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的力度了~!</p>
+<p>白了个白~！</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/06/16/picodom-introduce-additional/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1384,266 +1673,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/04/07/nodejs-hotreload/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="投身烈火">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Keep Walking">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/07/nodejs-hotreload/" itemprop="url">
-                  nodejs热更新的方法
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-07T22:04:44+08:00">
-                2017-04-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>嗯，没错，我又来要放水了今天……这个周末停休了，没辙没辙的……</p>
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/04/07/nodejs-hotreload/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/03/31/vue-source-notes-2/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="投身烈火">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.png">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="Keep Walking">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="Keep Walking" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/31/vue-source-notes-2/" itemprop="url">
-                  vue源码阅读笔记(2)
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-31T08:23:23+08:00">
-                2017-03-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
-                    <span itemprop="name">学习笔记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>啊，又到deadline了……话说因为之前一直在整理<a href="/2017/03/17/vue-source-notes-1/index.html">上一篇</a>笔记，所以过了这么长时间一直都没怎么读新的，真是惭愧啊……那么这次就读两个简单的模块吧，把简单的解决了，后续再啃硬骨头。</p>
-          <!--noindex-->
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/03/31/vue-source-notes-2/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1689,7 +1718,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">34</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1706,7 +1735,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>

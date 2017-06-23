@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-06-16T14:51:34.000Z</updated>
+  <updated>2017-06-20T10:28:07.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -14,6 +14,75 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>简单解决vim打开.vue文件没语法高亮的问题</title>
+    <link href="http://brooch.me/2017/06/20/vim-vue-syntax-highlight/"/>
+    <id>http://brooch.me/2017/06/20/vim-vue-syntax-highlight/</id>
+    <published>2017-06-20T09:23:50.000Z</published>
+    <updated>2017-06-20T10:28:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>看vue源码的时候随手写了些测试的代码，发现.vue文件在vim里没高亮，查了下发现vue作者说如果想简单处理直接使用html的高亮就行。so，直接在.vimrc文件里面加一句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">au BufRead,BufNewFile *.vue set filetype=html</div></pre></td></tr></table></figure>
+<p>就ok了。</p>
+<p>如果觉得html高亮还不够完美，也可以自定义高亮设置。</p>
+<p>首先把之前.vimrc文件里的设置改为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">au BufRead,BufNewFile *.vue set filetype=vue</div></pre></td></tr></table></figure>
+<p>然后在 ~/.vim/syntax（没有自己新建一个）目录下新建文件vue.vim。让vue.vim继承html的高亮，在加上自定义的高亮就行了。</p>
+<p>具体写法类似这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&quot; version那里要换成自己的vim版本</div><div class="line">runtime! /usr/share/vim/vim&lt;version&gt;/syntax/syntax/html.vim</div><div class="line"></div><div class="line">let b:current_syntax = &quot;vue&quot;</div><div class="line"></div><div class="line">&quot; custom...</div></pre></td></tr></table></figure>
+<p>剩下的我就不嫌丑了，毕竟我vim还没玩儿到那么高阶……有兴趣的可以对比<a href="https://github.com/vuejs/vue-syntax-highlight/blob/master/vue.tmLanguage" target="_blank" rel="external">vue.tmLanguage</a>和sublime自带的html.tmLanguage，看看哪儿不一样，再补充到刚才的vue.vim文件里。就这样了~ ╮(￣▽￣)╭</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;看vue源码的时候随手写了些测试的代码，发现.vue文件在vim里没高亮，查了下发现vue作者说如果想简单处理直接使用html的高亮就行。so，直接在.vimrc文件里面加一句：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;
+    
+    </summary>
+    
+      <category term="随手一记" scheme="http://brooch.me/categories/%E9%9A%8F%E6%89%8B%E4%B8%80%E8%AE%B0/"/>
+    
+    
+      <category term="vim" scheme="http://brooch.me/tags/vim/"/>
+    
+      <category term="vue" scheme="http://brooch.me/tags/vue/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>vue源码阅读笔记(6)</title>
+    <link href="http://brooch.me/2017/06/20/vue-source-notes-6/"/>
+    <id>http://brooch.me/2017/06/20/vue-source-notes-6/</id>
+    <published>2017-06-20T05:54:29.000Z</published>
+    <updated>2017-06-23T15:27:28.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>嗯，距离上次读vue的源码已经过了一个月了，再次捡起来已经完全不认得了……啊……俗话说，一天不练手脚慢,两天不练丢一半,三天不练门外汉,四天不练瞪眼看，俗话诚不欺我……总之写到哪儿算哪儿吧，希望能跟之前写的接上……╮(￣▽￣)╭</p>
+<h1 id="Vue构造函数和vue实例-instance"><a href="#Vue构造函数和vue实例-instance" class="headerlink" title="Vue构造函数和vue实例 instance"></a>Vue构造函数和vue实例 instance</h1><p>上次把global api和config都看了一遍，这次准备开始看instance这部分，这部分主要定义的是Vue构造函数和vue实例的各种方法。之前在global api中加工的Vue构造函数就出自这个模块。</p>
+<h2 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/instance/index.js" target="_blank" rel="external">index.js</a></h2><p>这个文件是整个模块的入口，主要负责将各个子模块的功能挂载到Vue构造函数上。挂载的方法与global api一样，通过Mixin函数将方法和属性附到Vue.prototype上。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; initMixin &#125; <span class="keyword">from</span> <span class="string">'./init'</span></div><div class="line"><span class="keyword">import</span> &#123; stateMixin &#125; <span class="keyword">from</span> <span class="string">'./state'</span></div><div class="line"><span class="keyword">import</span> &#123; renderMixin &#125; <span class="keyword">from</span> <span class="string">'./render'</span></div><div class="line"><span class="keyword">import</span> &#123; eventsMixin &#125; <span class="keyword">from</span> <span class="string">'./events'</span></div><div class="line"><span class="keyword">import</span> &#123; lifecycleMixin &#125; <span class="keyword">from</span> <span class="string">'./lifecycle'</span></div><div class="line"><span class="keyword">import</span> &#123; warn &#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Vue</span> (<span class="params">options</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp;</div><div class="line">    !(<span class="keyword">this</span> <span class="keyword">instanceof</span> Vue)) &#123;</div><div class="line">    warn(<span class="string">'Vue is a constructor and should be called with the `new` keyword'</span>)</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// _init就是Vue的起点</span></div><div class="line">  <span class="keyword">this</span>._init(options)</div><div class="line">&#125;</div><div class="line"><span class="comment">// 挂载_init方法</span></div><div class="line">initMixin(Vue)</div><div class="line"><span class="comment">// 挂载$set、$delete方法和$data、$prop属性</span></div><div class="line">stateMixin(Vue)</div><div class="line"><span class="comment">// 挂载$on、$once、$off、$emit方法</span></div><div class="line">eventsMixin(Vue)</div><div class="line"><span class="comment">// 挂载_update、$forceUpdate、$destroy方法</span></div><div class="line">lifecycleMixin(Vue)</div><div class="line"><span class="comment">// 挂载$nextTick、_render方法</span></div><div class="line">renderMixin(Vue)</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> Vue</div></pre></td></tr></table></figure>
+<p>可以看到_init是构造vue对象的起点，下面我们顺着mixin的挂载顺序，逐个分析文件。</p>
+<h2 id="init-js"><a href="#init-js" class="headerlink" title="init.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/instance/init.js" target="_blank" rel="external">init.js</a></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* @flow */</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">'../config'</span></div><div class="line"><span class="keyword">import</span> &#123; perf &#125; <span class="keyword">from</span> <span class="string">'../util/perf'</span></div><div class="line"><span class="keyword">import</span> &#123; initProxy &#125; <span class="keyword">from</span> <span class="string">'./proxy'</span></div><div class="line"><span class="keyword">import</span> &#123; initState &#125; <span class="keyword">from</span> <span class="string">'./state'</span></div><div class="line"><span class="keyword">import</span> &#123; initRender &#125; <span class="keyword">from</span> <span class="string">'./render'</span></div><div class="line"><span class="keyword">import</span> &#123; initEvents &#125; <span class="keyword">from</span> <span class="string">'./events'</span></div><div class="line"><span class="keyword">import</span> &#123; initInjections &#125; <span class="keyword">from</span> <span class="string">'./inject'</span></div><div class="line"><span class="keyword">import</span> &#123; initLifecycle, callHook &#125; <span class="keyword">from</span> <span class="string">'./lifecycle'</span></div><div class="line"><span class="keyword">import</span> &#123; extend, mergeOptions, formatComponentName &#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> uid = <span class="number">0</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initMixin</span> (<span class="params">Vue: Class&lt;Component&gt;</span>) </span>&#123;</div><div class="line">  <span class="comment">// vue对象的初始化方法</span></div><div class="line">  Vue.prototype._init = <span class="function"><span class="keyword">function</span> (<span class="params">options?: Object</span>) </span>&#123;</div><div class="line">    <span class="comment">/* istanbul ignore if 覆盖率工具istanbul的注释语法，下面的if语句不会计入覆盖率*/</span></div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; config.performance &amp;&amp; perf) &#123;</div><div class="line">      perf.mark(<span class="string">'init'</span>)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">    <span class="comment">// uid是用来作为vue对象的唯一标示用的</span></div><div class="line">    vm._uid = uid++</div><div class="line">    <span class="comment">// 避免vue对象被观测的标记</span></div><div class="line">    vm._isVue = <span class="literal">true</span></div><div class="line">    <span class="comment">// 合并options</span></div><div class="line">    <span class="keyword">if</span> (options &amp;&amp; options._isComponent) &#123;</div><div class="line">      <span class="comment">// 如果是组件就走这个逻辑，initInternalComponent函数合并options的速度要比mergeOptions更快</span></div><div class="line">      initInternalComponent(vm, options)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="comment">// 实例化vue类的时候会调到这里，就是直接 new Vue 或者用 Vue.extend 扩展的子类</span></div><div class="line">      <span class="comment">// 用之前也说过mergeOptions主要用于扩展和继承</span></div><div class="line">      <span class="comment">// 这里用来整理当前的options</span></div><div class="line">      vm.$options = mergeOptions(</div><div class="line">        <span class="comment">// 这里获取类的options</span></div><div class="line">        resolveConstructorOptions(vm.constructor),</div><div class="line">        options || &#123;&#125;,</div><div class="line">        vm</div><div class="line">      )</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/* istanbul ignore else */</span></div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">      initProxy(vm)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      vm._renderProxy = vm</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 把vm暴露出来</span></div><div class="line">    vm._self = vm</div><div class="line">    <span class="comment">// 启动在index里面挂载的各个模块</span></div><div class="line">    initLifecycle(vm)</div><div class="line">    initEvents(vm)</div><div class="line">    initRender(vm)</div><div class="line">    callHook(vm, <span class="string">'beforeCreate'</span>)</div><div class="line">    initState(vm)</div><div class="line">    initInjections(vm)</div><div class="line">    callHook(vm, <span class="string">'created'</span>)</div><div class="line"></div><div class="line">    <span class="comment">/* istanbul ignore if */</span></div><div class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; config.performance &amp;&amp; perf) &#123;</div><div class="line">      vm._name = formatComponentName(vm, <span class="literal">false</span>)</div><div class="line">      perf.mark(<span class="string">'init end'</span>)</div><div class="line">      perf.measure(<span class="string">`<span class="subst">$&#123;vm._name&#125;</span> init`</span>, <span class="string">'init'</span>, <span class="string">'init end'</span>)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (vm.$options.el) &#123;</div><div class="line">      <span class="comment">// options有el参数的时候会自动执行绑定函数</span></div><div class="line">      vm.$mount(vm.$options.el)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 组件的初始化使用的函数，效率比使用mergeOptions效率高</span></div><div class="line"><span class="comment">// 因为函数内只赋值了特定的属性</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">initInternalComponent</span> (<span class="params">vm: Component, options: InternalComponentOptions</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> opts = vm.$options = <span class="built_in">Object</span>.create(vm.constructor.options)</div><div class="line">  opts.parent = options.parent</div><div class="line">  opts.propsData = options.propsData</div><div class="line">  opts._parentVnode = options._parentVnode</div><div class="line">  opts._parentListeners = options._parentListeners</div><div class="line">  opts._renderChildren = options._renderChildren</div><div class="line">  opts._componentTag = options._componentTag</div><div class="line">  opts._parentElm = options._parentElm</div><div class="line">  opts._refElm = options._refElm</div><div class="line">  <span class="keyword">if</span> (options.render) &#123;</div><div class="line">    opts.render = options.render</div><div class="line">    opts.staticRenderFns = options.staticRenderFns</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 整理获取类的options</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">resolveConstructorOptions</span> (<span class="params">Ctor: Class&lt;Component&gt;</span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> options = Ctor.options</div><div class="line">  <span class="keyword">if</span> (Ctor.super) &#123;</div><div class="line">    <span class="comment">// 如果有父类，就整理父类的options</span></div><div class="line">    <span class="keyword">const</span> superOptions = resolveConstructorOptions(Ctor.super)</div><div class="line">    <span class="keyword">const</span> cachedSuperOptions = Ctor.superOptions</div><div class="line">    <span class="keyword">if</span> (superOptions !== cachedSuperOptions) &#123;</div><div class="line">      <span class="comment">// 如果父类的options有变化，需要重新获取父类的options</span></div><div class="line">      Ctor.superOptions = superOptions</div><div class="line">      <span class="comment">// resolveModifiedOptions可以检查options的更新</span></div><div class="line">      <span class="keyword">const</span> modifiedOptions = resolveModifiedOptions(Ctor)</div><div class="line">      <span class="comment">// 同步修改过的属性</span></div><div class="line">      <span class="keyword">if</span> (modifiedOptions) &#123;</div><div class="line">        extend(Ctor.extendOptions, modifiedOptions)</div><div class="line">      &#125;</div><div class="line">      options = Ctor.options = mergeOptions(superOptions, Ctor.extendOptions)</div><div class="line">      <span class="keyword">if</span> (options.name) &#123;</div><div class="line">        options.components[options.name] = Ctor</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> options</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 检查options的更新</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">resolveModifiedOptions</span> (<span class="params">Ctor: Class&lt;Component&gt;</span>): ?<span class="title">Object</span> </span>&#123;</div><div class="line">  <span class="keyword">let</span> modified</div><div class="line">  <span class="keyword">const</span> latest = Ctor.options</div><div class="line">  <span class="keyword">const</span> sealed = Ctor.sealedOptions</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> latest) &#123;</div><div class="line">    <span class="keyword">if</span> (latest[key] !== sealed[key]) &#123;</div><div class="line">      <span class="keyword">if</span> (!modified) modified = &#123;&#125;</div><div class="line">      modified[key] = dedupe(latest[key], sealed[key])</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> modified</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 删除重复数据的函数</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">dedupe</span> (<span class="params">latest, sealed</span>) </span>&#123;</div><div class="line">  <span class="comment">// 主要是处理生命周期回调，让回调不会直接被替换赋值，而是被逐个添加</span></div><div class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(latest)) &#123;</div><div class="line">    <span class="keyword">const</span> res = []</div><div class="line">    sealed = <span class="built_in">Array</span>.isArray(sealed) ? sealed : [sealed]</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; latest.length; i++) &#123;</div><div class="line">      <span class="keyword">if</span> (sealed.indexOf(latest[i]) &lt; <span class="number">0</span>) &#123;</div><div class="line">        res.push(latest[i])</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> res</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> latest</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个模块对于 vue 实例的处理有很多都可以在官方文档的说明中找到，文档中没有描述的是 options 对象的继承。可以看到 options 对象的继承和并不是基于原型链的，而是基于合并赋值，我猜这么做的目的是为了让程序运行起来更快，毕竟省了一个遍历原型链的过程……</p>
+<h2 id="proxy-js"><a href="#proxy-js" class="headerlink" title="proxy.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/instance/proxy.js" target="_blank" rel="external">proxy.js</a></h2><p>proxy 这部分的启动逻辑只有在非生产环境才能起作用，感觉不是很重要啊……主要的作用是用来检查vm添加的属性是不是系统变量，如果是系统变量就报警告，貌似是这样吧……Proxy方法是用来定义对象属性的基本操作的，感觉跟defineProperty有点像</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//flow无法检查原生对象Proxy，所有这个文件就没用flow</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> config <span class="keyword">from</span> <span class="string">'core/config'</span></div><div class="line"><span class="keyword">import</span> &#123; warn, makeMap &#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></div><div class="line"></div><div class="line"><span class="keyword">let</span> initProxy</div><div class="line"></div><div class="line"><span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</div><div class="line">  <span class="keyword">const</span> allowedGlobals = makeMap(</div><div class="line">    <span class="string">'Infinity,undefined,NaN,isFinite,isNaN,'</span> +</div><div class="line">    <span class="string">'parseFloat,parseInt,decodeURI,decodeURIComponent,encodeURI,encodeURIComponent,'</span> +</div><div class="line">    <span class="string">'Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,'</span> +</div><div class="line">    <span class="string">'require'</span> <span class="comment">// for Webpack/Browserify</span></div><div class="line">  )</div><div class="line"></div><div class="line">  <span class="keyword">const</span> warnNonPresent = <span class="function">(<span class="params">target, key</span>) =&gt;</span> &#123;</div><div class="line">    warn(</div><div class="line">      <span class="string">`Property or method "<span class="subst">$&#123;key&#125;</span>" is not defined on the instance but `</span> +</div><div class="line">      <span class="string">`referenced during render. Make sure to declare reactive data `</span> +</div><div class="line">      <span class="string">`properties in the data option.`</span>,</div><div class="line">      target</div><div class="line">    )</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> hasProxy =</div><div class="line">    <span class="keyword">typeof</span> <span class="built_in">Proxy</span> !== <span class="string">'undefined'</span> &amp;&amp;</div><div class="line">    <span class="built_in">Proxy</span>.toString().match(<span class="regexp">/native code/</span>)</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (hasProxy) &#123;</div><div class="line">    <span class="keyword">const</span> isBuiltInModifier = makeMap(<span class="string">'stop,prevent,self,ctrl,shift,alt,meta'</span>)</div><div class="line">    config.keyCodes = <span class="keyword">new</span> <span class="built_in">Proxy</span>(config.keyCodes, &#123;</div><div class="line">      set (target, key, value) &#123;</div><div class="line">        <span class="keyword">if</span> (isBuiltInModifier(key)) &#123;</div><div class="line">          warn(<span class="string">`Avoid overwriting built-in modifier in config.keyCodes: .<span class="subst">$&#123;key&#125;</span>`</span>)</div><div class="line">          <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">          target[key] = value</div><div class="line">          <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;)</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> hasHandler = &#123;</div><div class="line">    has (target, key) &#123;</div><div class="line">      <span class="keyword">const</span> has = key <span class="keyword">in</span> target</div><div class="line">      <span class="keyword">const</span> isAllowed = allowedGlobals(key) || key.charAt(<span class="number">0</span>) === <span class="string">'_'</span></div><div class="line">      <span class="keyword">if</span> (!has &amp;&amp; !isAllowed) &#123;</div><div class="line">        warnNonPresent(target, key)</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> has || !isAllowed</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> getHandler = &#123;</div><div class="line">    get (target, key) &#123;</div><div class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> key === <span class="string">'string'</span> &amp;&amp; !(key <span class="keyword">in</span> target)) &#123;</div><div class="line">        warnNonPresent(target, key)</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">return</span> target[key]</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  initProxy = <span class="function"><span class="keyword">function</span> <span class="title">initProxy</span> (<span class="params">vm</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (hasProxy) &#123;</div><div class="line">      <span class="comment">// determine which proxy handler to use</span></div><div class="line">      <span class="keyword">const</span> options = vm.$options</div><div class="line">      <span class="comment">// _withStripped这个属性如果被设为true，则不能给vm添加系统变量作为属性，貌似吧……具体的用法是在测试代码里找到的……</span></div><div class="line">      <span class="keyword">const</span> handlers = options.render &amp;&amp; options.render._withStripped</div><div class="line">        ? getHandler</div><div class="line">        : hasHandler</div><div class="line">      vm._renderProxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(vm, handlers)</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      vm._renderProxy = vm</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> &#123; initProxy &#125;</div></pre></td></tr></table></figure>
+<p>今天就到这儿吧，累了，话说下周开始我们也要007了……真是嘴贱某次跟领导吃饭的时候把007当笑话告诉了他，结果给他打开了新世界的大门……如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的力度了~!</p>
+<p>白了个白~！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;嗯，距离上次读vue的源码已经过了一个月了，再次捡起来已经完全不认得了……啊……俗话说，一天不练手脚慢,两天不练丢一半,三天不练门外汉,四天不练瞪眼看，俗话诚不欺我……总之写到哪儿算哪儿吧，希望能跟之前写的接上……╮(￣▽￣)╭&lt;/p&gt;
+&lt;h1 id=&quot;Vue构造函数和vu
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="http://brooch.me/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="vue" scheme="http://brooch.me/tags/vue/"/>
+    
+  </entry>
   
   <entry>
     <title>Picodom中的diff算法补完</title>
@@ -977,216 +1046,6 @@
     
     
       <category term="javascript" scheme="http://brooch.me/tags/javascript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深入mobx原理</title>
-    <link href="http://brooch.me/2017/01/13/an-in-depthexplanation-of-mobx/"/>
-    <id>http://brooch.me/2017/01/13/an-in-depthexplanation-of-mobx/</id>
-    <published>2017-01-13T13:53:00.000Z</published>
-    <updated>2017-01-13T14:26:17.000Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote>
-<p>这篇文章翻译自mobx作者 Michel Weststrate 的一篇博客，虽然我也想做到信达雅，奈何英语水平有限……所以其中掺杂了很多我自己的理解。想了解细节的话可移步<a href="https://medium.com/@mweststrate/becoming-fully-reactive-an-in-depth-explanation-of-mobservable-55995262a254#.2lcdbiz5f" target="_blank" rel="external">原文</a></p>
-</blockquote>
-<p>看过我之前的博客的看官都知道，mobx的除了能实现响应式的功能，它的运行速度还很快，那么，他是如何做到的呢？我们一起来看看mobx的内部运行机制。</p>
-<a id="more"></a>
-<p>首先，让我们来回顾一下mobx的核心概念：</p>
-<ol>
-<li><p><strong>可观测状态</strong></p>
-<p>状态是指任何可以改变并且会引发计算属性变化的值。mobx可以把大多数类型的值(基础类型、数组、各种对象)，都转化成可观测的。而且针对，数组或对象等的结构化的数据类型，这种转化是递归的，数组或对象的所有子节点都会被转化。</p>
-</li>
-<li><p><strong>计算属性</strong></p>
-<p>计算属性是一个函数。这个函数不接收参数，只单纯的依赖的其他可观测状态。依赖的可观测状态发生变化，它的运行结果才会发生变化。</p>
-<p>虽然和定义有一定出入，但是从输入输出保持一致这点来看，计算属性应该算是一种纯函数。</p>
-<p>很多场景都能用到计算属性，比如字符串的连接，或者生成复杂结构的对象。因为计算属性自身也是可观测的，所以甚至可以使用它从可观测状态导出完整的用户界面。计算属性还可以在惰性和活跃两种状态之间切换。</p>
-</li>
-<li><p><strong>反应</strong></p>
-<p>反应和计算属性有点类似，不同点在于，计算属性的函数是产生一个新的值，而反应是产生一个副作用。所谓副作用，就是指一些跟计算无关的动作，比如打印日志，网络请求，更新界面之类的。总之使用反应可以把数据变化和其他流程关联起来。</p>
-</li>
-<li><p><strong>动作</strong></p>
-<p>动作是修改状态的主要方法。动作本身并不对状态更改做响应，而是修改可观测状态。（如用户触发的事件、web-socket传入消息、或直接对可观测状态的修改）</p>
-</li>
-</ol>
-<p>这四个核心概念对应mobx中最常用的4个api，observable、computed、reaction（autorun）、action。</p>
-<p>之后，我们把计算属性和反应都称为<strong>派生</strong>。</p>
-<p>上面的解释可能有点儿不好理解，那我把它说的更形象一些：</p>
-<p>execl都用过吧？<strong>可观测状态</strong> 就是里面的单元格。<strong>计算属性</strong> 就是里面的公式。<strong>动作</strong> 好比你双击了一个单元格改变了单元格的数据。把修改过后的数据反馈到屏幕上就是 <strong>反应</strong> 做的事。</p>
-<p>这有个使用mobx和react的例子，例子中使用到了这四个概念：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</div><div class="line">  @observable firstName = <span class="string">"Michel"</span>;</div><div class="line">  @observable lastName = <span class="string">"Weststrate"</span>;</div><div class="line">  @observable nickName;</div><div class="line"></div><div class="line">  @computed get fullName() &#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">" "</span> + <span class="keyword">this</span>.lastName;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> michel = <span class="keyword">new</span> Person();</div><div class="line"></div><div class="line"><span class="comment">// 这里就算是一个反应，用来打印可观测状态变化的日志</span></div><div class="line">autorun(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(person.nickName ? person.nickName : person.fullName));</div><div class="line"></div><div class="line"><span class="comment">// 示例的react组件，根据状态变化发生改变，其中observer是来自react-mobx的api</span></div><div class="line"><span class="keyword">const</span> profileView = observer(<span class="function"><span class="params">props</span> =&gt;</span> &#123;</div><div class="line">  <span class="keyword">if</span> (props.person.nickName)</div><div class="line">    <span class="keyword">return</span> &lt;div&gt;&#123;props.person.nickName&#125;&lt;/div&gt;</div><div class="line">  <span class="keyword">else</span></div><div class="line">    <span class="keyword">return</span> &lt;div&gt;&#123;props.person.fullName&#125;&lt;/div&gt;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">// 动作</span></div><div class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> michel.nickName = <span class="string">"mweststrate"</span>, <span class="number">5000</span>)</div><div class="line"></div><div class="line">React.render(React.createElement(profileView, &#123; <span class="attr">person</span>: michel &#125;), <span class="built_in">document</span>.body);</div></pre></td></tr></table></figure>
-<p>例1:可观测状态、计算属性、反应渲染Reactjs组件和动作</p>
-<p>基于上面的例子，我们可以整理出下图的依赖关系树:</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/an-in-depthexplanation-of-mobx-01.png" alt="Figure 1"></p>
-<p>图1:profileView组件的依赖关系树。此时fullName处于活跃状态，它同时观察firstName和lastName</p>
-<p>蓝色的是可观测状态。绿色的fullName是计算属性，可以通过观测firstName和lastName的状态自动计算。同理，nickName和fullName的变化都会传导到profileView。profileView 的状态变化会产生一个副作用，让react组件树更新。</p>
-<p>在mobx中，依赖关系树会被限制在最小限度。例如,一旦person对象有nickName属性，则视图不再受fullName的影响，也不会受firstName和lastName的影响。这些值之间的所有观察者都会被清理，MobX会自动简化依赖关系树：</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/an-in-depthexplanation-of-mobx-02.png" alt="Figure 2"></p>
-<p>图 2: 当person对象有nickname属性时的profileView组件的依赖性树，与图1相反，fullName现在处于惰性状态，同事他也不会观测firstName和lastName</p>
-<p>mobx将总是试图最小化产生一致状态所需的计算的数量。在这篇文章的其余部分,我将描述用来实现这一目标的一些策略。但在探索计算属性和反应保持同步的原理前，我们首先看下MobX背后的原则:</p>
-<blockquote class="blockquote-center"> 响应状态变化永远比处理状态变化好。 </blockquote><br>在我们平时的工作中，应用程序在响应状态更改时所触发的操作，通常会创建或更新某些值。我们可以尝试从另一个角度理解，既可以把大多数的动作都理解为对本地缓存的操作。<br><br>触发用户界面更新?更新某些值?与后端通信?这些都可以认为是缓存失效，我们为了更新缓存所执行的动作。<br><br>为了让这些缓存保持同步，我们一般会使用观察者模式，订阅缓存的状态变化，缓存失效了，好通知你的动作再次被触发。<br><br>但是使用这种模式却有个根本的问题：随着你的应用的不断扩大，你要管理的订阅也越来越多，在这个管理过程中，或多或少都会犯一些错误。比如超额订阅(继续订阅一个值不再使用的值)或遗漏订阅(忘记监听数据更新而导致的数据过时的bug)。<br><br><blockquote class="blockquote-center"> 也就是说，手动维护订阅关系，应用程序早晚会出现数据和展示不一致的情况。</blockquote>
-
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/an-in-depthexplanation-of-mobx-03.png" alt="Figure 3"></p>
-<p>图3:更新了个人信息之后，Twitter页面上的不一致现象，推文列表中作者的用户名和头像还是旧的值</p>
-<p>Twitter用户界面不一致是一个很好的例子的。我在Reactive2015论坛上解释过造成这种情况的两种原因：要么是没有订阅通知推文列表用户信息已经改变，需要重新渲染。要么就是推文作者的数据和当前登陆用户之前没有关联，尽管这两部分的数据描述的是相同的属性相同的对象。</p>
-<p>而像Flux那样的粗粒度的订阅很容易造成超额订阅。使用react时，可以使用react提供的开发工具打印调试信息查看是否有浪费的渲染，来简单的判断是否有超额订阅的情况。而MobX可以将这种情况降至零。mobx会自动帮你管理成千上万的订阅。</p>
-<p>值得一提的是，超额订阅可能会很隐秘。如果你订阅的数据但并不是在所有情况下都会被使用，那它仍然是超额订阅的。例如例1中，profileView组件订阅了的fullName，但是person对象有nickName属性时，它还是超额订阅的。</p>
-<p>所以设计mobx背后的一个重要的原则是:</p>
-<blockquote class="blockquote-center">只有运行时确定下来的订阅，才是最小的订阅集合</blockquote>
-
-<p>mbox背后的第二个重要思想是：尽量使用mobx去创建一个图结构的数据模型去管理你的应用，而不是平时常用的树状结构。</p>
-<p>我们真正要开发的应用通常会比TodoList复杂很多。图结构可以有效的保证数据的一致性，并避免数据重复。</p>
-<h2 id="mobx如何保持所有派生一致"><a href="#mobx如何保持所有派生一致" class="headerlink" title="mobx如何保持所有派生一致"></a>mobx如何保持所有派生一致</h2><p>解决方案：用计算代替缓存。有人会问：“那不是非常消耗资源的吗?”其实并没有，而且他效率还挺高的。</p>
-<p>原因正如上面所解释的：mobx并不运行所有派生，只同步那些参与到反应中的计算属性和可观测状态。这些派生被称为活跃的。</p>
-<h2 id="惰性和活跃"><a href="#惰性和活跃" class="headerlink" title="惰性和活跃"></a>惰性和活跃</h2><p>那么没有直接或间接被反应调用的派生咋办呢？当然，你仍然可以随时检查计算属性（如fullName）的值。</p>
-<p>解决方法也很简单：如果一个计算值不是活跃的，那么它将在需要他的时候重新计算（就是惰性的），就跟一个正常的getter函数一样。如果惰性的派生(从来没有观察到任何东西)从作用域中移除，就会被垃圾收集。还记得计算属性是可观察状态的纯函数吧？这就是为啥他是纯函数的原因:不管什么状态下，相同的可观测状态，计算属性函数计算的结果也一定是相同的。</p>
-<h2 id="运行计算"><a href="#运行计算" class="headerlink" title="运行计算"></a>运行计算</h2><p>mobx中反应和计算属性都是由以同样的方式运行的。当前运行的派生有个函数栈，当有计算触发了派生的函数，这个函数就会被推入栈中。只要计算正在运行，被访问的每个被观测状态都会将其自身注册为派生栈的最顶层函数的依赖。如果需要计算属性的值，并且计算属性已经处于活跃状态，则直接使用最后一次计算出的值。否则就将他推入派生函数栈，切换到活跃状态，并开始计算。</p>
-<p><img src="http://oin1wqn2f.bkt.clouddn.com/an-in-depthexplanation-of-mobx-04.png" alt="Figure 4"></p>
-<p>图4:在执行profileView响应函数期间的计算过程。</p>
-<p>当计算完成时，派生将获得在执行期间访问的可观测列表。 例如，在profileView中，此列表将只包含nickName属性，或nickName和fullName属性。 每次获得的列表与之前的都可能不同。 任何被废弃的属性都将被忽略（计算属性可能从活跃模式转换到惰性模式），并且任何新添加的可观测状态都将被观测，直到下一次计算。 如果firstname的值以后更改了，观测它的派生就知道fullName需要重新计算。这反过来将导致界面重新渲染。 下一段更详细地解释这个过程。</p>
-<h2 id="状态变化的传播"><a href="#状态变化的传播" class="headerlink" title="状态变化的传播"></a>状态变化的传播</h2><p><img src="http://oin1wqn2f.bkt.clouddn.com/an-in-depthexplanation-of-mobx-05.png" alt="Figure 5"></p>
-<p>图5：在依赖关系树上更改’1’的值的效果。 虚线边框表示需要被更新的派生。 数字表示计算的顺序。</p>
-<p>派生会自动响应状态的变化。所有反应函数都是同步执行的，而且是无干扰的。当一个可观测的值被修改，整个修改算法如下：</p>
-<ol>
-<li>被观测对象给所有观察它的派生发送一个过期通知，告诉它们自己需要更新了。任何受到影响的计算属性将递归的把消息传递给其他的观察者。结果，依赖树中的一部分被标记为过期。在图5的示例依赖关系树中，当值’1’改变时变为陈旧的观察者用橙色的虚线标记。这些都是受影响的派生。</li>
-<li>发送失效通知并存储新值后，将发送就绪通知。 此消息还将标记值是否真的发生了改变。</li>
-<li>一旦派生接收到针对步骤1的就绪通知，它就知道所有的观测值都已经稳定了，然后它会开始重新计算。就绪/失效消息的计数器会保证计算属性’4’将会在计算属性’3’变得稳定之后才重新计算。</li>
-<li>如果没有接到就绪通知值，则派生将简单的告诉自己的观察者自己已经准备好了，但是值没变。否则，计算属性将重新计算并给自己的观察者发送就绪通知。在图5中我们可以看到，比如计算属性‘4’重新计算后没有产生新值，那么最后的响应（‘-’表示的那个）永远都不会被执行。</li>
-</ol>
-<p>前两段总结了如何在运行时跟踪可观测状态和派生之间的依赖关系，以及如何通过派生来传播变化。 现在，你可能还会意识到，反应其实就是一个总是处于活跃状态的计算属性。 此外，mobx还应用了许多其他优化，不过这超出了本文的范围，暂不讨论。</p>
-<h2 id="同步执行"><a href="#同步执行" class="headerlink" title="同步执行"></a>同步执行</h2><p>人们经常惊讶与mobx所有的动作都是同步运行的（像RxJs和不像knockout）。 这有两大优点：首先，它变得根本不可能观察到过期的派生。 因此，在影响它的值修改之后，可以立即使用派生的值。 其次，它使栈跟踪和调试更容易，因为它避免了无用的栈跟踪。</p>
-<p>但是，有些时候我们不得不引入批量操作。比如autocomplate之类的常见功能，会在短时间内连续多次改变值，我们需要在一系列改变之后再发送就绪通知。这就要用mobx中的另一个概念，事务（transaction）。</p>
-<p>事务可以推迟就绪通知，整个事务完成。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">transaction(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  michel.firstName = <span class="string">"Mich"</span>;</div><div class="line">  michel.lastName = <span class="string">"W."</span>;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>例 2: 事务示例。</p>
-<p>至此，我们总结了mobx最基本的实现细节。我们还没有覆盖一切，但是剩下的也都很好理解，例如，你可以组合计算属性。 通过组合反应和计算属性，甚至可以自动将一个数据图转换为另一个数据图。通过这些特性，我们还能很容易的实现一些复杂的模式，如map-reduce，时间回溯，或者横向数据加载。</p>
-<h2 id="重点概要："><a href="#重点概要：" class="headerlink" title="重点概要："></a>重点概要：</h2><ol>
-<li>复杂应用程序的应用程序状态最好使用图表来表示，既能保证数据和视图的一致性，又直观好理解</li>
-<li>不应该通过手动订阅来同步状态。这将不可避免地导致超额订阅和遗漏订阅</li>
-<li>使用运行时分析来确定观察者→可观测状态关系的最小集合。 这样就能达到既保证基本功能，又保持最小计算量的效果。</li>
-<li>没有被主动调用的派生都会被优化掉</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;blockquote&gt;
-&lt;p&gt;这篇文章翻译自mobx作者 Michel Weststrate 的一篇博客，虽然我也想做到信达雅，奈何英语水平有限……所以其中掺杂了很多我自己的理解。想了解细节的话可移步&lt;a href=&quot;https://medium.com/@mweststrate/becoming-fully-reactive-an-in-depth-explanation-of-mobservable-55995262a254#.2lcdbiz5f&quot;&gt;原文&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;看过我之前的博客的看官都知道，mobx的除了能实现响应式的功能，它的运行速度还很快，那么，他是如何做到的呢？我们一起来看看mobx的内部运行机制。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="学习笔记" scheme="http://brooch.me/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="javascript" scheme="http://brooch.me/tags/javascript/"/>
-    
-      <category term="mobx" scheme="http://brooch.me/tags/mobx/"/>
-    
-      <category term="中文渣翻" scheme="http://brooch.me/tags/%E4%B8%AD%E6%96%87%E6%B8%A3%E7%BF%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>javascript中的进程、线程和协程</title>
-    <link href="http://brooch.me/2016/12/30/process-thread-and-coroutine-in-javascript/"/>
-    <id>http://brooch.me/2016/12/30/process-thread-and-coroutine-in-javascript/</id>
-    <published>2016-12-30T15:26:28.000Z</published>
-    <updated>2017-01-01T16:57:14.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>这周一直在编前端构建的脚本，用到了多进程去解决一个效率问题。期间差了很多进程、线程、协程的资料，在这里记录回顾一下。</p>
-<a id="more"></a>
-<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>关于进程、线程、协程的概念这里就不再赘述了，具体的可以参考wiki百科：</p>
-<ul>
-<li><p><a href="https://zh.wikipedia.org/wiki/%E8%A1%8C%E7%A8%8B" target="_blank" rel="external">进程</a></p>
-</li>
-<li><p><a href="https://zh.wikipedia.org/wiki/%E7%BA%BF%E7%A8%8B" target="_blank" rel="external">线程</a></p>
-</li>
-<li><p><a href="https://zh.wikipedia.org/wiki/%E5%8D%8F%E7%A8%8B" target="_blank" rel="external">协程</a></p>
-</li>
-</ul>
-<h2 id="简单概括一下它们间的区别"><a href="#简单概括一下它们间的区别" class="headerlink" title="简单概括一下它们间的区别"></a>简单概括一下它们间的区别</h2><p>就是相对线程和协程，进程更独立，有自己的内存空间，所以进程间通信比较困难。线程比进程轻量级，属于同一进程的多个线程间可以共享全部资源。协程与线程类似，不同点在于，线程由系统控制切换，协程是由用户控制切换。</p>
-<p>那么，控制切换，指的是控制什么的切换呢？</p>
-<p>在一个进程中执行的程序，有时需要同时处理多个工作，这时我们可以创建多个线程，让每个线程处理一个工作。但是，进程只有一个。就好比一个人，你给他分配了多个工作，帮他把每个工作单独拉了一个列表，可还是他一个人干，他只能一会儿干干这一会儿干干那，来模拟多个工作同时进行的状态，这就是所谓的系统控制切换，系统不停的在多个线程间切换来达到并行的效果。你可能会说，那根一件一件干不是一样吗？没错，是一样的，在只有一个cpu的电脑上，用不用多线程程序执行的时间是一样的。但是，如果这个人长了两个脑袋呢？那么他就能同时处理两件工作了。多核cpu就是那个长了好多个脑地的人……而协程的切换是要由用户手动来控制的，所以协程并适合并行计算，而更多的用来优化程序结构。</p>
-<h2 id="js都支持吗？"><a href="#js都支持吗？" class="headerlink" title="js都支持吗？"></a>js都支持吗？</h2><p>这要看js在什么环境运行。</p>
-<p>在浏览器中，可以通过webworkers创建进程，可以通过async/await，yield/Generator/GeneratorFunction实现协程，控制程序切换。</p>
-<p>在node中，除了可以使用上面浏览器中可以使用的方法，还可以通过cluster，child_process创建进程，通过libuv，tagg创建线程</p>
-<h2 id="刚才提到的那些都是啥？怎么用？"><a href="#刚才提到的那些都是啥？怎么用？" class="headerlink" title="刚才提到的那些都是啥？怎么用？"></a>刚才提到的那些都是啥？怎么用？</h2><h3 id="webworkers"><a href="#webworkers" class="headerlink" title="webworkers"></a>webworkers</h3><p>简单点儿说就是使用webworkers你可以在全新的环境中运行一个你指定的js文件。这个全新的环境是独立的，既一个全新的进程，有点儿像一个新iframe还没有window.top，window.parent属性，哈哈……</p>
-<p>webworkers创建的进程和主进程之间可以通过message事件传递消息，但是消息只能是字符串，所以想要传对象和数组就只能传json了……这也是他不方便的地方。</p>
-<p>具体使用方法可以看MDN上的文章：<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API/Using_web_workers" target="_blank" rel="external">使用 Web Workers</a></p>
-<h3 id="async-await"><a href="#async-await" class="headerlink" title="async/await"></a>async/await</h3><p>async/await是es7中新加的两个关键字，async 可以声明一个异步函数，此函数需要返回一个 Promise 对象。await 可以等待一个 Promise 对象 resolve，并拿到结果。</p>
-<p>其实就是类似汇编的寄存器和跳转指令……呃，通俗的说就是可以根据状态跳转态另一个函数半中间。</p>
-<p>由于es7还未在各个环境实现，想要使用的话还的用一些babel-polyfill之类的库做兼容……</p>
-<p>更详细介绍请看阿阮的文章：<a href="http://es6.ruanyifeng.com/?search=async&amp;x=0&amp;y=0#docs/async" target="_blank" rel="external">异步操作和Async函数</a></p>
-<h2 id="yield-Generator-GeneratorFunction"><a href="#yield-Generator-GeneratorFunction" class="headerlink" title="yield/Generator/GeneratorFunction"></a>yield/Generator/GeneratorFunction</h2><p>generator是es6中新增的函数，本质是可以将一个函数执行暂停，并保存上下文，再次调用时恢复当时的状态。但是用来解决协程切换的问题貌似有点儿滥用特性的感觉呢……</p>
-<p>更详细介绍请看阿阮的文章：<a href="http://es6.ruanyifeng.com/?search=async&amp;x=0&amp;y=0#docs/generator" target="_blank" rel="external">Generator 函数</a></p>
-<h3 id="cluster"><a href="#cluster" class="headerlink" title="cluster"></a>cluster</h3><p>cluster是node官方提供的一个多进程模块，效果和C语言的fork函数类似，当前文件完全重新执行一遍，通过cluster.isMaster判断是不是主进程，在区分不同的操作。进程间通过事件回调来通信，NodeJS 0.6.x 以上的版本开始支持。</p>
-<p>示例代码就不放了，node官方文档上写的很详细：<a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a></p>
-<h3 id="child-process"><a href="#child-process" class="headerlink" title="child_process"></a>child_process</h3><p>node自带的child_process模块里的fork函数可以实现类似浏览器里webworkers的效果，使用方法和webworker一毛一样，都是通过读取新文件开启新进程，通过message通信。</p>
-<p>具体介绍请看文档：<a href="https://nodejs.org/api/child_process.html#child_process_child_process_fork_modulepath_args_options" target="_blank" rel="external">child_process.fork(modulePath[, args][, options])</a></p>
-<p>官方文档没有示例，下面给出一个web服务接收参数计算斐波那契数组的例子：</p>
-<h4 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a>index.js</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</div><div class="line"><span class="keyword">var</span> fork = <span class="built_in">require</span>(<span class="string">'child_process'</span>).fork;</div><div class="line"><span class="keyword">var</span> app = express();</div><div class="line">app.get(<span class="string">'/'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>)</span>&#123;</div><div class="line">	<span class="keyword">var</span> worker = fork(<span class="string">'./work_fibo.js'</span>) <span class="comment">//创建一个工作进程</span></div><div class="line">	worker.on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">m</span>) </span>&#123;<span class="comment">//接收工作进程计算结果</span></div><div class="line">		<span class="keyword">if</span>(<span class="string">'object'</span> === <span class="keyword">typeof</span> m &amp;&amp; m.type === <span class="string">'fibo'</span>)&#123;</div><div class="line">			worker.kill();<span class="comment">//发送杀死进程的信号</span></div><div class="line">			res.send(m.result.toString());<span class="comment">//将结果返回客户端</span></div><div class="line">		&#125;</div><div class="line">	&#125;);</div><div class="line">	worker.send(&#123;<span class="attr">type</span>:<span class="string">'fibo'</span>,<span class="attr">num</span>:~~req.query.n || <span class="number">1</span>&#125;);<span class="comment">//发送给工作进程计算fibo的数量</span></div><div class="line">&#125;);</div><div class="line">app.listen(<span class="number">8124</span>);</div></pre></td></tr></table></figure>
-<h4 id="work-fibo-js"><a href="#work-fibo-js" class="headerlink" title="work_fibo.js"></a>work_fibo.js</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> fibo = <span class="function"><span class="keyword">function</span> <span class="title">fibo</span> (<span class="params">n</span>) </span>&#123;<span class="comment">//定义算法</span></div><div class="line">	<span class="keyword">return</span> n &gt; <span class="number">1</span> ? fibo(n - <span class="number">1</span>) + fibo(n - <span class="number">2</span>) : <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line">process.on(<span class="string">'message'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">m</span>) </span>&#123;</div><div class="line"><span class="comment">//接收主进程发送过来的消息</span></div><div class="line">	<span class="keyword">if</span>(<span class="keyword">typeof</span> m === <span class="string">'object'</span> &amp;&amp; m.type === <span class="string">'fibo'</span>)&#123;</div><div class="line">		<span class="keyword">var</span> num = fibo(~~m.num);</div><div class="line">		<span class="comment">//计算jibo</span></div><div class="line">		process.send(&#123;<span class="attr">type</span>: <span class="string">'fibo'</span>,<span class="attr">result</span>:num&#125;)</div><div class="line">		<span class="comment">//计算完毕返回结果        </span></div><div class="line">	&#125;</div><div class="line">&#125;);</div><div class="line">process.on(<span class="string">'SIGHUP'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">	process.exit();<span class="comment">//收到kill信息，进程退出</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h3 id="libuv"><a href="#libuv" class="headerlink" title="libuv"></a>libuv</h3><p>libuv是node底层实现使用的c++库……呃，所以如果你想使用这个库来实现多线程，那么你就得编写c++的代码了，不得不说，要想真正理解程序的本质，不多掌握几门语言真是不行啊……</p>
-<p>对c++不了解我就不瞎BB了，推荐两篇文章延伸阅读：</p>
-<ul>
-<li><a href="http://blog.csdn.net/limite_god/article/details/43668235" target="_blank" rel="external">libuv多线程处理的简单示例</a></li>
-<li><a href="http://snoopyxdy.blog.163.com/blog/static/601174402013422103614385/" target="_blank" rel="external">利用libuv编写异步多线程的addon实例</a></li>
-</ul>
-<h3 id="tagg"><a href="#tagg" class="headerlink" title="tagg"></a>tagg</h3><p>tagg(Threads a gogo for Node.js)是Jorge Chamorro Bieling开发的一个node包。使用c语言phread库实现的多线程。</p>
-<p>还是那刚才的斐波那契数组计算为例：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Threads = <span class="built_in">require</span>(<span class="string">'threads_a_gogo'</span>);<span class="comment">//加载tagg包</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">fibo</span>(<span class="params">n</span>) </span>&#123;<span class="comment">//定义斐波那契数组计算函数</span></div><div class="line">	<span class="keyword">return</span> n &gt; <span class="number">1</span> ? fibo(n - <span class="number">1</span>) + fibo(n - <span class="number">2</span>) : <span class="number">1</span>;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> t = Threads.create().eval(fibo);</div><div class="line">t.eval(<span class="string">'fibo(35)'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, result</span>) </span>&#123;<span class="comment">//将fibo(35)丢入子线程运行</span></div><div class="line">	<span class="keyword">if</span> (err) <span class="keyword">throw</span> err; <span class="comment">//线程创建失败</span></div><div class="line">	<span class="built_in">console</span>.log(<span class="string">'fibo(35)='</span> + result);<span class="comment">//打印fibo执行35次的结果</span></div><div class="line">&#125;);</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'not block'</span>);<span class="comment">//打印信息了，表示没有阻塞</span></div></pre></td></tr></table></figure>
-<p>最后结果：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">not block</div><div class="line">fibo(<span class="number">35</span>)=<span class="number">14930352</span></div></pre></td></tr></table></figure></p>
-<p>我们可以看到执行效果与webworker类似，不同的是通信使用了异步回调的方式。</p>
-<p>值得一提的是tagg包目前只能在linux下安装运行，这里再推荐一个tagg2包，是跨平台的。</p>
-<p>这里需要重点提一下的是，不论tagg还是tagg2包都是利用phtread库和v8的v8::Isolate Class类来实现js多线程功能的。</p>
-<blockquote>
-<p>Isolate代表着一个独立的v8引擎实例，v8的Isolate拥有完全分开的状态，在一个Isolate实例中的对象不能够在另外一个Isolate实例中使用。嵌入式开发者可以在其他线程创建一些额外的Isolate实例并行运行。在任何时刻，一个Isolate实例只能够被一个线程进行访问，可以利用加锁/解锁进行同步操作。</p>
-</blockquote>
-<p>换而言之，我们在进行v8的嵌入式开发时，无法在多线程中访问js变量，这条规则将直接导致我们之前的tagg2里面线程执行的函数无法使用Node.js的核心api，比如fs，crypto等模块。</p>
-<p>延伸阅读：</p>
-<ul>
-<li><a href="https://github.com/xk/node-threads-a-gogo" target="_blank" rel="external">tagg</a></li>
-<li><a href="https://github.com/DoubleSpout/node-threads-a-gogo2" target="_blank" rel="external">tagg2</a></li>
-</ul>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过以上的学习，我们大概应该了解到进程、线程、协程的使用场景了，进程、线程适合用来处理计算密集型操作，协程适合用来优化代码结构，解决回调函数嵌套问题。线程比进程更轻，更节省资源，但是由于上面提到的线程问题，针对一些可以使用js原生的大量计算或循环还可以用用，涉及到使用nodejs核心api的操作，比如文件处理之类的操作，就要用进程使用解决了。当然，也可以用libuv库写c++模块处理多线程的操作，但是还要学c++啊望天儿……</p>
-<h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><ul>
-<li><a href="http://www.admin10000.com/document/4196.html" target="_blank" rel="external">Node.js的线程和进程</a></li>
-<li><a href="https://cnodejs.org/topic/518b679763e9f8a5424406e9" target="_blank" rel="external">nodejs多线程，真正的非阻塞</a></li>
-<li><a href="https://www.zhihu.com/question/20511233" target="_blank" rel="external">协程的好处是什么?</a></li>
-<li><a href="https://www.zhihu.com/question/32218874" target="_blank" rel="external">为什么觉得协程是趋势？</a></li>
-</ul>
-<h2 id="p-s-我的问题"><a href="#p-s-我的问题" class="headerlink" title="p.s. 我的问题"></a>p.s. 我的问题</h2><p>我在工作中使用的是fis配合grunt调用打包。由于要同时打包多个项目，grunt和fis都会定义全局变量，各个模块之间的配置可能会相互影响，各个模块在打包过程中又没有相互的通信，同时为了提高效率，非常时候适合使用多进程的方式来运行脚本。所以用cluster实现了多进程打包的。</p>
-<p>最后，新年快乐，祝大家在2017年里，都能喝最烈的酒，日最野的狗~ ┑(￣Д ￣)┍</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;这周一直在编前端构建的脚本，用到了多进程去解决一个效率问题。期间差了很多进程、线程、协程的资料，在这里记录回顾一下。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="计算机原理" scheme="http://brooch.me/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/"/>
-    
-    
-      <category term="nodejs" scheme="http://brooch.me/tags/nodejs/"/>
-    
-      <category term="webworkers" scheme="http://brooch.me/tags/webworkers/"/>
-    
-      <category term="cluster" scheme="http://brooch.me/tags/cluster/"/>
-    
-      <category term="child_process" scheme="http://brooch.me/tags/child-process/"/>
-    
-      <category term="tagg2" scheme="http://brooch.me/tags/tagg2/"/>
-    
-      <category term="yield" scheme="http://brooch.me/tags/yield/"/>
-    
-      <category term="generator" scheme="http://brooch.me/tags/generator/"/>
-    
-      <category term="async" scheme="http://brooch.me/tags/async/"/>
-    
-      <category term="await" scheme="http://brooch.me/tags/await/"/>
     
   </entry>
   

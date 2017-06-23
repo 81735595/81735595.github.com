@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://brooch.me/2017/06/20/vue-source-notes-6/</loc>
+    
+    <lastmod>2017-06-23T15:27:28.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://brooch.me/2017/06/20/vim-vue-syntax-highlight/</loc>
+    
+    <lastmod>2017-06-20T10:28:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://brooch.me/2017/06/16/picodom-introduce-additional/</loc>
     
     <lastmod>2017-06-16T14:51:34.000Z</lastmod>
