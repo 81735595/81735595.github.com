@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://brooch.me/2017/06/30/webpack-tree-saking/</loc>
+    
+    <lastmod>2017-06-30T15:38:14.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://brooch.me/2017/06/20/vue-source-notes-6/</loc>
     
     <lastmod>2017-06-23T15:27:28.000Z</lastmod>

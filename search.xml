@@ -3,6 +3,13 @@
   
     
     <entry>
+      <title><![CDATA[webpack的tree-saking会优化哪些内容]]></title>
+      <url>%2F2017%2F06%2F30%2Fwebpack-tree-saking%2F</url>
+      <content type="text"><![CDATA[之前听朋友在群里说在使用webpack打包的时候，tree-saking并没有起作用，询问是否需要做相应的配置才能启动机制。因为之前仔细阅读过webpack的文档，写tree-saking的部分并没有提及需要做什么特殊的设置，所以问题应该不是出在webpack的设置上。 那么问题是出在哪儿呢？webpack的文档上有这样一段说明： 1webpack 2 comes with a built-in support for ES2015 modules (alias harmony modules) as well as unused module export detection. 大意是说，webpack 2 内部支持了es2015的模块机制。问题就出在这里，tree-saking依赖于webpack的模块机制，而一般使用webpack时都会搭配babel使用，所以可能在webpack处理之前和babel就已经使用自己的模块机制处理完成了，所以才导致了tree-saking没有成功。 当时他展示自己的babel配置是这样的： 123456\\... loader: 'babel-loader', options: &#123; presets: ['es2015', 'stage-0'], &#125;\\... 测试之后发现，修改为：123456789\\... loader: 'babel-loader', options: &#123; presets: [ ["es2015", &#123; "modules": false &#125;], "stage-2" ], &#125;\\... 就可以了…… 另外，如果想要保持与最新的标准同步，最好使用 babel-preset-env。 另外另外，在调查资料的过程中，还发了一个使用typescript时会遇到的问题，也在这里记录一下。 由于使用typescript时，需要先将先将代码转换到es5，所以也没法使用tree-saking的机制。解决方法是使用babel为webpack提供的babili-webpack-plugin插件来处理压缩代码。 好的由于时间不足，本期的博客就先写到这里，如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的热情了~! 白了个白~！]]></content>
+    </entry>
+
+    
+    <entry>
       <title><![CDATA[简单解决vim打开.vue文件没语法高亮的问题]]></title>
       <url>%2F2017%2F06%2F20%2Fvim-vue-syntax-highlight%2F</url>
       <content type="text"><![CDATA[看vue源码的时候随手写了些测试的代码，发现.vue文件在vim里没高亮，查了下发现vue作者说如果想简单处理直接使用html的高亮就行。so，直接在.vimrc文件里面加一句： 1au BufRead,BufNewFile *.vue set filetype=html 就ok了。 如果觉得html高亮还不够完美，也可以自定义高亮设置。 首先把之前.vimrc文件里的设置改为： 1au BufRead,BufNewFile *.vue set filetype=vue 然后在 ~/.vim/syntax（没有自己新建一个）目录下新建文件vue.vim。让vue.vim继承html的高亮，在加上自定义的高亮就行了。 具体写法类似这样： 123456&quot; version那里要换成自己的vim版本runtime! /usr/share/vim/vim&lt;version&gt;/syntax/syntax/html.vimlet b:current_syntax = &quot;vue&quot;&quot; custom... 剩下的我就不嫌丑了，毕竟我vim还没玩儿到那么高阶……有兴趣的可以对比vue.tmLanguage和sublime自带的html.tmLanguage，看看哪儿不一样，再补充到刚才的vue.vim文件里。就这样了~ ╮(￣▽￣)╭]]></content>
