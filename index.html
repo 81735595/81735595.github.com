@@ -266,7 +266,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/06/30/webpack-tree-saking/">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/06/30/webpack-tree-shaking/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="投身烈火">
@@ -291,8 +291,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/06/30/webpack-tree-saking/" itemprop="url">
-                  使用webpack 2 tree-saking机制时需要注意的细节
+                <a class="post-title-link" href="/2017/06/30/webpack-tree-shaking/" itemprop="url">
+                  使用webpack 2 tree-shaking机制时需要注意的细节
                 </a>
               
             
@@ -362,17 +362,17 @@
       
         
           
-            <p>之前听朋友在群里说在使用webpack打包的时候，tree-saking并没有起作用，询问是否需要做相应的配置才能启动机制。因为之前仔细阅读过webpack的文档，写tree-saking的部分并没有提及需要做什么特殊的设置，所以问题应该不是出在webpack的设置上。</p>
+            <p>之前听朋友在群里说在使用webpack打包的时候，tree-shaking并没有起作用，询问是否需要做相应的配置才能启动机制。因为之前仔细阅读过webpack的文档，写tree-shaking的部分并没有提及需要做什么特殊的设置，所以问题应该不是出在webpack的设置上。</p>
 <p>那么问题是出在哪儿呢？webpack的文档上有这样一段说明：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">webpack 2 comes with a built-in support for ES2015 modules (alias harmony modules) as well as unused module export detection.</div></pre></td></tr></table></figure>
-<p>大意是说，webpack 2 内部支持了es2015的模块机制。问题就出在这里，tree-saking依赖于webpack的模块机制，而一般使用webpack时都会搭配babel使用，所以可能在webpack处理之前和babel就已经使用自己的模块机制处理完成了，所以才导致了tree-saking没有成功。</p>
+<p>大意是说，webpack 2 内部支持了es2015的模块机制。问题就出在这里，tree-shaking依赖于webpack的模块机制，而一般使用webpack时都会搭配babel使用，所以可能在webpack处理之前和babel就已经使用自己的模块机制处理完成了，所以才导致了tree-shaking没有成功。</p>
 <p>当时他展示自己的babel配置是这样的：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">\\...</div><div class="line">    loader: <span class="string">'babel-loader'</span>,</div><div class="line">    <span class="attr">options</span>: &#123;</div><div class="line">        <span class="attr">presets</span>: [<span class="string">'es2015'</span>, <span class="string">'stage-0'</span>],</div><div class="line">    &#125;</div><div class="line">\\...</div></pre></td></tr></table></figure>
 <p>测试之后发现，修改为：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">\\...</div><div class="line">    loader: <span class="string">'babel-loader'</span>,</div><div class="line">    <span class="attr">options</span>: &#123;</div><div class="line">        <span class="attr">presets</span>: [</div><div class="line">            [<span class="string">"es2015"</span>, &#123; <span class="string">"modules"</span>: <span class="literal">false</span> &#125;],</div><div class="line">            <span class="string">"stage-2"</span></div><div class="line">        ],</div><div class="line">    &#125;</div><div class="line">\\...</div></pre></td></tr></table></figure></p>
 <p>就可以了……</p>
 <p>另外，如果想要保持与最新的标准同步，最好使用 babel-preset-env。</p>
 <p>另外另外，在调查资料的过程中，还发了一个使用typescript时会遇到的问题，也在这里记录一下。</p>
-<p>由于使用typescript时，需要先将先将代码转换到es5，所以也没法使用tree-saking的机制。解决方法是使用babel为webpack提供的babili-webpack-plugin插件来处理压缩代码。</p>
+<p>由于使用typescript时，需要先将先将代码转换到es5，所以也没法使用tree-shaking的机制。解决方法是使用babel为webpack提供的babili-webpack-plugin插件来处理压缩代码。</p>
 <p>好的由于时间不足，本期的博客就先写到这里，如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的热情了~!</p>
 <p>白了个白~！</p>
 
@@ -1743,7 +1743,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">37</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>
