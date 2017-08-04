@@ -86,19 +86,16 @@
 
 
 
-<meta name="description" content="嗯，距离上次读vue的源码已经过了一个月了，再次捡起来已经完全不认得了……啊……俗话说，一天不练手脚慢,两天不练丢一半,三天不练门外汉,四天不练瞪眼看，俗话诚不欺我……总之写到哪儿算哪儿吧，希望能跟之前写的接上……╮(￣▽￣)╭
-Vue构造函数和vue实例 instance上次把global api和config都看了一遍，这次准备开始看instance这部分，这部分主要定义的是Vue构造函数和v">
+<meta name="description" content="嗯，距离上次读vue的源码已经过了一个月了，再次捡起来已经完全不认得了……啊……俗话说，一天不练手脚慢,两天不练丢一半,三天不练门外汉,四天不练瞪眼看，俗话诚不欺我……总之写到哪儿算哪儿吧，希望能跟之前写的接上……╮(￣▽￣)╭">
 <meta property="og:type" content="article">
 <meta property="og:title" content="vue源码阅读笔记(6)">
 <meta property="og:url" content="http://brooch.me/2017/06/20/vue-source-notes-6/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="嗯，距离上次读vue的源码已经过了一个月了，再次捡起来已经完全不认得了……啊……俗话说，一天不练手脚慢,两天不练丢一半,三天不练门外汉,四天不练瞪眼看，俗话诚不欺我……总之写到哪儿算哪儿吧，希望能跟之前写的接上……╮(￣▽￣)╭
-Vue构造函数和vue实例 instance上次把global api和config都看了一遍，这次准备开始看instance这部分，这部分主要定义的是Vue构造函数和v">
-<meta property="og:updated_time" content="2017-06-23T15:27:28.000Z">
+<meta property="og:description" content="嗯，距离上次读vue的源码已经过了一个月了，再次捡起来已经完全不认得了……啊……俗话说，一天不练手脚慢,两天不练丢一半,三天不练门外汉,四天不练瞪眼看，俗话诚不欺我……总之写到哪儿算哪儿吧，希望能跟之前写的接上……╮(￣▽￣)╭">
+<meta property="og:updated_time" content="2017-08-04T10:52:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="vue源码阅读笔记(6)">
-<meta name="twitter:description" content="嗯，距离上次读vue的源码已经过了一个月了，再次捡起来已经完全不认得了……啊……俗话说，一天不练手脚慢,两天不练丢一半,三天不练门外汉,四天不练瞪眼看，俗话诚不欺我……总之写到哪儿算哪儿吧，希望能跟之前写的接上……╮(￣▽￣)╭
-Vue构造函数和vue实例 instance上次把global api和config都看了一遍，这次准备开始看instance这部分，这部分主要定义的是Vue构造函数和v">
+<meta name="twitter:description" content="嗯，距离上次读vue的源码已经过了一个月了，再次捡起来已经完全不认得了……啊……俗话说，一天不练手脚慢,两天不练丢一半,三天不练门外汉,四天不练瞪眼看，俗话诚不欺我……总之写到哪儿算哪儿吧，希望能跟之前写的接上……╮(￣▽￣)╭">
 
 
 
@@ -365,6 +362,7 @@ Vue构造函数和vue实例 instance上次把global api和config都看了一遍�
 
       
         <p>嗯，距离上次读vue的源码已经过了一个月了，再次捡起来已经完全不认得了……啊……俗话说，一天不练手脚慢,两天不练丢一半,三天不练门外汉,四天不练瞪眼看，俗话诚不欺我……总之写到哪儿算哪儿吧，希望能跟之前写的接上……╮(￣▽￣)╭</p>
+<a id="more"></a>
 <h1 id="Vue构造函数和vue实例-instance"><a href="#Vue构造函数和vue实例-instance" class="headerlink" title="Vue构造函数和vue实例 instance"></a>Vue构造函数和vue实例 instance</h1><p>上次把global api和config都看了一遍，这次准备开始看instance这部分，这部分主要定义的是Vue构造函数和vue实例的各种方法。之前在global api中加工的Vue构造函数就出自这个模块。</p>
 <h2 id="index-js"><a href="#index-js" class="headerlink" title="index.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/instance/index.js" target="_blank" rel="external">index.js</a></h2><p>这个文件是整个模块的入口，主要负责将各个子模块的功能挂载到Vue构造函数上。挂载的方法与global api一样，通过Mixin函数将方法和属性附到Vue.prototype上。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> &#123; initMixin &#125; <span class="keyword">from</span> <span class="string">'./init'</span></div><div class="line"><span class="keyword">import</span> &#123; stateMixin &#125; <span class="keyword">from</span> <span class="string">'./state'</span></div><div class="line"><span class="keyword">import</span> &#123; renderMixin &#125; <span class="keyword">from</span> <span class="string">'./render'</span></div><div class="line"><span class="keyword">import</span> &#123; eventsMixin &#125; <span class="keyword">from</span> <span class="string">'./events'</span></div><div class="line"><span class="keyword">import</span> &#123; lifecycleMixin &#125; <span class="keyword">from</span> <span class="string">'./lifecycle'</span></div><div class="line"><span class="keyword">import</span> &#123; warn &#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">Vue</span> (<span class="params">options</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp;</div><div class="line">    !(<span class="keyword">this</span> <span class="keyword">instanceof</span> Vue)) &#123;</div><div class="line">    warn(<span class="string">'Vue is a constructor and should be called with the `new` keyword'</span>)</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// _init就是Vue的起点</span></div><div class="line">  <span class="keyword">this</span>._init(options)</div><div class="line">&#125;</div><div class="line"><span class="comment">// 挂载_init方法</span></div><div class="line">initMixin(Vue)</div><div class="line"><span class="comment">// 挂载$set、$delete方法和$data、$prop属性</span></div><div class="line">stateMixin(Vue)</div><div class="line"><span class="comment">// 挂载$on、$once、$off、$emit方法</span></div><div class="line">eventsMixin(Vue)</div><div class="line"><span class="comment">// 挂载_update、$forceUpdate、$destroy方法</span></div><div class="line">lifecycleMixin(Vue)</div><div class="line"><span class="comment">// 挂载$nextTick、_render方法</span></div><div class="line">renderMixin(Vue)</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> Vue</div></pre></td></tr></table></figure>
@@ -510,7 +508,7 @@ Vue构造函数和vue实例 instance上次把global api和config都看了一遍�
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">37</span>
+              <span class="site-state-item-count">38</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
