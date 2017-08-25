@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="html," />
+  <meta name="keywords" content="vue," />
 
 
 
@@ -86,25 +86,16 @@
 
 
 
-<meta name="description" content="a标签的href属性值可以是mailto协议的地址，这个比较常见，但是能加参数设置邮件内容我还是第一次见呢。
-示例：
-mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
-貌似按照get方式加上参数就行了，Subject代表标题，Body代表正文">
+<meta name="description" content="上次看了生命周期部分的代码，这次准备看 event 的代码">
 <meta property="og:type" content="article">
-<meta property="og:title" content="邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉">
-<meta property="og:url" content="http://brooch.me/2015/10/21/邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉/index.html">
+<meta property="og:title" content="vue源码阅读笔记(8)">
+<meta property="og:url" content="http://brooch.me/2017/08/25/vue-source-notes-8/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="a标签的href属性值可以是mailto协议的地址，这个比较常见，但是能加参数设置邮件内容我还是第一次见呢。
-示例：
-mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
-貌似按照get方式加上参数就行了，Subject代表标题，Body代表正文">
-<meta property="og:updated_time" content="2016-11-16T16:36:24.000Z">
+<meta property="og:description" content="上次看了生命周期部分的代码，这次准备看 event 的代码">
+<meta property="og:updated_time" content="2017-08-25T10:11:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉">
-<meta name="twitter:description" content="a标签的href属性值可以是mailto协议的地址，这个比较常见，但是能加参数设置邮件内容我还是第一次见呢。
-示例：
-mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
-貌似按照get方式加上参数就行了，Subject代表标题，Body代表正文">
+<meta name="twitter:title" content="vue源码阅读笔记(8)">
+<meta name="twitter:description" content="上次看了生命周期部分的代码，这次准备看 event 的代码">
 
 
 
@@ -132,13 +123,13 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
 
 
 
-  <link rel="canonical" href="http://brooch.me/2015/10/21/邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉/"/>
+  <link rel="canonical" href="http://brooch.me/2017/08/25/vue-source-notes-8/"/>
 
 
 
 
 
-  <title> 邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉 | Keep Walking </title>
+  <title> vue源码阅读笔记(8) | Keep Walking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -274,7 +265,7 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2015/10/21/邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉/">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/08/25/vue-source-notes-8/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="投身烈火">
@@ -298,7 +289,7 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
             
             
               
-                邮件链接中加入参数可以给要发送的邮件添加标题和内容，第一次发现唉
+                vue源码阅读笔记(8)
               
             
           </h1>
@@ -311,8 +302,8 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-10-21T11:51:34+08:00">
-                2015-10-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-25T18:47:14+08:00">
+                2017-08-25
               </time>
             
 
@@ -330,8 +321,8 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/随手一记/" itemprop="url" rel="index">
-                    <span itemprop="name">随手一记</span>
+                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">学习笔记</span>
                   </a>
                 </span>
 
@@ -370,10 +361,12 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
       
 
       
-        <p>a标签的href属性值可以是mailto协议的地址，这个比较常见，但是能加参数设置邮件内容我还是第一次见呢。</p>
-<p>示例：</p>
-<p>mailto:xxx@xxx.com?Subject=标题&amp;Body=正文</p>
-<p>貌似按照get方式加上参数就行了，Subject代表标题，Body代表正文</p>
+        <p>上次看了生命周期部分的代码，这次准备看 event 的代码</p>
+<a id="more"></a>
+<h1 id="Vue构造函数和vue实例-instance"><a href="#Vue构造函数和vue实例-instance" class="headerlink" title="Vue构造函数和vue实例 instance"></a>Vue构造函数和vue实例 instance</h1><h2 id="events-js"><a href="#events-js" class="headerlink" title="events.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/instance/events.js" target="_blank" rel="external">events.js</a></h2><p>之前说过，实例这部分的文件里，一般包括两部分，一部分用在实例init的过程，一部分用在定义Vue构造函数的mixin。events.js 也是，所以废话不多说，咱们开始。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* @flow */</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> &#123; toArray &#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></div><div class="line"><span class="keyword">import</span> &#123; updateListeners &#125; <span class="keyword">from</span> <span class="string">'../vdom/helpers/index'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initEvents</span> (<span class="params">vm: Component</span>) </span>&#123;</div><div class="line">  <span class="comment">// 这个属性是用来记录当前实例注册过的事件的</span></div><div class="line">  vm._events = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</div><div class="line">  <span class="comment">// hook event应该是系统事件</span></div><div class="line">  vm._hasHookEvent = <span class="literal">false</span></div><div class="line">  <span class="comment">// init parent attached events</span></div><div class="line">  <span class="comment">// _parentListeners其实是父组件模板中写的v-on</span></div><div class="line">  <span class="comment">// 所以下面这段就是将父组件模板中注册的事件放到当前组件实例的listeners里面</span></div><div class="line">  <span class="keyword">const</span> listeners = vm.$options._parentListeners</div><div class="line">  <span class="keyword">if</span> (listeners) &#123;</div><div class="line">    updateComponentListeners(vm, listeners)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 用来存当前vm实例的临时变量</span></div><div class="line"><span class="keyword">let</span> target: Component</div><div class="line"><span class="comment">// 添加删除事件的方法，专门给updateComponentListeners用的</span></div><div class="line"><span class="comment">// 特意定义在外面可能是为了省内存吧？要是我就直接写匿名方法了……</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span> (<span class="params">event, fn, once</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (once) &#123;</div><div class="line">    target.$once(event, fn)</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    target.$on(event, fn)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">remove</span> (<span class="params">event, fn</span>) </span>&#123;</div><div class="line">  target.$off(event, fn)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 这个方法感觉是个过渡方法，用来让add和remove能够调用到vm实例用的</span></div><div class="line"><span class="comment">// 真正绑定事件updateListeners，</span></div><div class="line"><span class="comment">// 顺便一提的是，listeners里面的方法都已经用bind包装过了，所以不存在指向对象不对的情况</span></div><div class="line"><span class="comment">// 具体包装的时机我找了半天死活没找到，现在可以确定的是，在render函数生成的时候，就已经包装好了</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">updateComponentListeners</span> (<span class="params"></span></span></div><div class="line">  vm: Component,</div><div class="line">  listeners: Object,</div><div class="line">  oldListeners: ?Object</div><div class="line">) &#123;</div><div class="line">  target = vm</div><div class="line">  updateListeners(listeners, oldListeners || &#123;&#125;, add, remove, vm)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 往构造函数原型链上挂载用来注册的方法</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">eventsMixin</span> (<span class="params">Vue: Class&lt;Component&gt;</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> hookRE = <span class="regexp">/^hook:/</span></div><div class="line">  <span class="comment">// 常规的事件回调队列，每个事件对一个数组</span></div><div class="line">  Vue.prototype.$on = <span class="function"><span class="keyword">function</span> (<span class="params">event: string | Array&lt;string&gt;, fn: Function</span>): <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(event)) &#123;</div><div class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = event.length; i &lt; l; i++) &#123;</div><div class="line">        <span class="keyword">this</span>.$on(event[i], fn)</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      (vm._events[event] || (vm._events[event] = [])).push(fn)</div><div class="line">      <span class="comment">// optimize hook:event cost by using a boolean flag marked at registration</span></div><div class="line">      <span class="comment">// instead of a hash lookup</span></div><div class="line">      <span class="comment">// 这里标记为true之后每次update的时候就会用emit发出hook的消息</span></div><div class="line">      <span class="keyword">if</span> (hookRE.test(event)) &#123;</div><div class="line">        vm._hasHookEvent = <span class="literal">true</span></div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> vm</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 在on上包装了一层，执行一次就off了</span></div><div class="line">  Vue.prototype.$once = <span class="function"><span class="keyword">function</span> (<span class="params">event: string, fn: Function</span>): <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">on</span> (<span class="params"></span>) </span>&#123;</div><div class="line">      vm.$off(event, on)</div><div class="line">      fn.apply(vm, <span class="built_in">arguments</span>)</div><div class="line">    &#125;</div><div class="line">    on.fn = fn</div><div class="line">    vm.$on(event, on)</div><div class="line">    <span class="keyword">return</span> vm</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 删除事件对应回调用的</span></div><div class="line">  Vue.prototype.$off = <span class="function"><span class="keyword">function</span> (<span class="params">event?: string, fn?: Function</span>): <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">    <span class="comment">// all</span></div><div class="line">    <span class="comment">// 不传参数就全删了</span></div><div class="line">    <span class="keyword">if</span> (!<span class="built_in">arguments</span>.length) &#123;</div><div class="line">      vm._events = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</div><div class="line">      <span class="keyword">return</span> vm</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// specific event</span></div><div class="line">    <span class="comment">// 删除指定事件的回调队列</span></div><div class="line">    <span class="keyword">const</span> cbs = vm._events[event]</div><div class="line">    <span class="keyword">if</span> (!cbs) &#123;</div><div class="line">      <span class="keyword">return</span> vm</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">arguments</span>.length === <span class="number">1</span>) &#123;</div><div class="line">      vm._events[event] = <span class="literal">null</span></div><div class="line">      <span class="keyword">return</span> vm</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// specific handler</span></div><div class="line">    <span class="comment">// 删除指定的回调</span></div><div class="line">    <span class="keyword">let</span> cb</div><div class="line">    <span class="keyword">let</span> i = cbs.length</div><div class="line">    <span class="keyword">while</span> (i--) &#123;</div><div class="line">      cb = cbs[i]</div><div class="line">      <span class="comment">// 之前说过回调队列中的函数(就是cb)都用bind包装过了</span></div><div class="line">      <span class="comment">// 目测cb.fn就是原始的函数，所以用来比较了</span></div><div class="line">      <span class="keyword">if</span> (cb === fn || cb.fn === fn) &#123;</div><div class="line">        cbs.splice(i, <span class="number">1</span>)</div><div class="line">        <span class="keyword">break</span></div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> vm</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 触发对应事件的函数队列</span></div><div class="line">  Vue.prototype.$emit = <span class="function"><span class="keyword">function</span> (<span class="params">event: string</span>): <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">    <span class="keyword">let</span> cbs = vm._events[event]</div><div class="line">    <span class="keyword">if</span> (cbs) &#123;</div><div class="line">      cbs = cbs.length &gt; <span class="number">1</span> ? toArray(cbs) : cbs</div><div class="line">      <span class="comment">// 去掉参数列表的第一个，其他的都作为cb的参数，转成数组</span></div><div class="line">      <span class="keyword">const</span> args = toArray(<span class="built_in">arguments</span>, <span class="number">1</span>)</div><div class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = cbs.length; i &lt; l; i++) &#123;</div><div class="line">        cbs[i].apply(vm, args)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> vm</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>好的那么由于时间不足，本期的博客就写到这里了，为啥这次更新的内容这么少？因为光一个updateListeners我就看了一上午……(T_T)……如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的力度了~!</p>
+<p>白了个白~！</p>
 
       
     </div>
@@ -397,7 +390,7 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
       
         <div class="post-tags">
           
-            <a href="/tags/html/" rel="tag"># html</a>
+            <a href="/tags/vue/" rel="tag"># vue</a>
           
         </div>
       
@@ -406,8 +399,8 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/10/16/总结下hexo搭建的过程/" rel="next" title="总结下hexo搭建的过程">
-                <i class="fa fa-chevron-left"></i> 总结下hexo搭建的过程
+              <a href="/2017/08/04/vue-source-notes-7/" rel="next" title="vue源码阅读笔记(7)">
+                <i class="fa fa-chevron-left"></i> vue源码阅读笔记(7)
               </a>
             
           </div>
@@ -415,10 +408,6 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/21/Capitan之后JetBrains的产品都不能用了/" rel="prev" title="Capitan之后JetBrains的产品都不能用了">
-                Capitan之后JetBrains的产品都不能用了 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -488,8 +477,17 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -623,6 +621,22 @@ mailto:xxx@xxx.com?Subject=标题&amp;amp;Body=正文
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Vue构造函数和vue实例-instance"><span class="nav-number">1.</span> <span class="nav-text">Vue构造函数和vue实例 instance</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#events-js"><span class="nav-number">1.1.</span> <span class="nav-text">events.js</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>

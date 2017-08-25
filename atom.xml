@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-08-04T14:07:54.000Z</updated>
+  <updated>2017-08-25T10:11:31.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -14,6 +14,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>vue源码阅读笔记(8)</title>
+    <link href="http://brooch.me/2017/08/25/vue-source-notes-8/"/>
+    <id>http://brooch.me/2017/08/25/vue-source-notes-8/</id>
+    <published>2017-08-25T10:47:14.000Z</published>
+    <updated>2017-08-25T10:11:31.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>上次看了生命周期部分的代码，这次准备看 event 的代码</p>
+<a id="more"></a>
+<h1 id="Vue构造函数和vue实例-instance"><a href="#Vue构造函数和vue实例-instance" class="headerlink" title="Vue构造函数和vue实例 instance"></a>Vue构造函数和vue实例 instance</h1><h2 id="events-js"><a href="#events-js" class="headerlink" title="events.js"></a><a href="https://github.com/vuejs/vue/blob/v2.2.0/src/core/instance/events.js" target="_blank" rel="external">events.js</a></h2><p>之前说过，实例这部分的文件里，一般包括两部分，一部分用在实例init的过程，一部分用在定义Vue构造函数的mixin。events.js 也是，所以废话不多说，咱们开始。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/* @flow */</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> &#123; toArray &#125; <span class="keyword">from</span> <span class="string">'../util/index'</span></div><div class="line"><span class="keyword">import</span> &#123; updateListeners &#125; <span class="keyword">from</span> <span class="string">'../vdom/helpers/index'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initEvents</span> (<span class="params">vm: Component</span>) </span>&#123;</div><div class="line">  <span class="comment">// 这个属性是用来记录当前实例注册过的事件的</span></div><div class="line">  vm._events = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</div><div class="line">  <span class="comment">// hook event应该是系统事件</span></div><div class="line">  vm._hasHookEvent = <span class="literal">false</span></div><div class="line">  <span class="comment">// init parent attached events</span></div><div class="line">  <span class="comment">// _parentListeners其实是父组件模板中写的v-on</span></div><div class="line">  <span class="comment">// 所以下面这段就是将父组件模板中注册的事件放到当前组件实例的listeners里面</span></div><div class="line">  <span class="keyword">const</span> listeners = vm.$options._parentListeners</div><div class="line">  <span class="keyword">if</span> (listeners) &#123;</div><div class="line">    updateComponentListeners(vm, listeners)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 用来存当前vm实例的临时变量</span></div><div class="line"><span class="keyword">let</span> target: Component</div><div class="line"><span class="comment">// 添加删除事件的方法，专门给updateComponentListeners用的</span></div><div class="line"><span class="comment">// 特意定义在外面可能是为了省内存吧？要是我就直接写匿名方法了……</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span> (<span class="params">event, fn, once</span>) </span>&#123;</div><div class="line">  <span class="keyword">if</span> (once) &#123;</div><div class="line">    target.$once(event, fn)</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    target.$on(event, fn)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">remove</span> (<span class="params">event, fn</span>) </span>&#123;</div><div class="line">  target.$off(event, fn)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 这个方法感觉是个过渡方法，用来让add和remove能够调用到vm实例用的</span></div><div class="line"><span class="comment">// 真正绑定事件updateListeners，</span></div><div class="line"><span class="comment">// 顺便一提的是，listeners里面的方法都已经用bind包装过了，所以不存在指向对象不对的情况</span></div><div class="line"><span class="comment">// 具体包装的时机我找了半天死活没找到，现在可以确定的是，在render函数生成的时候，就已经包装好了</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">updateComponentListeners</span> (<span class="params"></span></span></div><div class="line">  vm: Component,</div><div class="line">  listeners: Object,</div><div class="line">  oldListeners: ?Object</div><div class="line">) &#123;</div><div class="line">  target = vm</div><div class="line">  updateListeners(listeners, oldListeners || &#123;&#125;, add, remove, vm)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 往构造函数原型链上挂载用来注册的方法</span></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">eventsMixin</span> (<span class="params">Vue: Class&lt;Component&gt;</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> hookRE = <span class="regexp">/^hook:/</span></div><div class="line">  <span class="comment">// 常规的事件回调队列，每个事件对一个数组</span></div><div class="line">  Vue.prototype.$on = <span class="function"><span class="keyword">function</span> (<span class="params">event: string | Array&lt;string&gt;, fn: Function</span>): <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(event)) &#123;</div><div class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = event.length; i &lt; l; i++) &#123;</div><div class="line">        <span class="keyword">this</span>.$on(event[i], fn)</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      (vm._events[event] || (vm._events[event] = [])).push(fn)</div><div class="line">      <span class="comment">// optimize hook:event cost by using a boolean flag marked at registration</span></div><div class="line">      <span class="comment">// instead of a hash lookup</span></div><div class="line">      <span class="comment">// 这里标记为true之后每次update的时候就会用emit发出hook的消息</span></div><div class="line">      <span class="keyword">if</span> (hookRE.test(event)) &#123;</div><div class="line">        vm._hasHookEvent = <span class="literal">true</span></div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> vm</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 在on上包装了一层，执行一次就off了</span></div><div class="line">  Vue.prototype.$once = <span class="function"><span class="keyword">function</span> (<span class="params">event: string, fn: Function</span>): <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">on</span> (<span class="params"></span>) </span>&#123;</div><div class="line">      vm.$off(event, on)</div><div class="line">      fn.apply(vm, <span class="built_in">arguments</span>)</div><div class="line">    &#125;</div><div class="line">    on.fn = fn</div><div class="line">    vm.$on(event, on)</div><div class="line">    <span class="keyword">return</span> vm</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 删除事件对应回调用的</span></div><div class="line">  Vue.prototype.$off = <span class="function"><span class="keyword">function</span> (<span class="params">event?: string, fn?: Function</span>): <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">    <span class="comment">// all</span></div><div class="line">    <span class="comment">// 不传参数就全删了</span></div><div class="line">    <span class="keyword">if</span> (!<span class="built_in">arguments</span>.length) &#123;</div><div class="line">      vm._events = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</div><div class="line">      <span class="keyword">return</span> vm</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// specific event</span></div><div class="line">    <span class="comment">// 删除指定事件的回调队列</span></div><div class="line">    <span class="keyword">const</span> cbs = vm._events[event]</div><div class="line">    <span class="keyword">if</span> (!cbs) &#123;</div><div class="line">      <span class="keyword">return</span> vm</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">arguments</span>.length === <span class="number">1</span>) &#123;</div><div class="line">      vm._events[event] = <span class="literal">null</span></div><div class="line">      <span class="keyword">return</span> vm</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// specific handler</span></div><div class="line">    <span class="comment">// 删除指定的回调</span></div><div class="line">    <span class="keyword">let</span> cb</div><div class="line">    <span class="keyword">let</span> i = cbs.length</div><div class="line">    <span class="keyword">while</span> (i--) &#123;</div><div class="line">      cb = cbs[i]</div><div class="line">      <span class="comment">// 之前说过回调队列中的函数(就是cb)都用bind包装过了</span></div><div class="line">      <span class="comment">// 目测cb.fn就是原始的函数，所以用来比较了</span></div><div class="line">      <span class="keyword">if</span> (cb === fn || cb.fn === fn) &#123;</div><div class="line">        cbs.splice(i, <span class="number">1</span>)</div><div class="line">        <span class="keyword">break</span></div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> vm</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// 触发对应事件的函数队列</span></div><div class="line">  Vue.prototype.$emit = <span class="function"><span class="keyword">function</span> (<span class="params">event: string</span>): <span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></div><div class="line">    <span class="keyword">let</span> cbs = vm._events[event]</div><div class="line">    <span class="keyword">if</span> (cbs) &#123;</div><div class="line">      cbs = cbs.length &gt; <span class="number">1</span> ? toArray(cbs) : cbs</div><div class="line">      <span class="comment">// 去掉参数列表的第一个，其他的都作为cb的参数，转成数组</span></div><div class="line">      <span class="keyword">const</span> args = toArray(<span class="built_in">arguments</span>, <span class="number">1</span>)</div><div class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = cbs.length; i &lt; l; i++) &#123;</div><div class="line">        cbs[i].apply(vm, args)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> vm</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>好的那么由于时间不足，本期的博客就写到这里了，为啥这次更新的内容这么少？因为光一个updateListeners我就看了一上午……(T_T)……如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的力度了~!</p>
+<p>白了个白~！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;上次看了生命周期部分的代码，这次准备看 event 的代码&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="学习笔记" scheme="http://brooch.me/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="vue" scheme="http://brooch.me/tags/vue/"/>
+    
+  </entry>
   
   <entry>
     <title>vue源码阅读笔记(7)</title>
@@ -853,68 +881,6 @@
       <category term="css" scheme="http://brooch.me/tags/css/"/>
     
       <category term="rem" scheme="http://brooch.me/tags/rem/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>聊聊动态规划(2) -- 特征</title>
-    <link href="http://brooch.me/2017/02/24/dynamic-programming-2/"/>
-    <id>http://brooch.me/2017/02/24/dynamic-programming-2/</id>
-    <published>2017-02-24T06:29:00.000Z</published>
-    <updated>2017-02-24T15:26:43.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>书接前文，上回咱们说到要如何鉴别动态规划可解问题。我预告说要从计算机工作原理开始讲起……呃……貌似跟原本要讲的东西差的有点儿远呢……那么为啥非要从这么底层的问题开始讲起呢？怎么说呢……就好比我要讲西游记，如果只说一句“唐僧师徒四人去西天取经然后都修成正果了”，对于没看过西游记的人来说，唐僧是谁、师徒四人又是谁、为啥非得跑西天去取经等等一系列问题，不去翻翻原著搜搜资料是肯定不知道怎么回事的。所以还是尽量揉碎了讲吧，不然看完了还得一通翻查资料，怪麻烦的……</p>
-<a id="more"></a>
-<p>尽管计算机技术自20世纪40年代第一部电子通用计算机诞生以来一直飞速的发展，但是，现代计算机仍然采用冯诺依曼结构来实现。冯诺依曼结构将计算机描述为五部分：输入设备、控制器、运算器、存储器和输出设备。工作流程大概就是，输入设备传入数据，控制器发出指令，运算器根据指令做算数逻辑运算，最后存储或者输出结果。如果咱们只关注计算机的理论原理，在抽象一点的看计算机工作的整个过程，你会发现，刚才我们描述的工作过程可以用数学理论来概括。存储器可以看做一个列举了计算机存在的所有可能状态的<strong>集合</strong>，控制器指令可以看做一组<strong>状态转换函数</strong>，运算器使用状态转换函数，从输入的状态和集合的状态，推导出输出的状态。所以计算机的工作原理，可以简单的概括为，利用当前的状态计算出下一个状态（美错儿，我就是在说状态机……）。</p>
-<p>我们平时编写程序，是在使用计算机帮我们解决问题。从计算机的本质是状态机这个角度来看，你思考如何编写程序来解决问题，其实就是在思考如何将这个问题表达成状态（用哪些变量，存储哪些数据）以及如何在状态之间中转换（怎样根据一些变量计算出另一些变量）。我们在看算法分析文章时，经常能看到的平时能看到的所谓<strong>空间复杂度</strong>，就是为了支持你的转换状态所必需存储的状态最多有多少；所谓<strong>时间复杂度</strong>，就是从初始状态到达最终状态中间需要做多少次状态转换。</p>
-<p>还拿我们上一次说的斐波拉契数列做🌰 ：</p>
-<p>我要计算第100项，之前的每一项就是这个问题的一个状态。每求新一项（新的一个状态）只需要之前的两个项（之前的两个状态）。所以同一个时刻，最多只需要保存两个状态，空间复杂度就是常数；每求一个新状态，所需要的时间是常数，而之前的状态是线性递增的，所以时间复杂度就是线性的。</p>
-<p>上面这种状态计算很直接，只需要依照固定的模式从旧状态计算出新状态就行（a[i]=a[i-1]+a[i-2]），不需要考虑是不是需要更多的状态，也不需要选择哪些旧状态来计算新状态。对于这样的解法，我们叫递推。</p>
-<p>斐波拉契数列这个例子过于简单，以至于让人忽视了阶段的概念。所谓阶段是指随着问题的解决，在同一个时刻可能会得到的不同状态的集合。斐波拉契数列中，每一步会计算得到一个新数字，所以每个阶段只有一个状态。咱们来想象另外一个情景：假如把你放在一个围棋棋盘上的某一点，你每一步只能走一格，因为你可以东南西北随便走，所以你当你同样走四步可能会处于很多个不同的位置。从头开始走了几步就是第几个阶段，走了n步可能处于的位置称为一个状态，走了这n步所有可能到达的位置的集合就是这个阶段下所有可能的状态。</p>
-<p>现在问题来了，有了阶段之后，计算新状态可能会遇到各种奇葩的情况，针对不同的情况，就需要不同的算法，下面就分情况来说明一下：</p>
-<p>假如问题有n个阶段，每个阶段都有多个状态，不同阶段的状态数不必相同，一个阶段的一个状态可以得到下个阶段的所有状态中的几个。那我们要计算出最终阶段的状态数自然要经历之前每个阶段的某些状态。</p>
-<p>好消息是，有时候我们并不需要真的计算所有状态。</p>
-<p>比如拿这样一个的棋盘问题举例：</p>
-<p>从棋盘的左上角到达右下角最短需要几步。答案很显然，用这样一个简单的问题是为了帮助我们理解阶段和状态。某个阶段确实可以有多个状态，正如这个问题中走n步可以走到很多位置一样。但是同样n步中，有哪些位置可以让我们在第n+1步中走的最远呢？没错，正是第n步中走的最远的位置。换成一句熟悉话叫做“<strong>下一步最优是从当前最优得到的</strong>”。所以为了计算最终的最优值，只需要存储每一步的最优值即可，解决符合这种性质的问题的算法就叫贪心算法。如果只看最优状态之间的计算过程是不是和斐波拉契数列的计算很像？所以计算的方法也是递推。</p>
-<p>既然问题都是可以划分成阶段和状态的。这样一来我们一下子解决了一大类问题：一个阶段的最优可以由前一个阶段的最优得到。</p>
-<p>如果一个阶段的最优无法用前一个阶段的最优得到呢？（需要前两个阶段得到当前最优，跟只用前一个阶段并没有本质区别）</p>
-<p>最麻烦的情况在于你需要之前所有的情况才行。再举一个探索迷宫的🌰 ：</p>
-<p>现在有一个迷宫，我们要计算从起点到终点的最短路线。这时你就不能只保存当前阶段的状态了，因为要求你计算最短路径，所以你必须知道之前走过的所有位置。因为即便你当前在的位置不变，之前的路线不同也会影响你之后走的路线。这时你需要保存的是之前每个阶段所经历的状态，根据之前所有的状态你才能计算出下一个状态！每个阶段的状态或许不多，但是每个状态都可以转移到下一阶段的多个状态，这种记录所有状态计算下一个状态的算法就叫搜索。所以搜索的空间复杂度就是指数级的，时间复杂度也是指数的。</p>
-<p>刚才提到的那种令人不开心的情况，就叫做有后效性。</p>
-<p>刚刚的情况实在太普遍，我们刚刚说到的解决方法也实在太暴力。那么，有没有哪些情况可以避免如此的暴力呢？契机就在于后效性。</p>
-<p>有这么一类问题，看似需要之前所有的状态，其实不用。比如求<a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97" target="_blank" rel="external">最长上升子序列（LIS）</a>长度问题：</p>
-<p>在一个无序的数组里，找出一组尽可能长的由低到高排列的数，这组数就叫最长上升子序列。</p>
-<p>比如，给出[5,4,1,2,3]，LIS 就是 [1,2,3]，长度是3；给出[4,2,4,5,3,7]，LIS 是 [2,4,5,7]，长度是 4。</p>
-<p>看到这个问题，第一反应就是用遍历去解决。从头到尾依次枚举是否选择当前的数字，每选定一个数字就要去看看是不是满足“上升”的性质，这里第i个阶段就是去思考是否要选择第i个数，第i个阶段有两个状态，分别是选和不选。哈哈，依稀出现了刚刚搜索迷宫的影子！</p>
-<p>但是当我们仔细思考之后会发现，每次当我决定要选择当前数字的时候，只需要和之前选定的一个数字比较，就能做出判断了！这是和之前迷宫问题的本质不同。这样我们就不需要记录之前所有的状态了。因为最后要求的是序列长度，所以我们只需要记录以某个元素结尾的LIS长度就好。</p>
-<p>这种“每个阶段的最优状态可以从之前某个阶段的某个或某些状态直接得到”的性质就叫做最优子结构；而“不管状态之前是如何得到的”的性质就叫做无后效性。</p>
-<p>那么，终于可以说出动态规划问题的两个特点了，这两个特点就是<strong>最优子结构</strong>和<strong>无后效性</strong>！只要有这两个特点的问题，就可以用动态规划的方法来解决了。</p>
-<p>通过之前的一系列描述我们也能看到，一个问题是该用递推、贪心、搜索还是动态规划，完全是由这个问题本身阶段间的状态转移方式决定的！</p>
-<ul>
-<li>每个阶段只有一个状态 —— 用递推。</li>
-<li>每个阶段的最优状态都是由上一个阶段的最优状态得到 —— 用贪心。</li>
-<li>每个阶段的最优状态是由之前所有阶段的状态的组合得到 —— 用搜索。</li>
-<li>每个阶段的最优状态可以从之前某个阶段的某个或某些状态直接得到而不管之前这个状态是如何得到的 —— 用动态规划。</li>
-</ul>
-<p>另外需要注意的是，一个问题从不同的角度分析，各阶段状态的定义和状态转移方式可能都不相同，存在一个有后效性的定义，并不代表该问题不适用动态规划的方法来解。就像我最早说过的一样：寻找看问题的角度，才是动态规划的核心~</p>
-<p>好的那么由于时间不足本次的博客就到这里，如果不出意外的话，大概可能maybe也许下周五会更新吧~！能不能准时更新，就全看米娜桑点赞打赏转发安利发评论的热情啦~！</p>
-<p>白了个白~！</p>
-<p><strong>相关资料</strong></p>
-<ul>
-<li><a href="https://www.zhihu.com/question/23995189" target="_blank" rel="external">什么是动态规划？动态规划的意义是什？</a></li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;书接前文，上回咱们说到要如何鉴别动态规划可解问题。我预告说要从计算机工作原理开始讲起……呃……貌似跟原本要讲的东西差的有点儿远呢……那么为啥非要从这么底层的问题开始讲起呢？怎么说呢……就好比我要讲西游记，如果只说一句“唐僧师徒四人去西天取经然后都修成正果了”，对于没看过西游记的人来说，唐僧是谁、师徒四人又是谁、为啥非得跑西天去取经等等一系列问题，不去翻翻原著搜搜资料是肯定不知道怎么回事的。所以还是尽量揉碎了讲吧，不然看完了还得一通翻查资料，怪麻烦的……&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="学习笔记" scheme="http://brooch.me/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    
-    
-      <category term="动态规划" scheme="http://brooch.me/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/"/>
     
   </entry>
   
