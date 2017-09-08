@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://brooch.me/"/>
-  <updated>2017-09-08T10:00:01.000Z</updated>
+  <updated>2017-09-08T10:04:11.000Z</updated>
   <id>http://brooch.me/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <title>vue源码阅读笔记(9)</title>
     <link href="http://brooch.me/2017/09/08/vue-source-notes-9/"/>
     <id>http://brooch.me/2017/09/08/vue-source-notes-9/</id>
-    <published>2017-09-08T10:47:14.000Z</published>
-    <updated>2017-09-08T10:00:01.000Z</updated>
+    <published>2017-09-08T10:03:50.000Z</published>
+    <updated>2017-09-08T10:04:11.000Z</updated>
     
     <content type="html"><![CDATA[<p>上次看了事件部分的代码，这次准备看 render 的代码</p>
 <a id="more"></a>
