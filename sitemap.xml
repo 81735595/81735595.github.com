@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://brooch.me/2017/07/07/how-to-make-vue-dialog-component/</loc>
+    
+    <lastmod>2017-12-20T07:06:55.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://brooch.me/2017/09/15/how-to-use-status-change-to-control-async-process/</loc>
+    
+    <lastmod>2017-09-18T01:47:43.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://brooch.me/2017/09/08/vue-source-notes-9/</loc>
     
     <lastmod>2017-09-08T10:04:11.000Z</lastmod>
@@ -33,13 +47,6 @@
     <loc>http://brooch.me/2017/06/20/vue-source-notes-6/</loc>
     
     <lastmod>2017-08-04T10:52:41.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://brooch.me/2017/07/07/how-to-make-vue-dialog-component/</loc>
-    
-    <lastmod>2017-07-22T10:30:42.000Z</lastmod>
     
   </url>
   

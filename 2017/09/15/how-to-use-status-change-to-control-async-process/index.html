@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="react," />
+  <meta name="keywords" content="promise,status," />
 
 
 
@@ -86,16 +86,16 @@
 
 
 
-<meta name="description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……">
+<meta name="description" content="白云苍狗，时光悠悠~ ￣ω￣=">
 <meta property="og:type" content="article">
-<meta property="og:title" content="闲扯react组件动态加载机制">
-<meta property="og:url" content="http://brooch.me/2017/05/19/react-component-dynamic-loading-1/index.html">
+<meta property="og:title" content="如何利用状态变化控制异步流程">
+<meta property="og:url" content="http://brooch.me/2017/09/15/how-to-use-status-change-to-control-async-process/index.html">
 <meta property="og:site_name" content="Keep Walking">
-<meta property="og:description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……">
-<meta property="og:updated_time" content="2017-05-26T06:01:52.000Z">
+<meta property="og:description" content="白云苍狗，时光悠悠~ ￣ω￣=">
+<meta property="og:updated_time" content="2017-09-18T01:47:43.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="闲扯react组件动态加载机制">
-<meta name="twitter:description" content="话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……">
+<meta name="twitter:title" content="如何利用状态变化控制异步流程">
+<meta name="twitter:description" content="白云苍狗，时光悠悠~ ￣ω￣=">
 
 
 
@@ -123,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://brooch.me/2017/05/19/react-component-dynamic-loading-1/"/>
+  <link rel="canonical" href="http://brooch.me/2017/09/15/how-to-use-status-change-to-control-async-process/"/>
 
 
 
 
 
-  <title> 闲扯react组件动态加载机制 | Keep Walking </title>
+  <title> 如何利用状态变化控制异步流程 | Keep Walking </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -265,7 +265,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/05/19/react-component-dynamic-loading-1/">
+  <link itemprop="mainEntityOfPage" href="http://brooch.me/2017/09/15/how-to-use-status-change-to-control-async-process/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="投身烈火">
@@ -289,7 +289,7 @@
             
             
               
-                闲扯react组件动态加载机制
+                如何利用状态变化控制异步流程
               
             
           </h1>
@@ -302,8 +302,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-19T16:33:12+08:00">
-                2017-05-19
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-15T22:27:44+08:00">
+                2017-09-15
               </time>
             
 
@@ -321,8 +321,8 @@
               <span class="post-meta-item-text">分类于</span>
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/学习笔记/" itemprop="url" rel="index">
-                    <span itemprop="name">学习笔记</span>
+                  <a href="/categories/随手一记/" itemprop="url" rel="index">
+                    <span itemprop="name">随手一记</span>
                   </a>
                 </span>
 
@@ -361,37 +361,7 @@
       
 
       
-        <p>话说之前老写vue的源码有点乏味，今天咱们扯点儿别的。之前在微信群里看到大家聊起react组件动态加载，貌似都没有什么好的解决方案呢，正好最近一直忙着写java，好久没折腾react的代码了，借这个机会捡捡以前的技能，不然都要忘光了……</p>
-<a id="more"></a>
-<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>之前在群里聊的时候也没看到有人说起核心的痛点，所以究竟在实际应用中会有啥问题我也不知道 (;￢＿￢) ……所以关于问题的分析，其实都是我脑补出来的，所以大家不要当真，全当看热闹吧……</p>
-<p>分析之前，先确定下目标，我的目标是简单实现react组件动态加载的机制。既然是要先串通机制，细节和环境配置就一切从简，后续再考虑实际使用和易用性。</p>
-<p>接下来分析问题，说到react组件动态加载，从字面上看可以分为两部分“react组件”和“动态加载”。动态加载其实老早就有就解决方案了，之前打包工具还没流行起来的时候，就有各种五花八门的库来解这问题，requirejs、seajs、YUI Loader啥的，所以这个问题用第三方库应该就能搞定。</p>
-<p>然后，跟react组件联系到一起，如何在加载完成后替换组件是个问题。其实这个问题也好解，因为react的组件可以返回新组件，所以做个透传参数的加载器应该就可以了。</p>
-<p>另外，现在想开发react的程序，webpack+es6+jsx也算是标配了吧。如何用webpack配合打包也是个问题，要把需要异步加载的都生成chunk。还得搭建一套构建环境……毕竟我的目标是实现机制，所以打包这部分就先不考虑，环境配置也省略，直接写浏览器可执行的脚本。</p>
-<p>好的，拉个list：</p>
-<ul>
-<li>动态加载问题 – 使用requirejs</li>
-<li>react组件替换 – 做个加载器组件</li>
-<li>webpack打包 – 后续考虑</li>
-<li>环境问题 – 先不使用jsx，不写浏览器不能直接运行的代码，公共库用unpkg加载，使用creat-react-class模块创建react组件构造函数</li>
-</ul>
-<p>ok，可以开始了。</p>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>之前列出的四个问题，真正需要解决的只有第二个，所以设计一个加载器组件，其实就能实现react组件动态加载的机制了吧……</p>
-<p>调用形式应该像下面这样，在标签上指定要加载的组件名，另外，被调用的组件也会需要设置属性，所以加载器也得接收。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">React.createElement(Loader, &#123;</div><div class="line">    <span class="attr">component</span>: <span class="string">'A'</span>,</div><div class="line">    <span class="attr">propA</span>: <span class="number">1</span>,</div><div class="line">    <span class="attr">propB</span>: <span class="literal">true</span></div><div class="line">&#125;)</div><div class="line"><span class="comment">// 用jsx写应该是下面这样的</span></div><div class="line">&lt;Loader component=<span class="string">'A'</span> propA=&#123;<span class="number">1</span>&#125; propB=&#123;<span class="literal">true</span>&#125;/&gt;</div></pre></td></tr></table></figure>
-<p>Loader内部，首先要有个地方记录已经加载了的组件，如果组件已经加载，就直接调用，如果没加载，就先显示loading并开始加载组件，加载完成后调用。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 把记录已加载组件的变量设为公共变量，为了能在多个实例之间共享</span></div><div class="line"><span class="keyword">var</span> componentList = &#123;&#125;</div><div class="line">createReactClass(&#123;</div><div class="line">    <span class="attr">displayName</span>:<span class="string">'Loader'</span>,</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> component = <span class="keyword">this</span>.props.component</div><div class="line">        <span class="keyword">if</span> (componentList[component]) &#123;</div><div class="line">            <span class="keyword">return</span> React.createElement(componentList[component], <span class="keyword">this</span>.props);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            getComponent(component)</div><div class="line">            <span class="keyword">return</span> React.createElement(div, <span class="literal">null</span>, <span class="string">'loading……'</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"><span class="comment">// 用es6写应该是这样的，没错，我就是想证明我会写但是我懒…… (￣.￣)</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Loader</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</div><div class="line">    <span class="keyword">constructor</span>(props) &#123;</div><div class="line">        <span class="keyword">super</span>(props);</div><div class="line">    &#125;</div><div class="line">    render () &#123;</div><div class="line">        <span class="keyword">let</span> component = &#123;<span class="keyword">this</span>.props&#125;</div><div class="line">        <span class="keyword">if</span> (componentList[component]) &#123;</div><div class="line">            <span class="keyword">return</span> &lt;componentList[component] &#123;...this.props&#125;/&gt;;</div><div class="line">        &#125; else &#123;</div><div class="line">            // 这个函数里面加载组件</div><div class="line">            getComponent(component)</div><div class="line">            return &lt;div&gt;loading……&lt;/div&gt;;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>大框架有了，继续细化。虽然上面写了加载组件的函数，但是在加载组件之后需要重新触发加载器的渲染，这就需要设置组件的state，所以必须要给加载器添加state属性，用来标记当前显示的组件，并且在getComponent对state进行设置，创建组件的地方也应该改成用state的属性创建。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">createReactClass(&#123;</div><div class="line">    <span class="attr">displayName</span>:<span class="string">'Loader'</span>,</div><div class="line">    <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">            <span class="attr">cur</span>: <span class="string">''</span></div><div class="line">        &#125;;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">getComponent</span>: <span class="function"><span class="keyword">function</span> (<span class="params">component</span>) </span>&#123;</div><div class="line">        <span class="built_in">require</span>([component], (Component) =&gt; &#123;</div><div class="line">            componentList[component] = Component</div><div class="line">            <span class="keyword">this</span>.setState(&#123;</div><div class="line">                <span class="attr">cur</span>: Component</div><div class="line">            &#125;)</div><div class="line">        &#125;)</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> component = <span class="keyword">this</span>.props.component</div><div class="line">        <span class="keyword">if</span> (componentList[component]) &#123;</div><div class="line">            <span class="keyword">return</span> React.createElement(<span class="keyword">this</span>.state.cur, <span class="keyword">this</span>.props);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">this</span>.getComponent(component)</div><div class="line">            <span class="keyword">return</span> React.createElement(div, <span class="literal">null</span>, <span class="string">'loading……'</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>接着问题就来了，react里setState会触发render，而上面render里getComponent又会触发setState，会造成死循环，所以要给他换个地方，react的组件运行时一共四个，constructor、componentWillMount、render、componentDidMount，render不能写，文档上说componentWillMount对于web runtime没屌用，所以只能在constructor和componentDidMount里面选了，其实放到哪个里都行，但是constructor是用来初始化组件的，从含以上看，我觉得放componentDidMount里比较合适，官方文档上也说componentDidMount是用来加载异步数据的。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">createReactClass(&#123;</div><div class="line">    <span class="attr">displayName</span>:<span class="string">'Loader'</span>,</div><div class="line">    <span class="attr">getInitialState</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">            <span class="attr">cur</span>: <span class="string">''</span></div><div class="line">        &#125;;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">getComponent</span>: <span class="function"><span class="keyword">function</span> (<span class="params">component</span>) </span>&#123;</div><div class="line">        <span class="built_in">require</span>([component], (Component) =&gt; &#123;</div><div class="line">            componentList[component] = Component</div><div class="line">            <span class="keyword">this</span>.setState(&#123;</div><div class="line">                <span class="attr">cur</span>: Component</div><div class="line">            &#125;)</div><div class="line">        &#125;)</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">componentDidMount</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.getComponent(<span class="keyword">this</span>.props.component)</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">render</span>: <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (componentList[<span class="keyword">this</span>.props.component]) &#123;</div><div class="line">            <span class="keyword">return</span> React.createElement(<span class="keyword">this</span>.state.cur, <span class="keyword">this</span>.props);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">return</span> React.createElement(div, <span class="literal">null</span>, <span class="string">'loading……'</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>呃……貌似这样就行了呢……至少大体的机制应该就是这样的吧，还有些细节需要完善，比如props变化的时候也切加载控间，现在这个加载器只能加载一次控件，其实只要在属性变化的运行时里加上getComponent函数就行了。再比如减少控件渲染次数，控价加载失败的异常处理之类的，详细的就不说了，自己体会吧，我把我练习的代码传到github上了，可以看看吐吐槽</p>
-<p><a href="https://github.com/81735595/react-component-dynamic-loading" target="_blank" rel="external">https://github.com/81735595/react-component-dynamic-loading</a></p>
-<p>用npm start就能启动了。</p>
-<h2 id="关于打包"><a href="#关于打包" class="headerlink" title="关于打包"></a>关于打包</h2><p>感觉在代码上直接用import替换require就能用webpack2打包了，但是我总觉得打包是个大头儿，有好多坑等着……所以等以后有时间了再补一次打包脚本联系好了。</p>
-<p>好的那么由于时间不足，本期的流水账就先写到这里，如果不出意外的话，maybe可能也许大概下周五会更新吧，能不能准时更新，就全看米娜桑点赞转发安利留言的热情了~!</p>
-<p>白了个白~！</p>
-
+        
       
     </div>
 
@@ -414,7 +384,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/react/" rel="tag"># react</a>
+            <a href="/tags/promise/" rel="tag"># promise</a>
+          
+            <a href="/tags/status/" rel="tag"># status</a>
           
         </div>
       
@@ -423,8 +395,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/05/vue-source-notes-5/" rel="next" title="vue源码阅读笔记(5)">
-                <i class="fa fa-chevron-left"></i> vue源码阅读笔记(5)
+              <a href="/2017/09/08/vue-source-notes-9/" rel="next" title="vue源码阅读笔记(9)">
+                <i class="fa fa-chevron-left"></i> vue源码阅读笔记(9)
               </a>
             
           </div>
@@ -432,10 +404,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/26/react-component-dynamic-loading-2/" rel="prev" title="闲扯react组件动态加载机制 -- webpack打包方案">
-                闲扯react组件动态加载机制 -- webpack打包方案 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -505,17 +473,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -649,22 +608,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题分析"><span class="nav-number">1.</span> <span class="nav-text">问题分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于打包"><span class="nav-number">3.</span> <span class="nav-text">关于打包</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
     </div>
